@@ -1,0 +1,37 @@
+{
+  "@@locale": "es",
+  "appTitle": "3xtreme Riders",
+  "@appTitle": {
+    "description": "Nombre de la app, usado en el título del sistema y splash"
+  },
+  "loginTagline": "ENCUENTRA · TIRA EL TRUCO · COMPARTE",
+  "@loginTagline": {
+    "description": "Eyebrow tracked bajo el wordmark en la pantalla de login"
+  },
+  "loginSubtitle": "El mapa colaborativo de spots para deportistas extremos.",
+  "@loginSubtitle": {
+    "description": "Frase descriptiva bajo el tagline en login"
+  },
+  "loginEmailPlaceholder": "tu@correo.com",
+  "loginPasswordPlaceholder": "••••••••",
+  "loginButton": "Iniciar sesión",
+  "@loginButton": {
+    "description": "Texto del botón principal de acción en la pantalla de login (se muestra en mayúsculas vía el widget)"
+  },
+  "loginDivider": "o continúa con",
+  "loginSignupPrompt": "¿Nuevo por aquí?",
+  "loginSignupCta": "Crear cuenta",
+  "comingSoon": "Próximamente",
+  "homeTitle": "INICIO",
+  "@homeTitle": {
+    "description": "Título del AppBar en la pantalla de home"
+  },
+  "homeWelcome": "Bienvenido a 3xtreme Riders",
+  "@homeWelcome": {
+    "description": "Mensaje de bienvenida placeholder en home"
+  },
+  "navHome": "Inicio",
+  "navSearch": "Buscar",
+  "navEvents": "Eventos",
+  "navSettings": "Ajustes"
+}

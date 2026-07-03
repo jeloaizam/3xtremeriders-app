@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "3xtreme Riders",
+  "loginTagline": "FIND · LAND THE TRICK · SHARE",
+  "loginSubtitle": "The collaborative spot map for extreme athletes.",
+  "loginEmailPlaceholder": "you@email.com",
+  "loginPasswordPlaceholder": "••••••••",
+  "loginButton": "Log in",
+  "loginDivider": "or continue with",
+  "loginSignupPrompt": "New here?",
+  "loginSignupCta": "Create account",
+  "comingSoon": "Coming soon",
+  "homeTitle": "HOME",
+  "homeWelcome": "Welcome to 3xtreme Riders",
+  "navHome": "Home",
+  "navSearch": "Search",
+  "navEvents": "Events",
+  "navSettings": "Settings"
+}

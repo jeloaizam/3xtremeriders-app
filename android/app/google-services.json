@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "635857910784",
+    "project_id": "xtremeriders-app420",
+    "storage_bucket": "xtremeriders-app420.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635857910784:android:cd31b7eb3ae84d41922ce5",
+        "android_client_info": {
+          "package_name": "com.xtremeriders.xtremeriders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "635857910784-78t3a48c0bqe1js7bujiucfvfn1rhqqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.xtremeriders.xtremeriders",
+            "certificate_hash": "5d389d9a7c97071bf8a025a7b79d429480d9335f"
+          }
+        },
+        {
+          "client_id": "635857910784-vhpb7ri7beg5414b6j69gaeomsme77dt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmqIdFbHr2orYrlYfy7dYCQEehvPjRwfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635857910784-vhpb7ri7beg5414b6j69gaeomsme77dt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

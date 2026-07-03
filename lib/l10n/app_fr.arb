@@ -1,0 +1,19 @@
+{
+  "@@locale": "fr",
+  "appTitle": "3xtreme Riders",
+  "loginTagline": "TROUVE · RÉUSSIS LA FIGURE · PARTAGE",
+  "loginSubtitle": "La carte collaborative des spots pour sportifs extrêmes.",
+  "loginEmailPlaceholder": "toi@email.com",
+  "loginPasswordPlaceholder": "••••••••",
+  "loginButton": "Se connecter",
+  "loginDivider": "ou continuer avec",
+  "loginSignupPrompt": "Nouveau ici ?",
+  "loginSignupCta": "Créer un compte",
+  "comingSoon": "Bientôt disponible",
+  "homeTitle": "ACCUEIL",
+  "homeWelcome": "Bienvenue sur 3xtreme Riders",
+  "navHome": "Accueil",
+  "navSearch": "Recherche",
+  "navEvents": "Événements",
+  "navSettings": "Paramètres"
+}
