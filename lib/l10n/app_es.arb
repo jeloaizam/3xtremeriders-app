@@ -22,16 +22,20 @@
   "loginSignupPrompt": "¿Nuevo por aquí?",
   "loginSignupCta": "Crear cuenta",
   "comingSoon": "Próximamente",
-  "homeTitle": "INICIO",
-  "@homeTitle": {
-    "description": "Título del AppBar en la pantalla de home"
+  "homeActiveSpots": "{count} SPOTS ACTIVOS · {city}",
+  "@homeActiveSpots": {
+    "description": "Eyebrow bajo el wordmark en Home, cantidad de spots activos y ciudad",
+    "placeholders": {
+      "count": { "type": "int" },
+      "city": { "type": "String" }
+    }
   },
-  "homeWelcome": "Bienvenido a 3xtreme Riders",
-  "@homeWelcome": {
-    "description": "Mensaje de bienvenida placeholder en home"
-  },
+  "homeSearchPlaceholder": "Buscar spots, riders…",
+  "homeNearYou": "CERCA DE TI",
   "navHome": "Inicio",
   "navSearch": "Buscar",
+  "navMenu": "Menú",
+  "navRide": "Ride",
   "navEvents": "Eventos",
   "navSettings": "Ajustes"
 }

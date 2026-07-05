@@ -7,7 +7,10 @@ plugins {
 
 android {
     namespace = "com.xtremeriders.xtremeriders"
-    compileSdk = flutter.compileSdkVersion
+    // mapbox_maps_flutter's flutter_plugin_android_lifecycle dependency
+    // requires compileSdk 36+; Flutter's own default (flutter.compileSdkVersion)
+    // still lags behind that.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

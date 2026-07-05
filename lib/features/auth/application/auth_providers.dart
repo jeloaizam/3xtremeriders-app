@@ -14,7 +14,14 @@ AuthApi authApi(Ref ref) => AuthApi();
 
 /// Raw Firebase auth state — the source of truth for whether someone is
 /// signed in. Doesn't touch the backend.
-@riverpod
+///
+/// keepAlive: without it, this (and [isAuthenticatedProvider] below) gets
+/// disposed whenever nothing is watching it, so a plain `ref.read()` from
+/// the router's `redirect` callback would rebuild it fresh each time — and
+/// a freshly rebuilt StreamProvider hasn't received its first async
+/// emission yet, reading as `null`/unauthenticated even right after a
+/// successful login.
+@Riverpod(keepAlive: true)
 Stream<User?> firebaseUser(Ref ref) {
   return ref.watch(firebaseAuthProvider).authStateChanges();
 }
@@ -22,7 +29,7 @@ Stream<User?> firebaseUser(Ref ref) {
 /// True once Firebase confirms a signed-in user. Used by the router guard —
 /// deliberately doesn't wait on the backend sync below, so navigation isn't
 /// blocked by a network round trip.
-@riverpod
+@Riverpod(keepAlive: true)
 bool isAuthenticated(Ref ref) {
   return ref.watch(firebaseUserProvider).value != null;
 }

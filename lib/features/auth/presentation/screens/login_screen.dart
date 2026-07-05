@@ -77,9 +77,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _showComingSoon() {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).comingSoon)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).comingSoon)),
+    );
   }
 
   @override
@@ -109,162 +109,181 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(26, 20, 26, 34),
-              child: Column(
-                children: [
-                  Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(26, 20, 26, 34),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: (constraints.maxHeight - 20 - 34).clamp(
+                      0.0,
+                      double.infinity,
+                    ),
+                  ),
+                  child: IntrinsicHeight(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text.rich(
-                          TextSpan(
-                            style: context.typography.displayXl.copyWith(
-                              fontWeight: FontWeight.w700,
-                              height: 0.9,
-                            ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextSpan(
-                                text: '3',
-                                style: TextStyle(color: colors.colorAction),
+                              Text.rich(
+                                TextSpan(
+                                  style: context.typography.displayXl.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    height: 0.9,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '3',
+                                      style: TextStyle(
+                                        color: colors.colorAction,
+                                      ),
+                                    ),
+                                    const TextSpan(text: 'xtreme Riders'),
+                                  ],
+                                ),
                               ),
-                              const TextSpan(text: 'xtreme Riders'),
+                              const SizedBox(height: 14),
+                              Text(
+                                l10n.loginTagline,
+                                style: GoogleFonts.oswald(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  letterSpacing: 15 * 0.22,
+                                  color: colors.colorBrand,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: 280,
+                                child: Text(
+                                  l10n.loginSubtitle,
+                                  style: context.typography.body.copyWith(
+                                    color: colors.textMuted,
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 14),
-                        Text(
-                          l10n.loginTagline,
-                          style: GoogleFonts.oswald(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            letterSpacing: 15 * 0.22,
-                            color: colors.colorBrand,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 280,
-                          child: Text(
-                            l10n.loginSubtitle,
-                            style: context.typography.body.copyWith(
-                              color: colors.textMuted,
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AppTextField(
-                        controller: _emailController,
-                        placeholder: l10n.loginEmailPlaceholder,
-                        icon: Symbols.mail,
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      const SizedBox(height: 11),
-                      AppTextField(
-                        controller: _passwordController,
-                        placeholder: l10n.loginPasswordPlaceholder,
-                        icon: Symbols.lock,
-                        trailingIcon: _obscurePassword
-                            ? Symbols.visibility
-                            : Symbols.visibility_off,
-                        onTrailingTap: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
-                        obscureText: _obscurePassword,
-                      ),
-                      const SizedBox(height: 5),
-                      AppButton(
-                        label: l10n.loginButton,
-                        onPressed: _submitting ? null : _submitEmailPassword,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        child: Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(
-                              child: Divider(
-                                color: colors.hairlineStrong,
-                                height: 1,
+                            AppTextField(
+                              controller: _emailController,
+                              placeholder: l10n.loginEmailPlaceholder,
+                              icon: Symbols.mail,
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            const SizedBox(height: 11),
+                            AppTextField(
+                              controller: _passwordController,
+                              placeholder: l10n.loginPasswordPlaceholder,
+                              icon: Symbols.lock,
+                              trailingIcon: _obscurePassword
+                                  ? Symbols.visibility
+                                  : Symbols.visibility_off,
+                              onTrailingTap: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
                               ),
+                              obscureText: _obscurePassword,
+                            ),
+                            const SizedBox(height: 5),
+                            AppButton(
+                              label: l10n.loginButton,
+                              onPressed: _submitting
+                                  ? null
+                                  : _submitEmailPassword,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                              ),
-                              child: Text(
-                                l10n.loginDivider,
-                                style: context.typography.meta,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(
+                                      color: colors.hairlineStrong,
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                    ),
+                                    child: Text(
+                                      l10n.loginDivider,
+                                      style: context.typography.meta,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(
+                                      color: colors.hairlineStrong,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Expanded(
-                              child: Divider(
-                                color: colors.hairlineStrong,
-                                height: 1,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _SocialButton(
+                                    label: 'Google',
+                                    mark: 'G',
+                                    color: const Color(0xFF4285F4),
+                                    onTap: _submitting ? null : _submitGoogle,
+                                  ),
+                                ),
+                                const SizedBox(width: 11),
+                                Expanded(
+                                  child: _SocialButton(
+                                    label: 'Facebook',
+                                    mark: 'f',
+                                    color: const Color(0xFF1877F2),
+                                    onTap: _showComingSoon,
+                                  ),
+                                ),
+                                const SizedBox(width: 11),
+                                Expanded(
+                                  child: _SocialButton(
+                                    label: 'Hotmail',
+                                    mark: '@',
+                                    color: colors.teal500,
+                                    onTap: _showComingSoon,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  style: context.typography.bodySm.copyWith(
+                                    color: colors.textMuted,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '${l10n.loginSignupPrompt} ',
+                                    ),
+                                    TextSpan(
+                                      text: l10n.loginSignupCta,
+                                      style: TextStyle(
+                                        color: colors.colorAction,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      recognizer: _signupRecognizer,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _SocialButton(
-                              label: 'Google',
-                              mark: 'G',
-                              color: const Color(0xFF4285F4),
-                              onTap: _submitting ? null : _submitGoogle,
-                            ),
-                          ),
-                          const SizedBox(width: 11),
-                          Expanded(
-                            child: _SocialButton(
-                              label: 'Facebook',
-                              mark: 'f',
-                              color: const Color(0xFF1877F2),
-                              onTap: _showComingSoon,
-                            ),
-                          ),
-                          const SizedBox(width: 11),
-                          Expanded(
-                            child: _SocialButton(
-                              label: 'Hotmail',
-                              mark: '@',
-                              color: colors.teal500,
-                              onTap: _showComingSoon,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
-                            style: context.typography.bodySm.copyWith(
-                              color: colors.textMuted,
-                            ),
-                            children: [
-                              TextSpan(text: '${l10n.loginSignupPrompt} '),
-                              TextSpan(
-                                text: l10n.loginSignupCta,
-                                style: TextStyle(
-                                  color: colors.colorAction,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                recognizer: _signupRecognizer,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
           ),

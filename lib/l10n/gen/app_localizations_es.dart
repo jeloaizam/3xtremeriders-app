@@ -40,16 +40,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get comingSoon => 'Próximamente';
 
   @override
-  String get homeTitle => 'INICIO';
+  String homeActiveSpots(int count, String city) {
+    return '$count SPOTS ACTIVOS · $city';
+  }
 
   @override
-  String get homeWelcome => 'Bienvenido a 3xtreme Riders';
+  String get homeSearchPlaceholder => 'Buscar spots, riders…';
+
+  @override
+  String get homeNearYou => 'CERCA DE TI';
 
   @override
   String get navHome => 'Inicio';
 
   @override
   String get navSearch => 'Buscar';
+
+  @override
+  String get navMenu => 'Menú';
+
+  @override
+  String get navRide => 'Ride';
 
   @override
   String get navEvents => 'Eventos';

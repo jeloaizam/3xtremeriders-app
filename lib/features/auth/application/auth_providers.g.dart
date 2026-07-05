@@ -93,25 +93,46 @@ String _$authApiHash() => r'6466c060dfa0d8c1a4883e17cac0870b5bfa1875';
 
 /// Raw Firebase auth state — the source of truth for whether someone is
 /// signed in. Doesn't touch the backend.
+///
+/// keepAlive: without it, this (and [isAuthenticatedProvider] below) gets
+/// disposed whenever nothing is watching it, so a plain `ref.read()` from
+/// the router's `redirect` callback would rebuild it fresh each time — and
+/// a freshly rebuilt StreamProvider hasn't received its first async
+/// emission yet, reading as `null`/unauthenticated even right after a
+/// successful login.
 
 @ProviderFor(firebaseUser)
 final firebaseUserProvider = FirebaseUserProvider._();
 
 /// Raw Firebase auth state — the source of truth for whether someone is
 /// signed in. Doesn't touch the backend.
+///
+/// keepAlive: without it, this (and [isAuthenticatedProvider] below) gets
+/// disposed whenever nothing is watching it, so a plain `ref.read()` from
+/// the router's `redirect` callback would rebuild it fresh each time — and
+/// a freshly rebuilt StreamProvider hasn't received its first async
+/// emission yet, reading as `null`/unauthenticated even right after a
+/// successful login.
 
 final class FirebaseUserProvider
     extends $FunctionalProvider<AsyncValue<User?>, User?, Stream<User?>>
     with $FutureModifier<User?>, $StreamProvider<User?> {
   /// Raw Firebase auth state — the source of truth for whether someone is
   /// signed in. Doesn't touch the backend.
+  ///
+  /// keepAlive: without it, this (and [isAuthenticatedProvider] below) gets
+  /// disposed whenever nothing is watching it, so a plain `ref.read()` from
+  /// the router's `redirect` callback would rebuild it fresh each time — and
+  /// a freshly rebuilt StreamProvider hasn't received its first async
+  /// emission yet, reading as `null`/unauthenticated even right after a
+  /// successful login.
   FirebaseUserProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'firebaseUserProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -130,7 +151,7 @@ final class FirebaseUserProvider
   }
 }
 
-String _$firebaseUserHash() => r'3b82d85d6c9cfd8ce4db008e733909274570bd18';
+String _$firebaseUserHash() => r'1929d12922ddfbefc7761d7934e072b1feb0982f';
 
 /// True once Firebase confirms a signed-in user. Used by the router guard —
 /// deliberately doesn't wait on the backend sync below, so navigation isn't
@@ -155,7 +176,7 @@ final class IsAuthenticatedProvider
         argument: null,
         retry: null,
         name: r'isAuthenticatedProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -182,7 +203,7 @@ final class IsAuthenticatedProvider
   }
 }
 
-String _$isAuthenticatedHash() => r'747021410b617a69d525563ba419ec509170e3ea';
+String _$isAuthenticatedHash() => r'7e4b76e019a785102d684103bb31a7554dde248f';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the

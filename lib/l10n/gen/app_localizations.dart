@@ -160,17 +160,23 @@ abstract class AppLocalizations {
   /// **'Próximamente'**
   String get comingSoon;
 
-  /// Título del AppBar en la pantalla de home
+  /// Eyebrow bajo el wordmark en Home, cantidad de spots activos y ciudad
   ///
   /// In es, this message translates to:
-  /// **'INICIO'**
-  String get homeTitle;
+  /// **'{count} SPOTS ACTIVOS · {city}'**
+  String homeActiveSpots(int count, String city);
 
-  /// Mensaje de bienvenida placeholder en home
+  /// No description provided for @homeSearchPlaceholder.
   ///
   /// In es, this message translates to:
-  /// **'Bienvenido a 3xtreme Riders'**
-  String get homeWelcome;
+  /// **'Buscar spots, riders…'**
+  String get homeSearchPlaceholder;
+
+  /// No description provided for @homeNearYou.
+  ///
+  /// In es, this message translates to:
+  /// **'CERCA DE TI'**
+  String get homeNearYou;
 
   /// No description provided for @navHome.
   ///
@@ -183,6 +189,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Buscar'**
   String get navSearch;
+
+  /// No description provided for @navMenu.
+  ///
+  /// In es, this message translates to:
+  /// **'Menú'**
+  String get navMenu;
+
+  /// No description provided for @navRide.
+  ///
+  /// In es, this message translates to:
+  /// **'Ride'**
+  String get navRide;
 
   /// No description provided for @navEvents.
   ///

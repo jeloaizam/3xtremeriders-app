@@ -10,10 +10,13 @@
   "loginSignupPrompt": "Nouveau ici ?",
   "loginSignupCta": "Créer un compte",
   "comingSoon": "Bientôt disponible",
-  "homeTitle": "ACCUEIL",
-  "homeWelcome": "Bienvenue sur 3xtreme Riders",
+  "homeActiveSpots": "{count} SPOTS ACTIFS · {city}",
+  "homeSearchPlaceholder": "Chercher spots, riders…",
+  "homeNearYou": "PRÈS DE TOI",
   "navHome": "Accueil",
   "navSearch": "Recherche",
+  "navMenu": "Menu",
+  "navRide": "Ride",
   "navEvents": "Événements",
   "navSettings": "Paramètres"
 }

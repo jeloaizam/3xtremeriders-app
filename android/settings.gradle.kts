@@ -19,7 +19,12 @@ pluginManagement {
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    id("com.android.application") version "9.0.1" apply false
+    // Pinned below 9.x: mapbox_maps_flutter 2.25.1 unconditionally applies the
+    // legacy 'kotlin-android' plugin, which conflicts with AGP 9's built-in
+    // Kotlin support (the plugin's own unreleased `main` branch already guards
+    // this with `if (agpMajor < 9)`, confirming this is the sanctioned fix
+    // until a newer pub.dev release ships that guard).
+    id("com.android.application") version "8.9.1" apply false
     id("org.jetbrains.kotlin.android") version "2.3.20" apply false
     id("com.google.gms.google-services") version "4.4.2" apply false
 }
