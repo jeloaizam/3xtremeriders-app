@@ -213,6 +213,126 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ajustes'**
   String get navSettings;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsProfileSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil'**
+  String get settingsProfileSection;
+
+  /// No description provided for @settingsNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get settingsNameLabel;
+
+  /// No description provided for @settingsLastNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Apellido'**
+  String get settingsLastNameLabel;
+
+  /// No description provided for @settingsNicknameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Apodo'**
+  String get settingsNicknameLabel;
+
+  /// No description provided for @settingsCityLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad'**
+  String get settingsCityLabel;
+
+  /// No description provided for @settingsCountryLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'País'**
+  String get settingsCountryLabel;
+
+  /// No description provided for @settingsBioLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Bio'**
+  String get settingsBioLabel;
+
+  /// No description provided for @settingsSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get settingsSave;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil actualizado'**
+  String get settingsSaved;
+
+  /// No description provided for @settingsAccountSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta'**
+  String get settingsAccountSection;
+
+  /// No description provided for @settingsEmailLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo'**
+  String get settingsEmailLabel;
+
+  /// No description provided for @settingsRoleLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Rol'**
+  String get settingsRoleLabel;
+
+  /// No description provided for @settingsRoleUser.
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario'**
+  String get settingsRoleUser;
+
+  /// No description provided for @settingsRoleModerator.
+  ///
+  /// In es, this message translates to:
+  /// **'Moderador'**
+  String get settingsRoleModerator;
+
+  /// No description provided for @settingsRoleAdmin.
+  ///
+  /// In es, this message translates to:
+  /// **'Administrador'**
+  String get settingsRoleAdmin;
+
+  /// No description provided for @settingsReputationLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Reputación'**
+  String get settingsReputationLabel;
+
+  /// No description provided for @settingsLanguageSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma'**
+  String get settingsLanguageSection;
+
+  /// No description provided for @settingsFollowDevice.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguir idioma del dispositivo'**
+  String get settingsFollowDevice;
+
+  /// No description provided for @settingsLogout.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar sesión'**
+  String get settingsLogout;
 }
 
 class _AppLocalizationsDelegate

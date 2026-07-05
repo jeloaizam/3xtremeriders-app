@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/auth_api.dart';
+import '../data/rider_api.dart';
 import '../domain/rider.dart';
 
 part 'auth_providers.g.dart';
@@ -54,5 +55,35 @@ class CurrentRider extends _$CurrentRider {
       lastName: '',
       nickname: '',
     );
+  }
+
+  /// Updates the signed-in rider's profile fields via `PATCH /riders/{id}`
+  /// and refreshes local state with the response.
+  Future<void> updateProfile({
+    String? name,
+    String? lastName,
+    String? nickname,
+    String? bio,
+    String? city,
+    int? countryId,
+  }) async {
+    final rider = state.value;
+    final user = ref.read(firebaseAuthProvider).currentUser;
+    if (rider == null || user == null) return;
+
+    final idToken = await user.getIdToken();
+    if (idToken == null) return;
+
+    final updated = await ref.read(riderApiProvider).update(
+      riderId: rider.id,
+      idToken: idToken,
+      name: name,
+      lastName: lastName,
+      nickname: nickname,
+      bio: bio,
+      city: city,
+      countryId: countryId,
+    );
+    state = AsyncData(updated);
   }
 }

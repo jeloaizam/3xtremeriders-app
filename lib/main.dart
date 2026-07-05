@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
+import 'core/locale/locale_provider.dart';
 import 'core/map/mapbox_config.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -13,7 +14,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   MapboxOptions.setAccessToken(mapboxAccessToken);
-  runApp(const ProviderScope(child: XtremeRidersApp()));
+  final persistedLocale = await loadPersistedLocale();
+  runApp(
+    ProviderScope(
+      overrides: [
+        appLocaleProvider.overrideWith(() => _InitialAppLocale(persistedLocale)),
+      ],
+      child: const XtremeRidersApp(),
+    ),
+  );
+}
+
+class _InitialAppLocale extends AppLocale {
+  _InitialAppLocale(this._initial);
+
+  final Locale? _initial;
+
+  @override
+  Locale? build() => _initial;
 }
 
 class XtremeRidersApp extends ConsumerWidget {
@@ -22,11 +40,13 @@ class XtremeRidersApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final locale = ref.watch(appLocaleProvider);
 
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.dark,
       routerConfig: router,
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     );

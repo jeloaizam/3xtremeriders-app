@@ -67,4 +67,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navSettings => 'Settings';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsProfileSection => 'Profile';
+
+  @override
+  String get settingsNameLabel => 'First name';
+
+  @override
+  String get settingsLastNameLabel => 'Last name';
+
+  @override
+  String get settingsNicknameLabel => 'Nickname';
+
+  @override
+  String get settingsCityLabel => 'City';
+
+  @override
+  String get settingsCountryLabel => 'Country';
+
+  @override
+  String get settingsBioLabel => 'Bio';
+
+  @override
+  String get settingsSave => 'Save changes';
+
+  @override
+  String get settingsSaved => 'Profile updated';
+
+  @override
+  String get settingsAccountSection => 'Account';
+
+  @override
+  String get settingsEmailLabel => 'Email';
+
+  @override
+  String get settingsRoleLabel => 'Role';
+
+  @override
+  String get settingsRoleUser => 'Rider';
+
+  @override
+  String get settingsRoleModerator => 'Moderator';
+
+  @override
+  String get settingsRoleAdmin => 'Admin';
+
+  @override
+  String get settingsReputationLabel => 'Reputation';
+
+  @override
+  String get settingsLanguageSection => 'Language';
+
+  @override
+  String get settingsFollowDevice => 'Follow device language';
+
+  @override
+  String get settingsLogout => 'Log out';
 }

@@ -14,6 +14,8 @@ class AppTextField extends StatelessWidget {
     this.onTrailingTap,
     this.obscureText = false,
     this.keyboardType,
+    this.multiline = false,
+    this.maxLines,
   });
 
   final TextEditingController? controller;
@@ -23,6 +25,8 @@ class AppTextField extends StatelessWidget {
   final VoidCallback? onTrailingTap;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final bool multiline;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +35,16 @@ class AppTextField extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
+      constraints: multiline ? const BoxConstraints(minHeight: 74) : null,
       decoration: BoxDecoration(
         color: colors.surfaceCard,
         border: Border.all(color: colors.hairlineStrong),
         borderRadius: BorderRadius.circular(spacing.radiusMd),
       ),
       child: Row(
+        crossAxisAlignment: multiline
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
           if (icon != null) ...[
             Icon(icon, size: 20, color: colors.textMuted),
@@ -46,7 +54,11 @@ class AppTextField extends StatelessWidget {
             child: TextField(
               controller: controller,
               obscureText: obscureText,
-              keyboardType: keyboardType,
+              keyboardType: multiline
+                  ? TextInputType.multiline
+                  : keyboardType,
+              minLines: multiline ? 3 : 1,
+              maxLines: maxLines ?? (multiline ? 6 : 1),
               style: context.typography.body.copyWith(color: colors.text100),
               decoration: InputDecoration(
                 hintText: placeholder,

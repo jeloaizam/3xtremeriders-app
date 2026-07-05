@@ -3,18 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../../core/network/api_config.dart';
+import '../../../core/network/api_exception.dart';
 import '../domain/rider.dart';
-
-/// Thrown when the backend rejects an /auth request (bad token, validation, etc).
-class AuthApiException implements Exception {
-  AuthApiException(this.statusCode, this.body);
-
-  final int statusCode;
-  final String body;
-
-  @override
-  String toString() => 'AuthApiException($statusCode): $body';
-}
 
 /// Talks to the backend's `/auth` endpoints (`app/routers/auth.py`).
 class AuthApi {
@@ -44,7 +34,7 @@ class AuthApi {
       }),
     );
     if (response.statusCode != 200) {
-      throw AuthApiException(response.statusCode, response.body);
+      throw ApiException(response.statusCode, response.body);
     }
     return Rider.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
@@ -55,7 +45,7 @@ class AuthApi {
       headers: {'Authorization': 'Bearer $idToken'},
     );
     if (response.statusCode != 200) {
-      throw AuthApiException(response.statusCode, response.body);
+      throw ApiException(response.statusCode, response.body);
     }
     return Rider.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -137,7 +138,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             onPressed: _onMyLocationTap,
                           ),
                           const SizedBox(width: 10),
-                          const AppAvatar(initial: 'M'),
+                          GestureDetector(
+                            onTap: () => context.push('/settings'),
+                            child: const AppAvatar(initial: 'M'),
+                          ),
                         ],
                       ),
                     ],
@@ -169,7 +173,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: context.spacing.navHeight + 14,
+            bottom: context.spacing.navHeight +
+                14 +
+                MediaQuery.of(context).padding.bottom,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -234,7 +240,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     label: l10n.navSettings.toUpperCase(),
                   ),
                 ],
-                onSelect: (_) => _showComingSoon(),
+                onSelect: (id) {
+                  if (id == 'ajustes') {
+                    context.push('/settings');
+                  } else {
+                    _showComingSoon();
+                  }
+                },
               ),
             ),
           ),

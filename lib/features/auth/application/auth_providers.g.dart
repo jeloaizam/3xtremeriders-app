@@ -242,7 +242,7 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'a811b994fa78bbcc1ab44af6d71cc34cffebbdfe';
+String _$currentRiderHash() => r'8e2b999bb43837b9ebc04825b20732545e7d3d04';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the

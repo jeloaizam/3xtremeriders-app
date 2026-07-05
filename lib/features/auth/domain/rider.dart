@@ -17,6 +17,7 @@ abstract class Rider with _$Rider {
     @JsonKey(name: 'icon_image') String? iconImage,
     String? bio,
     String? city,
+    @JsonKey(name: 'country_id') int? countryId,
     @JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,
     @JsonKey(name: 'reputation_pts') required int reputationPts,
     @JsonKey(name: 'created_date') required DateTime createdDate,
