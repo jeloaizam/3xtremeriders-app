@@ -39,7 +39,13 @@ bool isAuthenticated(Ref ref) {
 /// POST /auth/sync. For an already-registered rider the backend ignores the
 /// placeholder profile fields and just returns the stored profile — real
 /// values are only needed the first time a given firebase_uid signs in.
-@riverpod
+///
+/// keepAlive: this must survive even when no screen is actively watching it
+/// (e.g. between Home and Settings), otherwise a rider who never opens
+/// Settings never gets synced — and anything that calls an authenticated
+/// endpoint (Spot ratings, likes) gets a 401 "Rider no registrado" even
+/// though they're validly signed in with Firebase.
+@Riverpod(keepAlive: true)
 class CurrentRider extends _$CurrentRider {
   @override
   Future<Rider?> build() async {

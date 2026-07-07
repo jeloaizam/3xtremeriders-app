@@ -51,6 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeNearYou => 'NEAR YOU';
 
   @override
+  String get homeSheetViewSpot => 'VIEW SPOT';
+
+  @override
   String get navHome => 'Home';
 
   @override
@@ -127,4 +130,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsLogout => 'Log out';
+
+  @override
+  String get spotCreatedBy => 'Created by';
+
+  @override
+  String get spotDifficulty => 'Difficulty';
+
+  @override
+  String spotRatingsCount(int count) {
+    return '$count ratings';
+  }
+
+  @override
+  String get spotSeason => 'Season';
+
+  @override
+  String get spotSchedule => 'SCHEDULE';
+
+  @override
+  String get spotDescription => 'DESCRIPTION';
+
+  @override
+  String spotElementsTitle(int count) {
+    return 'ELEMENTS · $count';
+  }
+
+  @override
+  String get spotNoElements => 'No elements reported yet';
+
+  @override
+  String spotHazardRatingsCount(int count) {
+    return '$count hazard ratings';
+  }
+
+  @override
+  String spotHazardsTitle(int count) {
+    return 'HAZARDS · $count';
+  }
+
+  @override
+  String get spotNoHazards => 'No hazards reported';
+
+  @override
+  String spotCommentsTitle(int count) {
+    return 'COMMENTS · $count';
+  }
+
+  @override
+  String get spotNoComments => 'No comments yet';
+
+  @override
+  String get spotCommentPlaceholder => 'Write a comment…';
+
+  @override
+  String get spotVote => 'VOTE';
+
+  @override
+  String get spotNoMedia => 'No photos yet';
+
+  @override
+  String get spotNoVideos => 'No videos yet';
+
+  @override
+  String get spotMediaVideoTab => 'VIDEO';
+
+  @override
+  String get spotMediaPhotoTab => 'PHOTOS';
+
+  @override
+  String get spotMediaMore => 'MORE';
+
+  @override
+  String get spotBack => 'Back';
 }

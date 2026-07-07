@@ -32,6 +32,7 @@
   },
   "homeSearchPlaceholder": "Buscar spots, riders…",
   "homeNearYou": "CERCA DE TI",
+  "homeSheetViewSpot": "VER SPOT",
   "navHome": "Inicio",
   "navSearch": "Buscar",
   "navMenu": "Menú",
@@ -57,5 +58,56 @@
   "settingsReputationLabel": "Reputación",
   "settingsLanguageSection": "Idioma",
   "settingsFollowDevice": "Seguir idioma del dispositivo",
-  "settingsLogout": "Cerrar sesión"
+  "settingsLogout": "Cerrar sesión",
+  "spotCreatedBy": "Creado por",
+  "spotDifficulty": "Dificultad",
+  "spotRatingsCount": "{count} calificaciones",
+  "@spotRatingsCount": {
+    "description": "Cantidad de calificaciones en estrellas de un spot",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotSeason": "Temporada",
+  "spotSchedule": "HORARIOS",
+  "spotDescription": "DESCRIPCIÓN",
+  "spotElementsTitle": "ELEMENTOS · {count}",
+  "@spotElementsTitle": {
+    "description": "Título de la sección de elementos del spot con la cantidad",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotNoElements": "Sin elementos reportados todavía",
+  "spotHazardRatingsCount": "{count} calificaciones de peligro",
+  "@spotHazardRatingsCount": {
+    "description": "Cantidad de calificaciones de peligro (muletas) de un spot",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotHazardsTitle": "PELIGROS · {count}",
+  "@spotHazardsTitle": {
+    "description": "Título de la sección de peligros del spot con la cantidad",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotNoHazards": "Sin peligros reportados",
+  "spotCommentsTitle": "COMENTARIOS · {count}",
+  "@spotCommentsTitle": {
+    "description": "Título de la sección de comentarios con la cantidad",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotNoComments": "Sin comentarios todavía",
+  "spotCommentPlaceholder": "Escribe un comentario…",
+  "spotVote": "VOTAR",
+  "spotNoMedia": "Sin fotos todavía",
+  "spotNoVideos": "Sin videos todavía",
+  "spotMediaVideoTab": "VIDEO",
+  "spotMediaPhotoTab": "FOTOS",
+  "spotMediaMore": "MÁS",
+  "spotBack": "Regresar"
 }

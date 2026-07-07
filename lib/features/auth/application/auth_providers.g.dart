@@ -209,6 +209,12 @@ String _$isAuthenticatedHash() => r'7e4b76e019a785102d684103bb31a7554dde248f';
 /// POST /auth/sync. For an already-registered rider the backend ignores the
 /// placeholder profile fields and just returns the stored profile — real
 /// values are only needed the first time a given firebase_uid signs in.
+///
+/// keepAlive: this must survive even when no screen is actively watching it
+/// (e.g. between Home and Settings), otherwise a rider who never opens
+/// Settings never gets synced — and anything that calls an authenticated
+/// endpoint (Spot ratings, likes) gets a 401 "Rider no registrado" even
+/// though they're validly signed in with Firebase.
 
 @ProviderFor(CurrentRider)
 final currentRiderProvider = CurrentRiderProvider._();
@@ -217,19 +223,31 @@ final currentRiderProvider = CurrentRiderProvider._();
 /// POST /auth/sync. For an already-registered rider the backend ignores the
 /// placeholder profile fields and just returns the stored profile — real
 /// values are only needed the first time a given firebase_uid signs in.
+///
+/// keepAlive: this must survive even when no screen is actively watching it
+/// (e.g. between Home and Settings), otherwise a rider who never opens
+/// Settings never gets synced — and anything that calls an authenticated
+/// endpoint (Spot ratings, likes) gets a 401 "Rider no registrado" even
+/// though they're validly signed in with Firebase.
 final class CurrentRiderProvider
     extends $AsyncNotifierProvider<CurrentRider, Rider?> {
   /// The backend Rider profile for the current Firebase user, synced via
   /// POST /auth/sync. For an already-registered rider the backend ignores the
   /// placeholder profile fields and just returns the stored profile — real
   /// values are only needed the first time a given firebase_uid signs in.
+  ///
+  /// keepAlive: this must survive even when no screen is actively watching it
+  /// (e.g. between Home and Settings), otherwise a rider who never opens
+  /// Settings never gets synced — and anything that calls an authenticated
+  /// endpoint (Spot ratings, likes) gets a 401 "Rider no registrado" even
+  /// though they're validly signed in with Firebase.
   CurrentRiderProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'currentRiderProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -242,12 +260,18 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'8e2b999bb43837b9ebc04825b20732545e7d3d04';
+String _$currentRiderHash() => r'4a95965b103735d122ed280ce459366b546e8dc9';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the
 /// placeholder profile fields and just returns the stored profile — real
 /// values are only needed the first time a given firebase_uid signs in.
+///
+/// keepAlive: this must survive even when no screen is actively watching it
+/// (e.g. between Home and Settings), otherwise a rider who never opens
+/// Settings never gets synced — and anything that calls an authenticated
+/// endpoint (Spot ratings, likes) gets a 401 "Rider no registrado" even
+/// though they're validly signed in with Firebase.
 
 abstract class _$CurrentRider extends $AsyncNotifier<Rider?> {
   FutureOr<Rider?> build();

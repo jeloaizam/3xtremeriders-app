@@ -178,6 +178,12 @@ abstract class AppLocalizations {
   /// **'CERCA DE TI'**
   String get homeNearYou;
 
+  /// No description provided for @homeSheetViewSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'VER SPOT'**
+  String get homeSheetViewSpot;
+
   /// No description provided for @navHome.
   ///
   /// In es, this message translates to:
@@ -333,6 +339,132 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cerrar sesión'**
   String get settingsLogout;
+
+  /// No description provided for @spotCreatedBy.
+  ///
+  /// In es, this message translates to:
+  /// **'Creado por'**
+  String get spotCreatedBy;
+
+  /// No description provided for @spotDifficulty.
+  ///
+  /// In es, this message translates to:
+  /// **'Dificultad'**
+  String get spotDifficulty;
+
+  /// Cantidad de calificaciones en estrellas de un spot
+  ///
+  /// In es, this message translates to:
+  /// **'{count} calificaciones'**
+  String spotRatingsCount(int count);
+
+  /// No description provided for @spotSeason.
+  ///
+  /// In es, this message translates to:
+  /// **'Temporada'**
+  String get spotSeason;
+
+  /// No description provided for @spotSchedule.
+  ///
+  /// In es, this message translates to:
+  /// **'HORARIOS'**
+  String get spotSchedule;
+
+  /// No description provided for @spotDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'DESCRIPCIÓN'**
+  String get spotDescription;
+
+  /// Título de la sección de elementos del spot con la cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'ELEMENTOS · {count}'**
+  String spotElementsTitle(int count);
+
+  /// No description provided for @spotNoElements.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin elementos reportados todavía'**
+  String get spotNoElements;
+
+  /// Cantidad de calificaciones de peligro (muletas) de un spot
+  ///
+  /// In es, this message translates to:
+  /// **'{count} calificaciones de peligro'**
+  String spotHazardRatingsCount(int count);
+
+  /// Título de la sección de peligros del spot con la cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'PELIGROS · {count}'**
+  String spotHazardsTitle(int count);
+
+  /// No description provided for @spotNoHazards.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin peligros reportados'**
+  String get spotNoHazards;
+
+  /// Título de la sección de comentarios con la cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'COMENTARIOS · {count}'**
+  String spotCommentsTitle(int count);
+
+  /// No description provided for @spotNoComments.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin comentarios todavía'**
+  String get spotNoComments;
+
+  /// No description provided for @spotCommentPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un comentario…'**
+  String get spotCommentPlaceholder;
+
+  /// No description provided for @spotVote.
+  ///
+  /// In es, this message translates to:
+  /// **'VOTAR'**
+  String get spotVote;
+
+  /// No description provided for @spotNoMedia.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin fotos todavía'**
+  String get spotNoMedia;
+
+  /// No description provided for @spotNoVideos.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin videos todavía'**
+  String get spotNoVideos;
+
+  /// No description provided for @spotMediaVideoTab.
+  ///
+  /// In es, this message translates to:
+  /// **'VIDEO'**
+  String get spotMediaVideoTab;
+
+  /// No description provided for @spotMediaPhotoTab.
+  ///
+  /// In es, this message translates to:
+  /// **'FOTOS'**
+  String get spotMediaPhotoTab;
+
+  /// No description provided for @spotMediaMore.
+  ///
+  /// In es, this message translates to:
+  /// **'MÁS'**
+  String get spotMediaMore;
+
+  /// No description provided for @spotBack.
+  ///
+  /// In es, this message translates to:
+  /// **'Regresar'**
+  String get spotBack;
 }
 
 class _AppLocalizationsDelegate

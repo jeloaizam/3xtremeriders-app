@@ -8,10 +8,13 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_bottom_nav.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../../auth/application/auth_providers.dart';
 import '../../../spots/application/spots_providers.dart';
+import '../../../spots/domain/spot.dart';
 import '../../../spots/presentation/widgets/spot_card.dart';
 
 /// Mirrors `ui_kits/mobile/HomeScreen.jsx` from the design project, with a
@@ -25,12 +28,15 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   MapboxMap? _mapboxMap;
+  Spot? _selectedSpot;
+  final Map<String, Spot> _spotByAnnotationId = {};
 
   static final _bogotaCenter = Point(coordinates: Position(-74.0721, 4.7110));
 
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
     final pinBorderColor = context.colors.bg850.toARGB32();
+    final pinColor = context.colors.colorBrand.toARGB32();
 
     await mapboxMap.setCamera(
       CameraOptions(center: _bogotaCenter, zoom: 12.5),
@@ -38,20 +44,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final manager = await mapboxMap.annotations.createCircleAnnotationManager();
 
-    final spots = ref.read(nearbySpotsProvider);
+    final spots = await ref.read(nearbySpotsProvider.future);
     final options = [
       for (final spot in spots)
         CircleAnnotationOptions(
-          geometry: Point(coordinates: Position(spot.lng, spot.lat)),
+          geometry: Point(coordinates: Position(spot.longitude, spot.latitude)),
           circleRadius: 9,
-          circleColor: spot.pinColor.toARGB32(),
+          circleColor: pinColor,
           circleStrokeWidth: 2,
           circleStrokeColor: pinBorderColor,
         ),
     ];
-    await manager.createMulti(options);
+    final created = await manager.createMulti(options);
+    for (var i = 0; i < created.length; i++) {
+      final annotation = created[i];
+      if (annotation != null) _spotByAnnotationId[annotation.id] = spots[i];
+    }
 
-    manager.tapEvents(onTap: (_) => _showComingSoon());
+    manager.tapEvents(onTap: (annotation) {
+      final spot = _spotByAnnotationId[annotation.id];
+      if (spot != null && mounted) setState(() => _selectedSpot = spot);
+    });
   }
 
   Future<void> _onMyLocationTap() async {
@@ -71,9 +84,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Triggers the one-time backend rider sync (POST /auth/sync) as soon as
+    // Home loads, so authenticated calls elsewhere (Spot likes/ratings)
+    // don't 401 just because the rider never visited Settings.
+    ref.watch(currentRiderProvider);
+
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
-    final spots = ref.watch(nearbySpotsProvider);
+    final spotsAsync = ref.watch(nearbySpotsProvider);
 
     return Scaffold(
       body: Stack(
@@ -148,7 +166,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    l10n.homeActiveSpots(42, 'BOGOTÁ'),
+                    l10n.homeActiveSpots(
+                      spotsAsync.value?.length ?? 0,
+                      'BOGOTÁ',
+                    ),
                     style: context.typography.eyebrow.copyWith(
                       color: colors.textMuted,
                     ),
@@ -190,21 +211,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 SizedBox(
                   height: 96,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: spots.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) {
-                      final spot = spots[index];
-                      return SizedBox(
-                        width: 200,
-                        child: SpotCard(
-                          spot: spot,
-                          onTap: _showComingSoon,
-                        ),
-                      );
-                    },
+                  child: spotsAsync.when(
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, _) => Center(child: Text('$error')),
+                    data: (spots) => ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: spots.length,
+                      separatorBuilder: (_, _) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final spot = spots[index];
+                        return SizedBox(
+                          width: 200,
+                          child: SpotCard(
+                            spot: spot,
+                            onTap: () => setState(() => _selectedSpot = spot),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -249,6 +274,209 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 },
               ),
             ),
+          ),
+          if (_selectedSpot != null)
+            _QuickViewSheet(
+              spot: _selectedSpot!,
+              onClose: () => setState(() => _selectedSpot = null),
+              onViewSpot: () {
+                final spot = _selectedSpot!;
+                setState(() => _selectedSpot = null);
+                context.push('/spot/${spot.id}');
+              },
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Quick-info sheet that slides up when a map pin is tapped — mirrors the
+/// `hasSheet`/`sheet` state in `Deportes Extremos App v2.dc.html`. Tapping
+/// "VER SPOT" (or the card itself) goes to the full [SpotScreen]; tapping
+/// the scrim dismisses it.
+class _QuickViewSheet extends ConsumerWidget {
+  const _QuickViewSheet({
+    required this.spot,
+    required this.onClose,
+    required this.onViewSpot,
+  });
+
+  final Spot spot;
+  final VoidCallback onClose;
+  final VoidCallback onViewSpot;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
+    final sports = ref.watch(spotSportsProvider(spot.id)).value ?? const [];
+    final elementCount = ref.watch(spotElementsProvider(spot.id)).value?.length ?? 0;
+
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: onClose,
+            child: Container(color: Colors.black.withValues(alpha: .5)),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: context.spacing.navHeight + MediaQuery.of(context).padding.bottom,
+          child: GestureDetector(
+            onTap: onViewSpot,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(18, 12, 18, 22),
+              decoration: BoxDecoration(
+                color: colors.surfaceCard,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+                border: Border(top: BorderSide(color: colors.hairline)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: colors.hairlineStrong,
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 110,
+                      child: spot.coverPhotoUrl != null
+                          ? Image.network(spot.coverPhotoUrl!, fit: BoxFit.cover)
+                          : Container(
+                              color: colors.surfaceMedia,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                spot.coverVideoUrl != null
+                                    ? Symbols.play_circle
+                                    : Symbols.image,
+                                size: 30,
+                                color: colors.text700,
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              spot.name,
+                              style: context.typography.title.copyWith(
+                                fontSize: 20,
+                                height: 1,
+                              ),
+                            ),
+                            if (sports.isNotEmpty) ...[
+                              const SizedBox(height: 5),
+                              Text(
+                                sports.map((s) => s.name).join(' · '),
+                                style: context.typography.meta,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      Icon(Symbols.chevron_right, size: 22, color: colors.text700),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _SheetChip(
+                        icon: Symbols.star,
+                        label: spot.ratingAvg?.toStringAsFixed(1) ?? '—',
+                        color: colors.colorRating,
+                      ),
+                      if (spot.difficulty != null)
+                        _SheetChip(
+                          icon: Symbols.signal_cellular_alt,
+                          label: '${spot.difficulty}/5',
+                          color: colors.colorInfo,
+                        ),
+                      if (spot.hazardCount > 0)
+                        _SheetChip(
+                          icon: Symbols.personal_injury,
+                          label: spot.hazardAvg!.toStringAsFixed(1),
+                          color: colors.colorWarn,
+                        ),
+                      if (elementCount > 0)
+                        _SheetChip(
+                          icon: Symbols.construction,
+                          label: '$elementCount',
+                          color: colors.colorBrand,
+                        ),
+                      if (spot.neighborhood != null)
+                        _SheetChip(
+                          icon: Symbols.location_on,
+                          label: spot.neighborhood!,
+                          color: colors.blue500,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      label: l10n.homeSheetViewSpot,
+                      onPressed: onViewSpot,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SheetChip extends StatelessWidget {
+  const _SheetChip({required this.icon, required this.label, required this.color});
+
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .14),
+        borderRadius: BorderRadius.circular(7),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: context.typography.tag.copyWith(color: color),
           ),
         ],
       ),

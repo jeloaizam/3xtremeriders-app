@@ -11,6 +11,17 @@ part 'rider_api.g.dart';
 
 /// Talks to the backend's `/riders` endpoints (`app/routers/rider.py`).
 class RiderApi {
+  /// Fetches a rider's public profile by id — no auth required.
+  Future<Rider> get(int riderId) async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/riders/$riderId'),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Rider.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
   /// Updates the caller's own profile fields. Mirrors `RiderUpdate` — only
   /// non-null fields are sent, matching the backend's partial-update schema.
   Future<Rider> update({
