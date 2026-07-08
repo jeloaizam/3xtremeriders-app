@@ -51,6 +51,53 @@ final class NearbySpotsProvider
 
 String _$nearbySpotsHash() => r'4b54ada159cfd154fda1571f8b6714e8e3196afd';
 
+/// The full sport catalog (not scoped to a spot) — used by the "create
+/// spot" screen's sport picker.
+
+@ProviderFor(allSports)
+final allSportsProvider = AllSportsProvider._();
+
+/// The full sport catalog (not scoped to a spot) — used by the "create
+/// spot" screen's sport picker.
+
+final class AllSportsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Sport>>,
+          List<Sport>,
+          FutureOr<List<Sport>>
+        >
+    with $FutureModifier<List<Sport>>, $FutureProvider<List<Sport>> {
+  /// The full sport catalog (not scoped to a spot) — used by the "create
+  /// spot" screen's sport picker.
+  AllSportsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'allSportsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$allSportsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Sport>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Sport>> create(Ref ref) {
+    return allSports(ref);
+  }
+}
+
+String _$allSportsHash() => r'082e57463780b421add94881b9e0a3f280fd82e3';
+
 /// A spot's sports, fetched from `GET /spots/{id}/sports` — cached per
 /// spotId so Home's list and the Spot detail screen share one fetch.
 ///
@@ -531,6 +578,189 @@ final class SpotVideosFamily extends $Family
 
   @override
   String toString() => r'spotVideosProvider';
+}
+
+/// Whether the signed-in rider has already voted each of a spot's photos,
+/// keyed by photo id — drives the filled/outline heart on each media tile.
+/// One `/votes/check` call per photo (N+1, acceptable given spots only have
+/// a handful of photos).
+
+@ProviderFor(spotPhotoVotes)
+final spotPhotoVotesProvider = SpotPhotoVotesFamily._();
+
+/// Whether the signed-in rider has already voted each of a spot's photos,
+/// keyed by photo id — drives the filled/outline heart on each media tile.
+/// One `/votes/check` call per photo (N+1, acceptable given spots only have
+/// a handful of photos).
+
+final class SpotPhotoVotesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<int, bool>>,
+          Map<int, bool>,
+          FutureOr<Map<int, bool>>
+        >
+    with $FutureModifier<Map<int, bool>>, $FutureProvider<Map<int, bool>> {
+  /// Whether the signed-in rider has already voted each of a spot's photos,
+  /// keyed by photo id — drives the filled/outline heart on each media tile.
+  /// One `/votes/check` call per photo (N+1, acceptable given spots only have
+  /// a handful of photos).
+  SpotPhotoVotesProvider._({
+    required SpotPhotoVotesFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'spotPhotoVotesProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$spotPhotoVotesHash();
+
+  @override
+  String toString() {
+    return r'spotPhotoVotesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Map<int, bool>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<int, bool>> create(Ref ref) {
+    final argument = this.argument as int;
+    return spotPhotoVotes(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SpotPhotoVotesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$spotPhotoVotesHash() => r'c92f1e795b4073e85668312e784f627f9e417500';
+
+/// Whether the signed-in rider has already voted each of a spot's photos,
+/// keyed by photo id — drives the filled/outline heart on each media tile.
+/// One `/votes/check` call per photo (N+1, acceptable given spots only have
+/// a handful of photos).
+
+final class SpotPhotoVotesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Map<int, bool>>, int> {
+  SpotPhotoVotesFamily._()
+    : super(
+        retry: null,
+        name: r'spotPhotoVotesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// Whether the signed-in rider has already voted each of a spot's photos,
+  /// keyed by photo id — drives the filled/outline heart on each media tile.
+  /// One `/votes/check` call per photo (N+1, acceptable given spots only have
+  /// a handful of photos).
+
+  SpotPhotoVotesProvider call(int spotId) =>
+      SpotPhotoVotesProvider._(argument: spotId, from: this);
+
+  @override
+  String toString() => r'spotPhotoVotesProvider';
+}
+
+/// Same as [spotPhotoVotes] but for videos.
+
+@ProviderFor(spotVideoVotes)
+final spotVideoVotesProvider = SpotVideoVotesFamily._();
+
+/// Same as [spotPhotoVotes] but for videos.
+
+final class SpotVideoVotesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<int, bool>>,
+          Map<int, bool>,
+          FutureOr<Map<int, bool>>
+        >
+    with $FutureModifier<Map<int, bool>>, $FutureProvider<Map<int, bool>> {
+  /// Same as [spotPhotoVotes] but for videos.
+  SpotVideoVotesProvider._({
+    required SpotVideoVotesFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'spotVideoVotesProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$spotVideoVotesHash();
+
+  @override
+  String toString() {
+    return r'spotVideoVotesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Map<int, bool>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<int, bool>> create(Ref ref) {
+    final argument = this.argument as int;
+    return spotVideoVotes(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SpotVideoVotesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$spotVideoVotesHash() => r'6155fbcb392e518f8139fcce9b10eb67a5317511';
+
+/// Same as [spotPhotoVotes] but for videos.
+
+final class SpotVideoVotesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Map<int, bool>>, int> {
+  SpotVideoVotesFamily._()
+    : super(
+        retry: null,
+        name: r'spotVideoVotesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// Same as [spotPhotoVotes] but for videos.
+
+  SpotVideoVotesProvider call(int spotId) =>
+      SpotVideoVotesProvider._(argument: spotId, from: this);
+
+  @override
+  String toString() => r'spotVideoVotesProvider';
 }
 
 /// Everything the Spot detail screen needs for one spot, fetched in

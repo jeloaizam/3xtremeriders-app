@@ -203,4 +203,118 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get spotBack => 'Regresar';
+
+  @override
+  String get spotMediaLibraryTitle => 'GALERÍA COMPLETA';
+
+  @override
+  String get createSpotTitle => 'NUEVO SPOT';
+
+  @override
+  String get createSpotNameLabel => 'NOMBRE DEL SPOT';
+
+  @override
+  String get createSpotNamePlaceholder => 'Ej. Bowl del parque…';
+
+  @override
+  String get createSpotSportLabel => 'DEPORTE';
+
+  @override
+  String get createSpotLocationLabel => 'UBICACIÓN';
+
+  @override
+  String get createSpotUseCurrentLocation => 'USAR MI UBICACIÓN ACTUAL';
+
+  @override
+  String get createSpotLocationSet => 'Ubicación fijada ✓';
+
+  @override
+  String get createSpotLocationDenied =>
+      'Necesitamos permiso de ubicación para fijar el spot';
+
+  @override
+  String get createSpotDifficultyLabel => 'DIFICULTAD · 1–5';
+
+  @override
+  String get createSpotSeasonLabel => 'TEMPORADA';
+
+  @override
+  String get createSpotElementsLabel => 'ELEMENTOS DEL SPOT';
+
+  @override
+  String get createSpotHazardsLabel => 'PELIGROS';
+
+  @override
+  String get createSpotAddHazard => 'Añadir peligro (grieta, tráfico, marea…)';
+
+  @override
+  String get createSpotHazardNamePlaceholder => 'Ej. Grieta en el borde norte';
+
+  @override
+  String get createSpotHazardSeverityLabel => 'GRAVEDAD · 1–5';
+
+  @override
+  String get createSpotDescriptionLabel => 'DESCRIPCIÓN';
+
+  @override
+  String get createSpotDescriptionPlaceholder =>
+      'Describe el terreno, superficie, peligros…';
+
+  @override
+  String get createSpotMediaLabel => 'MULTIMEDIA';
+
+  @override
+  String get createSpotUseCamera => 'Tomar foto';
+
+  @override
+  String get createSpotUseGallery => 'Elegir de la galería';
+
+  @override
+  String get createSpotUploadPhoto => 'SUBIR FOTO';
+
+  @override
+  String get createSpotUploadVideo => 'SUBIR VIDEO';
+
+  @override
+  String get createSpotLinkVideo => 'ENLAZAR VIDEO';
+
+  @override
+  String get createSpotVideoUrlPlaceholder => 'https://youtube.com/…';
+
+  @override
+  String get createSpotVideoTooLong =>
+      'El video no puede durar más de 1:30 minutos';
+
+  @override
+  String get createSpotPublish => 'PUBLICAR SPOT';
+
+  @override
+  String get createSpotNameRequired => 'El nombre es obligatorio';
+
+  @override
+  String get createSpotDescriptionRequired => 'La descripción es obligatoria';
+
+  @override
+  String get dialogCancel => 'Cancelar';
+
+  @override
+  String get dialogAdd => 'Agregar';
+
+  @override
+  String get drawerMyProfile => 'MI PERFIL (RIDER)';
+
+  @override
+  String get drawerMyRides => 'MIS RIDES';
+
+  @override
+  String get drawerEvents => 'EVENTOS';
+
+  @override
+  String get drawerCreateSpot => 'CREAR SPOT';
+
+  @override
+  String get drawerCreateEvent => 'CREAR EVENTO';
+
+  @override
+  String get drawerLogout => 'CERRAR SESIÓN';
 }

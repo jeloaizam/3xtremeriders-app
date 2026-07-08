@@ -24,6 +24,26 @@ class SpotPhotoApi {
         .map((json) => SpotPhoto.fromJson(json as Map<String, dynamic>))
         .toList();
   }
+
+  Future<SpotPhoto> create({
+    required int spotId,
+    required String url,
+    String? caption,
+    required String idToken,
+  }) async {
+    final response = await http.post(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/photos'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'url': url, 'caption': ?caption}),
+    );
+    if (response.statusCode != 201) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotPhoto.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
 }
 
 @riverpod

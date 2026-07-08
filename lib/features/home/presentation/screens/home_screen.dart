@@ -13,6 +13,7 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../auth/data/auth_repository.dart';
 import '../../../spots/application/spots_providers.dart';
 import '../../../spots/domain/spot.dart';
 import '../../../spots/presentation/widgets/spot_card.dart';
@@ -28,23 +29,45 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   MapboxMap? _mapboxMap;
+  CircleAnnotationManager? _annotationManager;
   Spot? _selectedSpot;
   final Map<String, Spot> _spotByAnnotationId = {};
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   static final _bogotaCenter = Point(coordinates: Position(-74.0721, 4.7110));
 
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
-    final pinBorderColor = context.colors.bg850.toARGB32();
-    final pinColor = context.colors.colorBrand.toARGB32();
 
     await mapboxMap.setCamera(
       CameraOptions(center: _bogotaCenter, zoom: 12.5),
     );
 
     final manager = await mapboxMap.annotations.createCircleAnnotationManager();
+    _annotationManager = manager;
 
     final spots = await ref.read(nearbySpotsProvider.future);
+    await _refreshAnnotations(spots);
+
+    manager.tapEvents(onTap: (annotation) {
+      final spot = _spotByAnnotationId[annotation.id];
+      if (spot != null && mounted) setState(() => _selectedSpot = spot);
+    });
+  }
+
+  /// Rebuilds the map pins from scratch — called on first load and whenever
+  /// `nearbySpotsProvider` changes (e.g. right after creating a new spot),
+  /// since annotations aren't reactively tied to the provider on their own.
+  Future<void> _refreshAnnotations(List<Spot> spots) async {
+    final manager = _annotationManager;
+    if (manager == null) return;
+
+    await manager.deleteAll();
+    if (!mounted) return;
+    _spotByAnnotationId.clear();
+
+    final pinBorderColor = context.colors.bg850.toARGB32();
+    final pinColor = context.colors.colorBrand.toARGB32();
     final options = [
       for (final spot in spots)
         CircleAnnotationOptions(
@@ -60,11 +83,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final annotation = created[i];
       if (annotation != null) _spotByAnnotationId[annotation.id] = spots[i];
     }
-
-    manager.tapEvents(onTap: (annotation) {
-      final spot = _spotByAnnotationId[annotation.id];
-      if (spot != null && mounted) setState(() => _selectedSpot = spot);
-    });
   }
 
   Future<void> _onMyLocationTap() async {
@@ -89,11 +107,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // don't 401 just because the rider never visited Settings.
     ref.watch(currentRiderProvider);
 
+    // Keeps the map pins in sync whenever the spot list changes (e.g. right
+    // after publishing a new spot) — the annotations themselves are an
+    // imperative one-time side effect in _onMapCreated, not otherwise tied
+    // to this provider.
+    ref.listen(nearbySpotsProvider, (previous, next) {
+      final spots = next.value;
+      if (spots != null) _refreshAnnotations(spots);
+    });
+
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final spotsAsync = ref.watch(nearbySpotsProvider);
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const _AppDrawer(),
       body: Stack(
         children: [
           Positioned.fill(
@@ -268,6 +297,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onSelect: (id) {
                   if (id == 'ajustes') {
                     context.push('/settings');
+                  } else if (id == 'menu') {
+                    _scaffoldKey.currentState?.openDrawer();
                   } else {
                     _showComingSoon();
                   }
@@ -479,6 +510,163 @@ class _SheetChip extends StatelessWidget {
             style: context.typography.tag.copyWith(color: color),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Hamburger drawer — mirrors the slide-in menu in
+/// `Deportes Extremos App v2.dc.html` (profile header + MI PERFIL/MIS
+/// RIDES/EVENTOS/CREAR SPOT/CREAR EVENTO/AJUSTES + logout). Only AJUSTES
+/// and CREAR SPOT are wired to real screens today; the rest are
+/// "coming soon" until those screens exist.
+class _AppDrawer extends ConsumerWidget {
+  const _AppDrawer();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
+    final rider = ref.watch(currentRiderProvider).value;
+
+    void showComingSoon() {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.comingSoon)));
+    }
+
+    return Drawer(
+      backgroundColor: colors.surfaceApp,
+      width: 300,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
+              child: GestureDetector(
+                onTap: showComingSoon,
+                child: Row(
+                  children: [
+                    AppAvatar(
+                      initial: rider != null && rider.nickname.isNotEmpty
+                          ? rider.nickname[0].toUpperCase()
+                          : '?',
+                    ),
+                    const SizedBox(width: 13),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            (rider?.nickname ?? '').toUpperCase(),
+                            style: context.typography.title.copyWith(fontSize: 19),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            rider?.email ?? '',
+                            style: context.typography.micro,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Divider(height: 1, color: colors.hairlineSoft),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                children: [
+                  _DrawerItem(
+                    icon: Symbols.person,
+                    label: l10n.drawerMyProfile,
+                    onTap: showComingSoon,
+                  ),
+                  _DrawerItem(
+                    icon: Symbols.pedal_bike,
+                    label: l10n.drawerMyRides,
+                    onTap: showComingSoon,
+                  ),
+                  _DrawerItem(
+                    icon: Symbols.local_activity,
+                    label: l10n.drawerEvents,
+                    onTap: showComingSoon,
+                  ),
+                  _DrawerItem(
+                    icon: Symbols.add_location_alt,
+                    iconColor: colors.colorAction,
+                    label: l10n.drawerCreateSpot,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      context.push('/spot/new');
+                    },
+                  ),
+                  _DrawerItem(
+                    icon: Symbols.event,
+                    iconColor: colors.colorAction,
+                    label: l10n.drawerCreateEvent,
+                    onTap: showComingSoon,
+                  ),
+                  _DrawerItem(
+                    icon: Symbols.settings,
+                    label: l10n.navSettings.toUpperCase(),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      context.push('/settings');
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Divider(height: 1, color: colors.hairlineSoft),
+            _DrawerItem(
+              icon: Symbols.logout,
+              label: l10n.drawerLogout,
+              onTap: () {
+                Navigator.of(context).pop();
+                ref.read(authRepositoryProvider).signOut();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DrawerItem extends StatelessWidget {
+  const _DrawerItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.iconColor,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final Color? iconColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+        child: Row(
+          children: [
+            Icon(icon, size: 23, color: iconColor ?? colors.colorBrand),
+            const SizedBox(width: 15),
+            Text(label, style: context.typography.title.copyWith(fontSize: 17)),
+          ],
+        ),
       ),
     );
   }

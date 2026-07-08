@@ -203,4 +203,118 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get spotBack => 'Back';
+
+  @override
+  String get spotMediaLibraryTitle => 'FULL GALLERY';
+
+  @override
+  String get createSpotTitle => 'NEW SPOT';
+
+  @override
+  String get createSpotNameLabel => 'SPOT NAME';
+
+  @override
+  String get createSpotNamePlaceholder => 'E.g. Park bowl…';
+
+  @override
+  String get createSpotSportLabel => 'SPORT';
+
+  @override
+  String get createSpotLocationLabel => 'LOCATION';
+
+  @override
+  String get createSpotUseCurrentLocation => 'USE MY CURRENT LOCATION';
+
+  @override
+  String get createSpotLocationSet => 'Location set ✓';
+
+  @override
+  String get createSpotLocationDenied =>
+      'We need location permission to set the spot';
+
+  @override
+  String get createSpotDifficultyLabel => 'DIFFICULTY · 1–5';
+
+  @override
+  String get createSpotSeasonLabel => 'SEASON';
+
+  @override
+  String get createSpotElementsLabel => 'SPOT ELEMENTS';
+
+  @override
+  String get createSpotHazardsLabel => 'HAZARDS';
+
+  @override
+  String get createSpotAddHazard => 'Add hazard (crack, traffic, tide…)';
+
+  @override
+  String get createSpotHazardNamePlaceholder => 'E.g. Crack on the north edge';
+
+  @override
+  String get createSpotHazardSeverityLabel => 'SEVERITY · 1–5';
+
+  @override
+  String get createSpotDescriptionLabel => 'DESCRIPTION';
+
+  @override
+  String get createSpotDescriptionPlaceholder =>
+      'Describe the terrain, surface, hazards…';
+
+  @override
+  String get createSpotMediaLabel => 'MEDIA';
+
+  @override
+  String get createSpotUseCamera => 'Take photo';
+
+  @override
+  String get createSpotUseGallery => 'Choose from gallery';
+
+  @override
+  String get createSpotUploadPhoto => 'UPLOAD PHOTO';
+
+  @override
+  String get createSpotUploadVideo => 'UPLOAD VIDEO';
+
+  @override
+  String get createSpotLinkVideo => 'LINK VIDEO';
+
+  @override
+  String get createSpotVideoUrlPlaceholder => 'https://youtube.com/…';
+
+  @override
+  String get createSpotVideoTooLong =>
+      'Video can\'t be longer than 1:30 minutes';
+
+  @override
+  String get createSpotPublish => 'PUBLISH SPOT';
+
+  @override
+  String get createSpotNameRequired => 'Name is required';
+
+  @override
+  String get createSpotDescriptionRequired => 'Description is required';
+
+  @override
+  String get dialogCancel => 'Cancel';
+
+  @override
+  String get dialogAdd => 'Add';
+
+  @override
+  String get drawerMyProfile => 'MY PROFILE (RIDER)';
+
+  @override
+  String get drawerMyRides => 'MY RIDES';
+
+  @override
+  String get drawerEvents => 'EVENTS';
+
+  @override
+  String get drawerCreateSpot => 'CREATE SPOT';
+
+  @override
+  String get drawerCreateEvent => 'CREATE EVENT';
+
+  @override
+  String get drawerLogout => 'LOG OUT';
 }

@@ -24,6 +24,26 @@ class SpotVideoApi {
         .map((json) => SpotVideo.fromJson(json as Map<String, dynamic>))
         .toList();
   }
+
+  Future<SpotVideo> create({
+    required int spotId,
+    required String url,
+    String? provider,
+    required String idToken,
+  }) async {
+    final response = await http.post(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/videos'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'url': url, 'provider': ?provider}),
+    );
+    if (response.statusCode != 201) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotVideo.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
 }
 
 @riverpod

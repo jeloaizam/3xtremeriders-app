@@ -5,6 +5,7 @@ import '../../features/auth/application/auth_providers.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/spots/presentation/screens/create_spot_screen.dart';
 import '../../features/spots/presentation/screens/spot_screen.dart';
 import 'go_router_refresh_stream.dart';
 
@@ -32,6 +33,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/spot/new',
+        builder: (context, state) => const CreateSpotScreen(),
       ),
       GoRoute(
         path: '/spot/:id',

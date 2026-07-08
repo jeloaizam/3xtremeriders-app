@@ -22,6 +22,26 @@ class HazzardApi {
     final data = jsonDecode(response.body) as List<dynamic>;
     return data.map((json) => Hazzard.fromJson(json as Map<String, dynamic>)).toList();
   }
+
+  Future<Hazzard> create({
+    required int spotId,
+    required String name,
+    int? severity,
+    required String idToken,
+  }) async {
+    final response = await http.post(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/hazzards'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'name': name, 'severity': ?severity}),
+    );
+    if (response.statusCode != 201) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Hazzard.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
 }
 
 @riverpod

@@ -465,6 +465,228 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Regresar'**
   String get spotBack;
+
+  /// No description provided for @spotMediaLibraryTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'GALERÍA COMPLETA'**
+  String get spotMediaLibraryTitle;
+
+  /// No description provided for @createSpotTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'NUEVO SPOT'**
+  String get createSpotTitle;
+
+  /// No description provided for @createSpotNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'NOMBRE DEL SPOT'**
+  String get createSpotNameLabel;
+
+  /// No description provided for @createSpotNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Bowl del parque…'**
+  String get createSpotNamePlaceholder;
+
+  /// No description provided for @createSpotSportLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DEPORTE'**
+  String get createSpotSportLabel;
+
+  /// No description provided for @createSpotLocationLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'UBICACIÓN'**
+  String get createSpotLocationLabel;
+
+  /// No description provided for @createSpotUseCurrentLocation.
+  ///
+  /// In es, this message translates to:
+  /// **'USAR MI UBICACIÓN ACTUAL'**
+  String get createSpotUseCurrentLocation;
+
+  /// No description provided for @createSpotLocationSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación fijada ✓'**
+  String get createSpotLocationSet;
+
+  /// No description provided for @createSpotLocationDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos permiso de ubicación para fijar el spot'**
+  String get createSpotLocationDenied;
+
+  /// No description provided for @createSpotDifficultyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DIFICULTAD · 1–5'**
+  String get createSpotDifficultyLabel;
+
+  /// No description provided for @createSpotSeasonLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'TEMPORADA'**
+  String get createSpotSeasonLabel;
+
+  /// No description provided for @createSpotElementsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'ELEMENTOS DEL SPOT'**
+  String get createSpotElementsLabel;
+
+  /// No description provided for @createSpotHazardsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'PELIGROS'**
+  String get createSpotHazardsLabel;
+
+  /// No description provided for @createSpotAddHazard.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir peligro (grieta, tráfico, marea…)'**
+  String get createSpotAddHazard;
+
+  /// No description provided for @createSpotHazardNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Grieta en el borde norte'**
+  String get createSpotHazardNamePlaceholder;
+
+  /// No description provided for @createSpotHazardSeverityLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'GRAVEDAD · 1–5'**
+  String get createSpotHazardSeverityLabel;
+
+  /// No description provided for @createSpotDescriptionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DESCRIPCIÓN'**
+  String get createSpotDescriptionLabel;
+
+  /// No description provided for @createSpotDescriptionPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Describe el terreno, superficie, peligros…'**
+  String get createSpotDescriptionPlaceholder;
+
+  /// No description provided for @createSpotMediaLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'MULTIMEDIA'**
+  String get createSpotMediaLabel;
+
+  /// No description provided for @createSpotUseCamera.
+  ///
+  /// In es, this message translates to:
+  /// **'Tomar foto'**
+  String get createSpotUseCamera;
+
+  /// No description provided for @createSpotUseGallery.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir de la galería'**
+  String get createSpotUseGallery;
+
+  /// No description provided for @createSpotUploadPhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'SUBIR FOTO'**
+  String get createSpotUploadPhoto;
+
+  /// No description provided for @createSpotUploadVideo.
+  ///
+  /// In es, this message translates to:
+  /// **'SUBIR VIDEO'**
+  String get createSpotUploadVideo;
+
+  /// No description provided for @createSpotLinkVideo.
+  ///
+  /// In es, this message translates to:
+  /// **'ENLAZAR VIDEO'**
+  String get createSpotLinkVideo;
+
+  /// No description provided for @createSpotVideoUrlPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'https://youtube.com/…'**
+  String get createSpotVideoUrlPlaceholder;
+
+  /// No description provided for @createSpotVideoTooLong.
+  ///
+  /// In es, this message translates to:
+  /// **'El video no puede durar más de 1:30 minutos'**
+  String get createSpotVideoTooLong;
+
+  /// No description provided for @createSpotPublish.
+  ///
+  /// In es, this message translates to:
+  /// **'PUBLICAR SPOT'**
+  String get createSpotPublish;
+
+  /// No description provided for @createSpotNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El nombre es obligatorio'**
+  String get createSpotNameRequired;
+
+  /// No description provided for @createSpotDescriptionRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'La descripción es obligatoria'**
+  String get createSpotDescriptionRequired;
+
+  /// No description provided for @dialogCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get dialogCancel;
+
+  /// No description provided for @dialogAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar'**
+  String get dialogAdd;
+
+  /// No description provided for @drawerMyProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'MI PERFIL (RIDER)'**
+  String get drawerMyProfile;
+
+  /// No description provided for @drawerMyRides.
+  ///
+  /// In es, this message translates to:
+  /// **'MIS RIDES'**
+  String get drawerMyRides;
+
+  /// No description provided for @drawerEvents.
+  ///
+  /// In es, this message translates to:
+  /// **'EVENTOS'**
+  String get drawerEvents;
+
+  /// No description provided for @drawerCreateSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'CREAR SPOT'**
+  String get drawerCreateSpot;
+
+  /// No description provided for @drawerCreateEvent.
+  ///
+  /// In es, this message translates to:
+  /// **'CREAR EVENTO'**
+  String get drawerCreateEvent;
+
+  /// No description provided for @drawerLogout.
+  ///
+  /// In es, this message translates to:
+  /// **'CERRAR SESIÓN'**
+  String get drawerLogout;
 }
 
 class _AppLocalizationsDelegate

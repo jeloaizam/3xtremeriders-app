@@ -9,6 +9,7 @@ import '../data/spot_hazard_rating_api.dart';
 import '../data/spot_photo_api.dart';
 import '../data/spot_rating_api.dart';
 import '../data/spot_video_api.dart';
+import '../data/sport_api.dart';
 import '../data/vote_api.dart';
 import '../domain/hazzard.dart';
 import '../domain/spot.dart';
@@ -24,6 +25,13 @@ part 'spots_providers.g.dart';
 @riverpod
 Future<List<Spot>> nearbySpots(Ref ref) {
   return ref.read(spotApiProvider).list();
+}
+
+/// The full sport catalog (not scoped to a spot) — used by the "create
+/// spot" screen's sport picker.
+@Riverpod(keepAlive: true)
+Future<List<Sport>> allSports(Ref ref) {
+  return ref.read(sportApiProvider).list();
 }
 
 /// A spot's sports, fetched from `GET /spots/{id}/sports` — cached per
@@ -68,6 +76,52 @@ Future<List<SpotVideo>> spotVideos(Ref ref, int spotId) {
   return ref.read(spotVideoApiProvider).listBySpot(spotId);
 }
 
+/// Whether the signed-in rider has already voted each of a spot's photos,
+/// keyed by photo id — drives the filled/outline heart on each media tile.
+/// One `/votes/check` call per photo (N+1, acceptable given spots only have
+/// a handful of photos).
+@Riverpod(keepAlive: true)
+Future<Map<int, bool>> spotPhotoVotes(Ref ref, int spotId) async {
+  final photos = await ref.watch(spotPhotosProvider(spotId).future);
+  return _checkVotes(
+    ref,
+    targetType: 'photo',
+    ids: [for (final p in photos) p.id],
+  );
+}
+
+/// Same as [spotPhotoVotes] but for videos.
+@Riverpod(keepAlive: true)
+Future<Map<int, bool>> spotVideoVotes(Ref ref, int spotId) async {
+  final videos = await ref.watch(spotVideosProvider(spotId).future);
+  return _checkVotes(
+    ref,
+    targetType: 'video',
+    ids: [for (final v in videos) v.id],
+  );
+}
+
+Future<Map<int, bool>> _checkVotes(
+  Ref ref, {
+  required String targetType,
+  required List<int> ids,
+}) async {
+  if (ids.isEmpty) return {};
+
+  final user = ref.read(firebaseAuthProvider).currentUser;
+  final idToken = await user?.getIdToken();
+  if (idToken == null) return {for (final id in ids) id: false};
+
+  final voteApi = ref.read(voteApiProvider);
+  final results = await Future.wait([
+    for (final id in ids)
+      voteApi
+          .check(targetType: targetType, targetId: id, idToken: idToken)
+          .catchError((_) => false),
+  ]);
+  return {for (var i = 0; i < ids.length; i++) ids[i]: results[i]};
+}
+
 /// Everything the Spot detail screen needs for one spot, fetched in
 /// parallel and combined: the spot itself, its sports, hazards, comments
 /// (each resolved to its author), the creator's profile, whether the
@@ -104,18 +158,18 @@ Future<SpotDetailData> spotDetail(Ref ref, int spotId) async {
   final likedFuture = idToken == null
       ? Future.value(false)
       : voteApi
-          .check(targetType: 'spot', targetId: spotId, idToken: idToken)
-          .catchError((_) => false);
+            .check(targetType: 'spot', targetId: spotId, idToken: idToken)
+            .catchError((_) => false);
   final myRatingFuture = idToken == null
       ? Future.value(null)
       : ratingApi
-          .getMine(spotId: spotId, idToken: idToken)
-          .catchError((_) => null);
+            .getMine(spotId: spotId, idToken: idToken)
+            .catchError((_) => null);
   final myHazardRatingFuture = idToken == null
       ? Future.value(null)
       : hazardRatingApi
-          .getMine(spotId: spotId, idToken: idToken)
-          .catchError((_) => null);
+            .getMine(spotId: spotId, idToken: idToken)
+            .catchError((_) => null);
 
   final sports = await sportsFuture;
   final elements = await elementsFuture;
