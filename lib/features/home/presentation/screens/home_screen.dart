@@ -39,9 +39,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
 
-    await mapboxMap.setCamera(
-      CameraOptions(center: _bogotaCenter, zoom: 12.5),
-    );
+    await mapboxMap.setCamera(CameraOptions(center: _bogotaCenter, zoom: 12.5));
 
     final manager = await mapboxMap.annotations.createCircleAnnotationManager();
     _annotationManager = manager;
@@ -49,10 +47,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final spots = await ref.read(nearbySpotsProvider.future);
     await _refreshAnnotations(spots);
 
-    manager.tapEvents(onTap: (annotation) {
-      final spot = _spotByAnnotationId[annotation.id];
-      if (spot != null && mounted) setState(() => _selectedSpot = spot);
-    });
+    manager.tapEvents(
+      onTap: (annotation) {
+        final spot = _spotByAnnotationId[annotation.id];
+        if (spot != null && mounted) setState(() => _selectedSpot = spot);
+      },
+    );
   }
 
   /// Rebuilds the map pins from scratch — called on first load and whenever
@@ -95,9 +95,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _showComingSoon() {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).comingSoon)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).comingSoon)),
+    );
   }
 
   @override
@@ -207,13 +207,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: AppTextField(
-                          icon: Symbols.search,
-                          placeholder: l10n.homeSearchPlaceholder,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => context.push('/search'),
+                          child: IgnorePointer(
+                            child: AppTextField(
+                              icon: Symbols.search,
+                              placeholder: l10n.homeSearchPlaceholder,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 10),
-                      AppIconButton(icon: Symbols.tune, active: true),
+                      AppIconButton(
+                        icon: Symbols.tune,
+                        active: true,
+                        onPressed: () => context.push('/search'),
+                      ),
                     ],
                   ),
                 ],
@@ -223,7 +233,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: context.spacing.navHeight +
+            bottom:
+                context.spacing.navHeight +
                 14 +
                 MediaQuery.of(context).padding.bottom,
             child: Column(
@@ -241,7 +252,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 SizedBox(
                   height: 96,
                   child: spotsAsync.when(
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     error: (error, _) => Center(child: Text('$error')),
                     data: (spots) => ListView.separated(
                       scrollDirection: Axis.horizontal,
@@ -299,6 +311,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     context.push('/settings');
                   } else if (id == 'menu') {
                     _scaffoldKey.currentState?.openDrawer();
+                  } else if (id == 'buscar') {
+                    context.push('/search');
                   } else {
                     _showComingSoon();
                   }
@@ -342,7 +356,8 @@ class _QuickViewSheet extends ConsumerWidget {
     final colors = context.colors;
     final l10n = AppLocalizations.of(context);
     final sports = ref.watch(spotSportsProvider(spot.id)).value ?? const [];
-    final elementCount = ref.watch(spotElementsProvider(spot.id)).value?.length ?? 0;
+    final elementCount =
+        ref.watch(spotElementsProvider(spot.id)).value?.length ?? 0;
 
     return Stack(
       children: [
@@ -355,7 +370,8 @@ class _QuickViewSheet extends ConsumerWidget {
         Positioned(
           left: 0,
           right: 0,
-          bottom: context.spacing.navHeight + MediaQuery.of(context).padding.bottom,
+          bottom:
+              context.spacing.navHeight + MediaQuery.of(context).padding.bottom,
           child: GestureDetector(
             onTap: onViewSpot,
             child: Container(
@@ -389,7 +405,10 @@ class _QuickViewSheet extends ConsumerWidget {
                       width: double.infinity,
                       height: 110,
                       child: spot.coverPhotoUrl != null
-                          ? Image.network(spot.coverPhotoUrl!, fit: BoxFit.cover)
+                          ? Image.network(
+                              spot.coverPhotoUrl!,
+                              fit: BoxFit.cover,
+                            )
                           : Container(
                               color: colors.surfaceMedia,
                               alignment: Alignment.center,
@@ -428,7 +447,11 @@ class _QuickViewSheet extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      Icon(Symbols.chevron_right, size: 22, color: colors.text700),
+                      Icon(
+                        Symbols.chevron_right,
+                        size: 22,
+                        color: colors.text700,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -486,7 +509,11 @@ class _QuickViewSheet extends ConsumerWidget {
 }
 
 class _SheetChip extends StatelessWidget {
-  const _SheetChip({required this.icon, required this.label, required this.color});
+  const _SheetChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
 
   final IconData icon;
   final String label;
@@ -505,10 +532,7 @@ class _SheetChip extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
-          Text(
-            label,
-            style: context.typography.tag.copyWith(color: color),
-          ),
+          Text(label, style: context.typography.tag.copyWith(color: color)),
         ],
       ),
     );
@@ -561,7 +585,9 @@ class _AppDrawer extends ConsumerWidget {
                         children: [
                           Text(
                             (rider?.nickname ?? '').toUpperCase(),
-                            style: context.typography.title.copyWith(fontSize: 19),
+                            style: context.typography.title.copyWith(
+                              fontSize: 19,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -591,7 +617,10 @@ class _AppDrawer extends ConsumerWidget {
                   _DrawerItem(
                     icon: Symbols.pedal_bike,
                     label: l10n.drawerMyRides,
-                    onTap: showComingSoon,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      context.push('/rides');
+                    },
                   ),
                   _DrawerItem(
                     icon: Symbols.local_activity,

@@ -282,8 +282,141 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createSpotVideoUrlPlaceholder => 'https://youtube.com/…';
 
   @override
+  String get searchTitle => 'BÚSQUEDA';
+
+  @override
+  String get searchPlaceholder => 'Nombre, zona o rider…';
+
+  @override
+  String get searchSportLabel => 'DEPORTE';
+
+  @override
+  String get searchDifficultyLabel => 'DIFICULTAD · 1–5';
+
+  @override
+  String get searchDistanceLabel => 'DISTANCIA';
+
+  @override
+  String searchDistanceValue(int km) {
+    return '≤ $km KM';
+  }
+
+  @override
+  String get searchSeasonLabel => 'MEJOR TEMPORADA';
+
+  @override
+  String get searchSeasonAll => 'TODO EL AÑO';
+
+  @override
+  String get searchSeasonDry => 'SECA (NOV–ABR)';
+
+  @override
+  String get searchSeasonRain => 'LLUVIAS';
+
+  @override
+  String get searchHazardLabel => 'NIVEL DE PELIGRO';
+
+  @override
+  String get searchHazardLow => 'BAJO';
+
+  @override
+  String get searchHazardMedium => 'MEDIO';
+
+  @override
+  String get searchHazardHigh => 'ALTO';
+
+  @override
+  String searchResultsCount(int count) {
+    return 'RESULTADOS · $count';
+  }
+
+  @override
+  String get searchNoResults => 'No encontramos resultados con esos filtros';
+
+  @override
+  String get searchTabSpots => 'SPOTS';
+
+  @override
+  String get searchTabRiders => 'RIDERS';
+
+  @override
+  String get searchTabEvents => 'EVENTOS';
+
+  @override
   String get createSpotVideoTooLong =>
       'El video no puede durar más de 1:30 minutos';
+
+  @override
+  String get ridesTitle => 'MIS RIDES';
+
+  @override
+  String get ridesEmpty => 'Todavía no tienes rides';
+
+  @override
+  String get rideStateActive => 'ACTIVO';
+
+  @override
+  String get rideStateOnSale => 'EN VENTA';
+
+  @override
+  String get rideStateWasted => 'DAÑADO';
+
+  @override
+  String get rideStateToGift => 'PARA REGALAR';
+
+  @override
+  String get createRideTitle => 'NUEVO RIDE';
+
+  @override
+  String get createRideNameLabel => 'NOMBRE DEL RIDE';
+
+  @override
+  String get createRideNamePlaceholder => 'Ej. BMX Mongoose…';
+
+  @override
+  String get createRideStateLabel => 'ESTADO';
+
+  @override
+  String get createRideElementsLabel => 'ELEMENTOS';
+
+  @override
+  String get createRideAddElement => 'Agregar elemento';
+
+  @override
+  String get createRideElementNamePlaceholder => 'Ej. Pedales Odyssey…';
+
+  @override
+  String get createRideElementTypePlaceholder =>
+      'Tipo (pedales, manubrio, sillín…)';
+
+  @override
+  String get createRidePublish => 'PUBLICAR RIDE';
+
+  @override
+  String get createRideNameRequired => 'El nombre es obligatorio';
+
+  @override
+  String get createRideConditionLabel => 'CONDICIÓN · 1–5';
+
+  @override
+  String get createRideConditionWorst => 'Muy dañado';
+
+  @override
+  String get createRideConditionBest => 'Como nuevo';
+
+  @override
+  String get createRidePhotoRequired => 'Agrega al menos una foto';
+
+  @override
+  String get createRideCoverHint => 'Toca una foto para elegirla como portada';
+
+  @override
+  String rideElementsTitle(int count) {
+    return 'ELEMENTOS · $count';
+  }
+
+  @override
+  String get rideNoElements => 'Sin elementos agregados todavía';
 
   @override
   String get createSpotPublish => 'PUBLICAR SPOT';

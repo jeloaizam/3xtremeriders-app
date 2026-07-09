@@ -51,6 +51,99 @@ final class NearbySpotsProvider
 
 String _$nearbySpotsHash() => r'4b54ada159cfd154fda1571f8b6714e8e3196afd';
 
+/// Search results for the Search screen's Spots tab, re-fetched from the
+/// backend on every filter change (live filtering, no separate "apply"
+/// step). See [SearchQuery].
+
+@ProviderFor(searchSpots)
+final searchSpotsProvider = SearchSpotsFamily._();
+
+/// Search results for the Search screen's Spots tab, re-fetched from the
+/// backend on every filter change (live filtering, no separate "apply"
+/// step). See [SearchQuery].
+
+final class SearchSpotsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Spot>>,
+          List<Spot>,
+          FutureOr<List<Spot>>
+        >
+    with $FutureModifier<List<Spot>>, $FutureProvider<List<Spot>> {
+  /// Search results for the Search screen's Spots tab, re-fetched from the
+  /// backend on every filter change (live filtering, no separate "apply"
+  /// step). See [SearchQuery].
+  SearchSpotsProvider._({
+    required SearchSpotsFamily super.from,
+    required SearchQuery super.argument,
+  }) : super(
+         retry: null,
+         name: r'searchSpotsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchSpotsHash();
+
+  @override
+  String toString() {
+    return r'searchSpotsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Spot>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Spot>> create(Ref ref) {
+    final argument = this.argument as SearchQuery;
+    return searchSpots(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SearchSpotsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$searchSpotsHash() => r'089db487d2419f1f13b4f9728f6dcd02ce180aee';
+
+/// Search results for the Search screen's Spots tab, re-fetched from the
+/// backend on every filter change (live filtering, no separate "apply"
+/// step). See [SearchQuery].
+
+final class SearchSpotsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<Spot>>, SearchQuery> {
+  SearchSpotsFamily._()
+    : super(
+        retry: null,
+        name: r'searchSpotsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Search results for the Search screen's Spots tab, re-fetched from the
+  /// backend on every filter change (live filtering, no separate "apply"
+  /// step). See [SearchQuery].
+
+  SearchSpotsProvider call(SearchQuery query) =>
+      SearchSpotsProvider._(argument: query, from: this);
+
+  @override
+  String toString() => r'searchSpotsProvider';
+}
+
 /// The full sport catalog (not scoped to a spot) — used by the "create
 /// spot" screen's sport picker.
 

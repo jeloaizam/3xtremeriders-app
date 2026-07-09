@@ -22,6 +22,34 @@ class RiderApi {
     return Rider.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  /// Filtered search backing the Search screen's Riders tab — mirrors
+  /// `GET /riders` query params added in `crud_rider.search`.
+  Future<List<Rider>> search({
+    String? q,
+    List<int> sportIds = const [],
+    int limit = 100,
+  }) async {
+    final params = <String, String>{'limit': '$limit'};
+    if (q != null && q.isNotEmpty) params['q'] = q;
+
+    final query = [
+      for (final entry in params.entries)
+        '${Uri.encodeQueryComponent(entry.key)}=${Uri.encodeQueryComponent(entry.value)}',
+      for (final id in sportIds) 'sport_ids=$id',
+    ].join('&');
+
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/riders/?$query'),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    final data = jsonDecode(response.body) as List<dynamic>;
+    return data
+        .map((json) => Rider.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
   /// Updates the caller's own profile fields. Mirrors `RiderUpdate` — only
   /// non-null fields are sent, matching the backend's partial-update schema.
   Future<Rider> update({

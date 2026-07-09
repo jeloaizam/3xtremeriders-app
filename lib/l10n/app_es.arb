@@ -135,7 +135,67 @@
   "createSpotUploadVideo": "SUBIR VIDEO",
   "createSpotLinkVideo": "ENLAZAR VIDEO",
   "createSpotVideoUrlPlaceholder": "https://youtube.com/…",
+  "searchTitle": "BÚSQUEDA",
+  "searchPlaceholder": "Nombre, zona o rider…",
+  "searchSportLabel": "DEPORTE",
+  "searchDifficultyLabel": "DIFICULTAD · 1–5",
+  "searchDistanceLabel": "DISTANCIA",
+  "searchDistanceValue": "≤ {km} KM",
+  "@searchDistanceValue": {
+    "description": "Valor actual del slider de distancia en la búsqueda",
+    "placeholders": {
+      "km": { "type": "int" }
+    }
+  },
+  "searchSeasonLabel": "MEJOR TEMPORADA",
+  "searchSeasonAll": "TODO EL AÑO",
+  "searchSeasonDry": "SECA (NOV–ABR)",
+  "searchSeasonRain": "LLUVIAS",
+  "searchHazardLabel": "NIVEL DE PELIGRO",
+  "searchHazardLow": "BAJO",
+  "searchHazardMedium": "MEDIO",
+  "searchHazardHigh": "ALTO",
+  "searchResultsCount": "RESULTADOS · {count}",
+  "@searchResultsCount": {
+    "description": "Cantidad de spots que arroja la búsqueda con los filtros actuales",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "searchNoResults": "No encontramos resultados con esos filtros",
+  "searchTabSpots": "SPOTS",
+  "searchTabRiders": "RIDERS",
+  "searchTabEvents": "EVENTOS",
   "createSpotVideoTooLong": "El video no puede durar más de 1:30 minutos",
+  "ridesTitle": "MIS RIDES",
+  "ridesEmpty": "Todavía no tienes rides",
+  "rideStateActive": "ACTIVO",
+  "rideStateOnSale": "EN VENTA",
+  "rideStateWasted": "DAÑADO",
+  "rideStateToGift": "PARA REGALAR",
+  "createRideTitle": "NUEVO RIDE",
+  "createRideNameLabel": "NOMBRE DEL RIDE",
+  "createRideNamePlaceholder": "Ej. BMX Mongoose…",
+  "createRideStateLabel": "ESTADO",
+  "createRideElementsLabel": "ELEMENTOS",
+  "createRideAddElement": "Agregar elemento",
+  "createRideElementNamePlaceholder": "Ej. Pedales Odyssey…",
+  "createRideElementTypePlaceholder": "Tipo (pedales, manubrio, sillín…)",
+  "createRidePublish": "PUBLICAR RIDE",
+  "createRideNameRequired": "El nombre es obligatorio",
+  "createRideConditionLabel": "CONDICIÓN · 1–5",
+  "createRideConditionWorst": "Muy dañado",
+  "createRideConditionBest": "Como nuevo",
+  "createRidePhotoRequired": "Agrega al menos una foto",
+  "createRideCoverHint": "Toca una foto para elegirla como portada",
+  "rideElementsTitle": "ELEMENTOS · {count}",
+  "@rideElementsTitle": {
+    "description": "Título de la sección de elementos del ride con la cantidad",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "rideNoElements": "Sin elementos agregados todavía",
   "createSpotPublish": "PUBLICAR SPOT",
   "createSpotNameRequired": "El nombre es obligatorio",
   "createSpotDescriptionRequired": "La descripción es obligatoria",

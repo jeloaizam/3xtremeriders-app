@@ -616,11 +616,263 @@ abstract class AppLocalizations {
   /// **'https://youtube.com/…'**
   String get createSpotVideoUrlPlaceholder;
 
+  /// No description provided for @searchTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'BÚSQUEDA'**
+  String get searchTitle;
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre, zona o rider…'**
+  String get searchPlaceholder;
+
+  /// No description provided for @searchSportLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DEPORTE'**
+  String get searchSportLabel;
+
+  /// No description provided for @searchDifficultyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DIFICULTAD · 1–5'**
+  String get searchDifficultyLabel;
+
+  /// No description provided for @searchDistanceLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DISTANCIA'**
+  String get searchDistanceLabel;
+
+  /// Valor actual del slider de distancia en la búsqueda
+  ///
+  /// In es, this message translates to:
+  /// **'≤ {km} KM'**
+  String searchDistanceValue(int km);
+
+  /// No description provided for @searchSeasonLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'MEJOR TEMPORADA'**
+  String get searchSeasonLabel;
+
+  /// No description provided for @searchSeasonAll.
+  ///
+  /// In es, this message translates to:
+  /// **'TODO EL AÑO'**
+  String get searchSeasonAll;
+
+  /// No description provided for @searchSeasonDry.
+  ///
+  /// In es, this message translates to:
+  /// **'SECA (NOV–ABR)'**
+  String get searchSeasonDry;
+
+  /// No description provided for @searchSeasonRain.
+  ///
+  /// In es, this message translates to:
+  /// **'LLUVIAS'**
+  String get searchSeasonRain;
+
+  /// No description provided for @searchHazardLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'NIVEL DE PELIGRO'**
+  String get searchHazardLabel;
+
+  /// No description provided for @searchHazardLow.
+  ///
+  /// In es, this message translates to:
+  /// **'BAJO'**
+  String get searchHazardLow;
+
+  /// No description provided for @searchHazardMedium.
+  ///
+  /// In es, this message translates to:
+  /// **'MEDIO'**
+  String get searchHazardMedium;
+
+  /// No description provided for @searchHazardHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'ALTO'**
+  String get searchHazardHigh;
+
+  /// Cantidad de spots que arroja la búsqueda con los filtros actuales
+  ///
+  /// In es, this message translates to:
+  /// **'RESULTADOS · {count}'**
+  String searchResultsCount(int count);
+
+  /// No description provided for @searchNoResults.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos resultados con esos filtros'**
+  String get searchNoResults;
+
+  /// No description provided for @searchTabSpots.
+  ///
+  /// In es, this message translates to:
+  /// **'SPOTS'**
+  String get searchTabSpots;
+
+  /// No description provided for @searchTabRiders.
+  ///
+  /// In es, this message translates to:
+  /// **'RIDERS'**
+  String get searchTabRiders;
+
+  /// No description provided for @searchTabEvents.
+  ///
+  /// In es, this message translates to:
+  /// **'EVENTOS'**
+  String get searchTabEvents;
+
   /// No description provided for @createSpotVideoTooLong.
   ///
   /// In es, this message translates to:
   /// **'El video no puede durar más de 1:30 minutos'**
   String get createSpotVideoTooLong;
+
+  /// No description provided for @ridesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'MIS RIDES'**
+  String get ridesTitle;
+
+  /// No description provided for @ridesEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no tienes rides'**
+  String get ridesEmpty;
+
+  /// No description provided for @rideStateActive.
+  ///
+  /// In es, this message translates to:
+  /// **'ACTIVO'**
+  String get rideStateActive;
+
+  /// No description provided for @rideStateOnSale.
+  ///
+  /// In es, this message translates to:
+  /// **'EN VENTA'**
+  String get rideStateOnSale;
+
+  /// No description provided for @rideStateWasted.
+  ///
+  /// In es, this message translates to:
+  /// **'DAÑADO'**
+  String get rideStateWasted;
+
+  /// No description provided for @rideStateToGift.
+  ///
+  /// In es, this message translates to:
+  /// **'PARA REGALAR'**
+  String get rideStateToGift;
+
+  /// No description provided for @createRideTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'NUEVO RIDE'**
+  String get createRideTitle;
+
+  /// No description provided for @createRideNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'NOMBRE DEL RIDE'**
+  String get createRideNameLabel;
+
+  /// No description provided for @createRideNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. BMX Mongoose…'**
+  String get createRideNamePlaceholder;
+
+  /// No description provided for @createRideStateLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'ESTADO'**
+  String get createRideStateLabel;
+
+  /// No description provided for @createRideElementsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'ELEMENTOS'**
+  String get createRideElementsLabel;
+
+  /// No description provided for @createRideAddElement.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar elemento'**
+  String get createRideAddElement;
+
+  /// No description provided for @createRideElementNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Pedales Odyssey…'**
+  String get createRideElementNamePlaceholder;
+
+  /// No description provided for @createRideElementTypePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo (pedales, manubrio, sillín…)'**
+  String get createRideElementTypePlaceholder;
+
+  /// No description provided for @createRidePublish.
+  ///
+  /// In es, this message translates to:
+  /// **'PUBLICAR RIDE'**
+  String get createRidePublish;
+
+  /// No description provided for @createRideNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El nombre es obligatorio'**
+  String get createRideNameRequired;
+
+  /// No description provided for @createRideConditionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'CONDICIÓN · 1–5'**
+  String get createRideConditionLabel;
+
+  /// No description provided for @createRideConditionWorst.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy dañado'**
+  String get createRideConditionWorst;
+
+  /// No description provided for @createRideConditionBest.
+  ///
+  /// In es, this message translates to:
+  /// **'Como nuevo'**
+  String get createRideConditionBest;
+
+  /// No description provided for @createRidePhotoRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega al menos una foto'**
+  String get createRidePhotoRequired;
+
+  /// No description provided for @createRideCoverHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca una foto para elegirla como portada'**
+  String get createRideCoverHint;
+
+  /// Título de la sección de elementos del ride con la cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'ELEMENTOS · {count}'**
+  String rideElementsTitle(int count);
+
+  /// No description provided for @rideNoElements.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin elementos agregados todavía'**
+  String get rideNoElements;
 
   /// No description provided for @createSpotPublish.
   ///

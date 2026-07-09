@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/search/search_query.dart';
 import '../../auth/application/auth_providers.dart';
 import '../../auth/data/rider_api.dart';
 import '../data/hazzard_api.dart';
@@ -25,6 +26,25 @@ part 'spots_providers.g.dart';
 @riverpod
 Future<List<Spot>> nearbySpots(Ref ref) {
   return ref.read(spotApiProvider).list();
+}
+
+/// Search results for the Search screen's Spots tab, re-fetched from the
+/// backend on every filter change (live filtering, no separate "apply"
+/// step). See [SearchQuery].
+@riverpod
+Future<List<Spot>> searchSpots(Ref ref, SearchQuery query) {
+  return ref
+      .read(spotApiProvider)
+      .search(
+        q: query.q,
+        sportIds: searchQuerySportIds(query.sportIdsKey),
+        difficulty: query.difficulty,
+        bestSeason: query.bestSeason,
+        hazardLevel: query.hazardLevel,
+        lat: query.lat,
+        lng: query.lng,
+        radiusKm: query.radiusKm,
+      );
 }
 
 /// The full sport catalog (not scoped to a spot) — used by the "create
