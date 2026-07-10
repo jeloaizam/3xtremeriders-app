@@ -17,6 +17,7 @@ abstract class Event with _$Event {
     double? longitude,
     @JsonKey(name: 'created_by') required int createdBy,
     @JsonKey(name: 'state_id') int? stateId,
+    @JsonKey(name: 'cover_image_url') String? coverImageUrl,
     @JsonKey(name: 'created_date') required DateTime createdDate,
     @JsonKey(name: 'updated_date') DateTime? updatedDate,
   }) = _Event;

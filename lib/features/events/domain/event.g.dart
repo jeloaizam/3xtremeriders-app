@@ -19,6 +19,7 @@ _Event _$EventFromJson(Map<String, dynamic> json) => _Event(
   longitude: (json['longitude'] as num?)?.toDouble(),
   createdBy: (json['created_by'] as num).toInt(),
   stateId: (json['state_id'] as num?)?.toInt(),
+  coverImageUrl: json['cover_image_url'] as String?,
   createdDate: DateTime.parse(json['created_date'] as String),
   updatedDate: json['updated_date'] == null
       ? null
@@ -36,6 +37,7 @@ Map<String, dynamic> _$EventToJson(_Event instance) => <String, dynamic>{
   'longitude': instance.longitude,
   'created_by': instance.createdBy,
   'state_id': instance.stateId,
+  'cover_image_url': instance.coverImageUrl,
   'created_date': instance.createdDate.toIso8601String(),
   'updated_date': instance.updatedDate?.toIso8601String(),
 };

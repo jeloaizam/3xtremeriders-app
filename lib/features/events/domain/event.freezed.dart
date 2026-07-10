@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Event {
 
- int get id; String get name; String get description;@JsonKey(name: 'start_date') DateTime get startDate;@JsonKey(name: 'end_date') DateTime? get endDate;@JsonKey(name: 'spot_id') int? get spotId; double? get latitude; double? get longitude;@JsonKey(name: 'created_by') int get createdBy;@JsonKey(name: 'state_id') int? get stateId;@JsonKey(name: 'created_date') DateTime get createdDate;@JsonKey(name: 'updated_date') DateTime? get updatedDate;
+ int get id; String get name; String get description;@JsonKey(name: 'start_date') DateTime get startDate;@JsonKey(name: 'end_date') DateTime? get endDate;@JsonKey(name: 'spot_id') int? get spotId; double? get latitude; double? get longitude;@JsonKey(name: 'created_by') int get createdBy;@JsonKey(name: 'state_id') int? get stateId;@JsonKey(name: 'cover_image_url') String? get coverImageUrl;@JsonKey(name: 'created_date') DateTime get createdDate;@JsonKey(name: 'updated_date') DateTime? get updatedDate;
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EventCopyWith<Event> get copyWith => _$EventCopyWithImpl<Event>(this as Event, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Event&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.stateId, stateId) || other.stateId == stateId)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Event&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.stateId, stateId) || other.stateId == stateId)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,startDate,endDate,spotId,latitude,longitude,createdBy,stateId,createdDate,updatedDate);
+int get hashCode => Object.hash(runtimeType,id,name,description,startDate,endDate,spotId,latitude,longitude,createdBy,stateId,coverImageUrl,createdDate,updatedDate);
 
 @override
 String toString() {
-  return 'Event(id: $id, name: $name, description: $description, startDate: $startDate, endDate: $endDate, spotId: $spotId, latitude: $latitude, longitude: $longitude, createdBy: $createdBy, stateId: $stateId, createdDate: $createdDate, updatedDate: $updatedDate)';
+  return 'Event(id: $id, name: $name, description: $description, startDate: $startDate, endDate: $endDate, spotId: $spotId, latitude: $latitude, longitude: $longitude, createdBy: $createdBy, stateId: $stateId, coverImageUrl: $coverImageUrl, createdDate: $createdDate, updatedDate: $updatedDate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $EventCopyWith<$Res>  {
   factory $EventCopyWith(Event value, $Res Function(Event) _then) = _$EventCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String description,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'end_date') DateTime? endDate,@JsonKey(name: 'spot_id') int? spotId, double? latitude, double? longitude,@JsonKey(name: 'created_by') int createdBy,@JsonKey(name: 'state_id') int? stateId,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
+ int id, String name, String description,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'end_date') DateTime? endDate,@JsonKey(name: 'spot_id') int? spotId, double? latitude, double? longitude,@JsonKey(name: 'created_by') int createdBy,@JsonKey(name: 'state_id') int? stateId,@JsonKey(name: 'cover_image_url') String? coverImageUrl,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
 });
 
 
@@ -65,7 +65,7 @@ class _$EventCopyWithImpl<$Res>
 
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? startDate = null,Object? endDate = freezed,Object? spotId = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdBy = null,Object? stateId = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? startDate = null,Object? endDate = freezed,Object? spotId = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdBy = null,Object? stateId = freezed,Object? coverImageUrl = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,8 @@ as int?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cas
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,createdBy: null == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as int,stateId: freezed == stateId ? _self.stateId : stateId // ignore: cast_nullable_to_non_nullable
-as int?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as int?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
+as String?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedDate: freezed == updatedDate ? _self.updatedDate : updatedDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -164,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String description, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'end_date')  DateTime? endDate, @JsonKey(name: 'spot_id')  int? spotId,  double? latitude,  double? longitude, @JsonKey(name: 'created_by')  int createdBy, @JsonKey(name: 'state_id')  int? stateId, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String description, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'end_date')  DateTime? endDate, @JsonKey(name: 'spot_id')  int? spotId,  double? latitude,  double? longitude, @JsonKey(name: 'created_by')  int createdBy, @JsonKey(name: 'state_id')  int? stateId, @JsonKey(name: 'cover_image_url')  String? coverImageUrl, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Event() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endDate,_that.spotId,_that.latitude,_that.longitude,_that.createdBy,_that.stateId,_that.createdDate,_that.updatedDate);case _:
+return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endDate,_that.spotId,_that.latitude,_that.longitude,_that.createdBy,_that.stateId,_that.coverImageUrl,_that.createdDate,_that.updatedDate);case _:
   return orElse();
 
 }
@@ -185,10 +186,10 @@ return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endD
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String description, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'end_date')  DateTime? endDate, @JsonKey(name: 'spot_id')  int? spotId,  double? latitude,  double? longitude, @JsonKey(name: 'created_by')  int createdBy, @JsonKey(name: 'state_id')  int? stateId, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String description, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'end_date')  DateTime? endDate, @JsonKey(name: 'spot_id')  int? spotId,  double? latitude,  double? longitude, @JsonKey(name: 'created_by')  int createdBy, @JsonKey(name: 'state_id')  int? stateId, @JsonKey(name: 'cover_image_url')  String? coverImageUrl, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)  $default,) {final _that = this;
 switch (_that) {
 case _Event():
-return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endDate,_that.spotId,_that.latitude,_that.longitude,_that.createdBy,_that.stateId,_that.createdDate,_that.updatedDate);case _:
+return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endDate,_that.spotId,_that.latitude,_that.longitude,_that.createdBy,_that.stateId,_that.coverImageUrl,_that.createdDate,_that.updatedDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +206,10 @@ return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endD
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String description, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'end_date')  DateTime? endDate, @JsonKey(name: 'spot_id')  int? spotId,  double? latitude,  double? longitude, @JsonKey(name: 'created_by')  int createdBy, @JsonKey(name: 'state_id')  int? stateId, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String description, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'end_date')  DateTime? endDate, @JsonKey(name: 'spot_id')  int? spotId,  double? latitude,  double? longitude, @JsonKey(name: 'created_by')  int createdBy, @JsonKey(name: 'state_id')  int? stateId, @JsonKey(name: 'cover_image_url')  String? coverImageUrl, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,) {final _that = this;
 switch (_that) {
 case _Event() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endDate,_that.spotId,_that.latitude,_that.longitude,_that.createdBy,_that.stateId,_that.createdDate,_that.updatedDate);case _:
+return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endDate,_that.spotId,_that.latitude,_that.longitude,_that.createdBy,_that.stateId,_that.coverImageUrl,_that.createdDate,_that.updatedDate);case _:
   return null;
 
 }
@@ -220,7 +221,7 @@ return $default(_that.id,_that.name,_that.description,_that.startDate,_that.endD
 @JsonSerializable()
 
 class _Event implements Event {
-  const _Event({required this.id, required this.name, required this.description, @JsonKey(name: 'start_date') required this.startDate, @JsonKey(name: 'end_date') this.endDate, @JsonKey(name: 'spot_id') this.spotId, this.latitude, this.longitude, @JsonKey(name: 'created_by') required this.createdBy, @JsonKey(name: 'state_id') this.stateId, @JsonKey(name: 'created_date') required this.createdDate, @JsonKey(name: 'updated_date') this.updatedDate});
+  const _Event({required this.id, required this.name, required this.description, @JsonKey(name: 'start_date') required this.startDate, @JsonKey(name: 'end_date') this.endDate, @JsonKey(name: 'spot_id') this.spotId, this.latitude, this.longitude, @JsonKey(name: 'created_by') required this.createdBy, @JsonKey(name: 'state_id') this.stateId, @JsonKey(name: 'cover_image_url') this.coverImageUrl, @JsonKey(name: 'created_date') required this.createdDate, @JsonKey(name: 'updated_date') this.updatedDate});
   factory _Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
 
 @override final  int id;
@@ -233,6 +234,7 @@ class _Event implements Event {
 @override final  double? longitude;
 @override@JsonKey(name: 'created_by') final  int createdBy;
 @override@JsonKey(name: 'state_id') final  int? stateId;
+@override@JsonKey(name: 'cover_image_url') final  String? coverImageUrl;
 @override@JsonKey(name: 'created_date') final  DateTime createdDate;
 @override@JsonKey(name: 'updated_date') final  DateTime? updatedDate;
 
@@ -249,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Event&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.stateId, stateId) || other.stateId == stateId)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Event&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.stateId, stateId) || other.stateId == stateId)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,startDate,endDate,spotId,latitude,longitude,createdBy,stateId,createdDate,updatedDate);
+int get hashCode => Object.hash(runtimeType,id,name,description,startDate,endDate,spotId,latitude,longitude,createdBy,stateId,coverImageUrl,createdDate,updatedDate);
 
 @override
 String toString() {
-  return 'Event(id: $id, name: $name, description: $description, startDate: $startDate, endDate: $endDate, spotId: $spotId, latitude: $latitude, longitude: $longitude, createdBy: $createdBy, stateId: $stateId, createdDate: $createdDate, updatedDate: $updatedDate)';
+  return 'Event(id: $id, name: $name, description: $description, startDate: $startDate, endDate: $endDate, spotId: $spotId, latitude: $latitude, longitude: $longitude, createdBy: $createdBy, stateId: $stateId, coverImageUrl: $coverImageUrl, createdDate: $createdDate, updatedDate: $updatedDate)';
 }
 
 
@@ -269,7 +271,7 @@ abstract mixin class _$EventCopyWith<$Res> implements $EventCopyWith<$Res> {
   factory _$EventCopyWith(_Event value, $Res Function(_Event) _then) = __$EventCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String description,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'end_date') DateTime? endDate,@JsonKey(name: 'spot_id') int? spotId, double? latitude, double? longitude,@JsonKey(name: 'created_by') int createdBy,@JsonKey(name: 'state_id') int? stateId,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
+ int id, String name, String description,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'end_date') DateTime? endDate,@JsonKey(name: 'spot_id') int? spotId, double? latitude, double? longitude,@JsonKey(name: 'created_by') int createdBy,@JsonKey(name: 'state_id') int? stateId,@JsonKey(name: 'cover_image_url') String? coverImageUrl,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
 });
 
 
@@ -286,7 +288,7 @@ class __$EventCopyWithImpl<$Res>
 
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? startDate = null,Object? endDate = freezed,Object? spotId = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdBy = null,Object? stateId = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? startDate = null,Object? endDate = freezed,Object? spotId = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdBy = null,Object? stateId = freezed,Object? coverImageUrl = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
   return _then(_Event(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -298,7 +300,8 @@ as int?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cas
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,createdBy: null == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as int,stateId: freezed == stateId ? _self.stateId : stateId // ignore: cast_nullable_to_non_nullable
-as int?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as int?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
+as String?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedDate: freezed == updatedDate ? _self.updatedDate : updatedDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
