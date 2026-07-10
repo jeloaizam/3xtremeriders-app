@@ -50,8 +50,10 @@ class RiderApi {
         .toList();
   }
 
-  /// Updates the caller's own profile fields. Mirrors `RiderUpdate` — only
+  /// Updates a rider's profile fields. Mirrors `RiderUpdate` — only
   /// non-null fields are sent, matching the backend's partial-update schema.
+  /// `roleId` is only accepted by the backend when the caller is an admin
+  /// (self-edits of other fields still require being the profile's owner).
   Future<Rider> update({
     required int riderId,
     required String idToken,
@@ -61,6 +63,7 @@ class RiderApi {
     String? bio,
     String? city,
     int? countryId,
+    int? roleId,
   }) async {
     final response = await http.patch(
       Uri.parse('${ApiConfig.baseUrl}/riders/$riderId'),
@@ -75,6 +78,7 @@ class RiderApi {
         'bio': ?bio,
         'city': ?city,
         'country_id': ?countryId,
+        'role_id': ?roleId,
       }),
     );
     if (response.statusCode != 200) {
