@@ -24,7 +24,9 @@ class SpotRatingApi {
       throw ApiException(response.statusCode, response.body);
     }
     if (response.body == 'null') return null;
-    return SpotRating.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return SpotRating.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 
   Future<SpotRating> rate({
@@ -43,7 +45,9 @@ class SpotRatingApi {
     if (response.statusCode != 200) {
       throw ApiException(response.statusCode, response.body);
     }
-    return SpotRating.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return SpotRating.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 }
 

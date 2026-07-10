@@ -412,6 +412,125 @@ class AppLocalizationsFr extends AppLocalizations {
       'Touche une photo pour la définir comme couverture';
 
   @override
+  String riderProfileRidesTitle(int count) {
+    return 'RIDES · $count';
+  }
+
+  @override
+  String get riderProfileNoRides => 'Aucun ride pour l\'instant';
+
+  @override
+  String get riderProfileChangeRoleTitle => 'CHANGER LE RÔLE';
+
+  @override
+  String get riderProfileChangeRoleConfirm =>
+      'Es-tu sûr de vouloir changer le rôle de ce rider ?';
+
+  @override
+  String get eventsTitle => 'ÉVÉNEMENTS';
+
+  @override
+  String get eventsCreate => 'CRÉER';
+
+  @override
+  String get eventsTabUpcoming => 'À VENIR';
+
+  @override
+  String get eventsTabNearby => 'PROCHES';
+
+  @override
+  String get eventsTabGoing => 'J\'Y VAIS';
+
+  @override
+  String get eventsEmpty => 'Aucun événement pour l\'instant';
+
+  @override
+  String get eventStateActive => 'ACTIF';
+
+  @override
+  String get eventStateCancelled => 'ANNULÉ';
+
+  @override
+  String get eventStateHidden => 'MASQUÉ';
+
+  @override
+  String get eventOrganizedBy => 'Organisé par';
+
+  @override
+  String get eventViewSpot => 'Voir le spot →';
+
+  @override
+  String get eventAboutTitle => 'À PROPOS DE L\'ÉVÉNEMENT';
+
+  @override
+  String eventAttendeesTitle(int count) {
+    return 'PARTICIPANTS · $count';
+  }
+
+  @override
+  String eventInterestedCount(int count) {
+    return '$count intéressés';
+  }
+
+  @override
+  String get rsvpGoing => 'J\'Y VAIS';
+
+  @override
+  String get rsvpInterested => 'ÇA M\'INTÉRESSE';
+
+  @override
+  String get rsvpDeclined => 'PAS PARTANT';
+
+  @override
+  String get createEventTitle => 'NOUVEL ÉVÉNEMENT';
+
+  @override
+  String get createEventNameLabel => 'NOM DE L\'ÉVÉNEMENT';
+
+  @override
+  String get createEventNamePlaceholder => 'Ex. Jam de bowl…';
+
+  @override
+  String get createEventStartLabel => 'DÉBUT';
+
+  @override
+  String get createEventEndLabel => 'FIN';
+
+  @override
+  String get createEventEndOptional => 'Facultatif';
+
+  @override
+  String get createEventLocationLabel => 'LIEU';
+
+  @override
+  String get createEventLocationExistingSpot => 'SPOT EXISTANT';
+
+  @override
+  String get createEventLocationOwnPoint => 'POINT LIBRE';
+
+  @override
+  String get createEventPickSpot => 'Choisir un spot…';
+
+  @override
+  String get createEventSportsLabel => 'SPORTS';
+
+  @override
+  String get createEventDescriptionPlaceholder =>
+      'Catégories, prix, quoi apporter…';
+
+  @override
+  String get createEventPublish => 'PUBLIER L\'ÉVÉNEMENT';
+
+  @override
+  String get createEventNameRequired => 'Le nom est obligatoire';
+
+  @override
+  String get createEventStartRequired => 'La date de début est obligatoire';
+
+  @override
+  String get createEventLocationRequired => 'Sélectionne un lieu';
+
+  @override
   String rideElementsTitle(int count) {
     return 'ÉLÉMENTS · $count';
   }
@@ -451,4 +570,73 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get drawerLogout => 'DÉCONNEXION';
+
+  @override
+  String get settingsFavoriteSportsSection => 'Sports favoris';
+
+  @override
+  String get settingsFavoriteSportsHint =>
+      'Choisis jusqu\'à 10 — le premier que tu choisis personnalise le menu du bas';
+
+  @override
+  String get settingsFavoriteSportsMax =>
+      'Tu as déjà 10 sports favoris, enlève-en un pour en ajouter un autre';
+
+  @override
+  String get navSport => 'Sports';
+
+  @override
+  String get searchTabSports => 'SPORTS';
+
+  @override
+  String get sportRankingSection => 'CLASSEMENT';
+
+  @override
+  String get sportTopRidersLabel => 'Meilleurs riders';
+
+  @override
+  String get sportNoRidersYet => 'Personne n\'a encore ce sport en favori';
+
+  @override
+  String get sportTopSpotsLabel => 'Meilleurs spots';
+
+  @override
+  String get sportNoSpotsYet => 'Pas encore de spots notés pour ce sport';
+
+  @override
+  String get sportEventsSection => 'ÉVÉNEMENTS';
+
+  @override
+  String get sportUpcomingEventsLabel => 'À venir';
+
+  @override
+  String get sportPastEventsLabel => 'Passés';
+
+  @override
+  String get sportNoEventsYet => 'Pas encore d\'événements pour ce sport';
+
+  @override
+  String get sportTopMediaSection => 'LES PLUS VOTÉS';
+
+  @override
+  String get sportTopPhotosLabel => 'Photos';
+
+  @override
+  String get sportTopVideosLabel => 'Vidéos';
+
+  @override
+  String get sportNoMediaYet => 'Pas encore de contenu voté pour ce sport';
+
+  @override
+  String get rideEdit => 'Modifier le ride';
+
+  @override
+  String get rideDelete => 'Supprimer le ride';
+
+  @override
+  String get rideDeleteConfirmTitle => 'Supprimer ce ride ?';
+
+  @override
+  String get rideDeleteConfirmBody =>
+      'Cette action est irréversible. Le ride sera supprimé avec ses éléments.';
 }

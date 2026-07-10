@@ -13,9 +13,15 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../auth/application/rider_sports_providers.dart';
 import '../../../auth/data/auth_repository.dart';
+import '../../../auth/domain/rider_sport.dart';
+import '../../../auth/domain/role.dart';
 import '../../../spots/application/spots_providers.dart';
 import '../../../spots/domain/spot.dart';
+import '../../../spots/domain/sport.dart';
+import '../../../spots/presentation/screens/search_screen.dart' show SearchTab;
+import '../../../spots/presentation/sport_visuals.dart';
 import '../../../spots/presentation/widgets/spot_card.dart';
 
 /// Mirrors `ui_kits/mobile/HomeScreen.jsx` from the design project, with a
@@ -119,6 +125,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final spotsAsync = ref.watch(nearbySpotsProvider);
+
+    final rider = ref.watch(currentRiderProvider).value;
+    final riderSports = rider != null
+        ? ref.watch(riderSportsProvider(rider.id)).value ?? const <RiderSport>[]
+        : const <RiderSport>[];
+    final allSports = ref.watch(allSportsProvider).value ?? const <Sport>[];
+
+    RiderSport? topFavorite;
+    for (final rs in riderSports) {
+      if (topFavorite == null || rs.order < topFavorite.order) topFavorite = rs;
+    }
+    Sport? favoriteSport;
+    if (topFavorite != null) {
+      for (final sport in allSports) {
+        if (sport.id == topFavorite.sportId) {
+          favoriteSport = sport;
+          break;
+        }
+      }
+    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -301,6 +327,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     label: l10n.navRide.toUpperCase(),
                   ),
                   AppBottomNavItem(
+                    id: 'sport',
+                    icon: favoriteSport != null
+                        ? SportVisual.of(favoriteSport.name, colors).icon
+                        : Symbols.sports,
+                    label: (favoriteSport?.name ?? l10n.navSport).toUpperCase(),
+                  ),
+                  AppBottomNavItem(
                     id: 'ajustes',
                     icon: Symbols.settings,
                     label: l10n.navSettings.toUpperCase(),
@@ -313,6 +346,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     _scaffoldKey.currentState?.openDrawer();
                   } else if (id == 'buscar') {
                     context.push('/search');
+                  } else if (id == 'ride') {
+                    context.push('/rides');
+                  } else if (id == 'sport') {
+                    if (favoriteSport != null) {
+                      context.push('/sports/${favoriteSport.id}');
+                    } else {
+                      context.push('/search', extra: SearchTab.sports);
+                    }
                   } else {
                     _showComingSoon();
                   }
@@ -570,7 +611,12 @@ class _AppDrawer extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
               child: GestureDetector(
-                onTap: showComingSoon,
+                onTap: rider == null
+                    ? null
+                    : () {
+                        Navigator.of(context).pop();
+                        context.push('/riders/${rider.id}');
+                      },
                 child: Row(
                   children: [
                     AppAvatar(
@@ -612,7 +658,12 @@ class _AppDrawer extends ConsumerWidget {
                   _DrawerItem(
                     icon: Symbols.person,
                     label: l10n.drawerMyProfile,
-                    onTap: showComingSoon,
+                    onTap: rider == null
+                        ? showComingSoon
+                        : () {
+                            Navigator.of(context).pop();
+                            context.push('/riders/${rider.id}');
+                          },
                   ),
                   _DrawerItem(
                     icon: Symbols.pedal_bike,
@@ -625,7 +676,10 @@ class _AppDrawer extends ConsumerWidget {
                   _DrawerItem(
                     icon: Symbols.local_activity,
                     label: l10n.drawerEvents,
-                    onTap: showComingSoon,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      context.push('/events');
+                    },
                   ),
                   _DrawerItem(
                     icon: Symbols.add_location_alt,
@@ -636,12 +690,20 @@ class _AppDrawer extends ConsumerWidget {
                       context.push('/spot/new');
                     },
                   ),
-                  _DrawerItem(
-                    icon: Symbols.event,
-                    iconColor: colors.colorAction,
-                    label: l10n.drawerCreateEvent,
-                    onTap: showComingSoon,
-                  ),
+                  // Events are "official" — only admins can create them
+                  // (enforced server-side too, see require_admin on
+                  // POST /events/), so hide the entry point entirely for
+                  // everyone else rather than showing a disabled item.
+                  if ((rider?.roleId ?? 0) >= roleAdmin)
+                    _DrawerItem(
+                      icon: Symbols.event,
+                      iconColor: colors.colorAction,
+                      label: l10n.drawerCreateEvent,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.push('/events/new');
+                      },
+                    ),
                   _DrawerItem(
                     icon: Symbols.settings,
                     label: l10n.navSettings.toUpperCase(),

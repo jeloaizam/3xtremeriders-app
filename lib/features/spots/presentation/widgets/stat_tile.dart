@@ -23,7 +23,12 @@ class StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final (Color iconColor, Color valueColor, Color background, Color border) = switch (tone) {
+    final (
+      Color iconColor,
+      Color valueColor,
+      Color background,
+      Color border,
+    ) = switch (tone) {
       StatTileTone.neutral => (
         colors.colorInfo,
         colors.text100,

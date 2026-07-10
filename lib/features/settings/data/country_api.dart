@@ -13,7 +13,9 @@ part 'country_api.g.dart';
 /// (`app/routers/country.py`).
 class CountryApi {
   Future<List<Country>> list() async {
-    final response = await http.get(Uri.parse('${ApiConfig.baseUrl}/countries/'));
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/countries/'),
+    );
     if (response.statusCode != 200) {
       throw ApiException(response.statusCode, response.body);
     }

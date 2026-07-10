@@ -42,7 +42,9 @@ class SpotPhotoApi {
     if (response.statusCode != 201) {
       throw ApiException(response.statusCode, response.body);
     }
-    return SpotPhoto.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return SpotPhoto.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 }
 

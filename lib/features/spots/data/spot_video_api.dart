@@ -42,7 +42,9 @@ class SpotVideoApi {
     if (response.statusCode != 201) {
       throw ApiException(response.statusCode, response.body);
     }
-    return SpotVideo.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return SpotVideo.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 }
 

@@ -55,12 +55,9 @@ class CurrentRider extends _$CurrentRider {
     final idToken = await user.getIdToken();
     if (idToken == null) return null;
 
-    return ref.read(authApiProvider).sync(
-      idToken: idToken,
-      name: '',
-      lastName: '',
-      nickname: '',
-    );
+    return ref
+        .read(authApiProvider)
+        .sync(idToken: idToken, name: '', lastName: '', nickname: '');
   }
 
   /// Updates the signed-in rider's profile fields via `PATCH /riders/{id}`
@@ -80,16 +77,18 @@ class CurrentRider extends _$CurrentRider {
     final idToken = await user.getIdToken();
     if (idToken == null) return;
 
-    final updated = await ref.read(riderApiProvider).update(
-      riderId: rider.id,
-      idToken: idToken,
-      name: name,
-      lastName: lastName,
-      nickname: nickname,
-      bio: bio,
-      city: city,
-      countryId: countryId,
-    );
+    final updated = await ref
+        .read(riderApiProvider)
+        .update(
+          riderId: rider.id,
+          idToken: idToken,
+          name: name,
+          lastName: lastName,
+          nickname: nickname,
+          bio: bio,
+          city: city,
+          countryId: countryId,
+        );
     state = AsyncData(updated);
   }
 }

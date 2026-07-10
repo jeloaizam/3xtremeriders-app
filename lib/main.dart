@@ -18,7 +18,9 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        appLocaleProvider.overrideWith(() => _InitialAppLocale(persistedLocale)),
+        appLocaleProvider.overrideWith(
+          () => _InitialAppLocale(persistedLocale),
+        ),
       ],
       child: const XtremeRidersApp(),
     ),

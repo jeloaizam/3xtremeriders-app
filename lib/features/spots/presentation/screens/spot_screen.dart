@@ -196,7 +196,7 @@ class _SpotScreenBody extends StatelessWidget {
                             runSpacing: 7,
                             children: [
                               for (final sport in detail.sports)
-                                _SportChip(name: sport.name),
+                                _SportChip(id: sport.id, name: sport.name),
                             ],
                           ),
                         ],
@@ -234,7 +234,7 @@ class _SpotScreenBody extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               GestureDetector(
-                onTap: onComingSoon,
+                onTap: () => context.push('/riders/${detail.creator.id}'),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 11,
@@ -861,8 +861,9 @@ class MediaTile extends StatelessWidget {
 }
 
 class _SportChip extends StatelessWidget {
-  const _SportChip({required this.name});
+  const _SportChip({required this.id, required this.name});
 
+  final int id;
   final String name;
 
   @override
@@ -870,22 +871,25 @@ class _SportChip extends StatelessWidget {
     final colors = context.colors;
     final visual = SportVisual.of(name, colors);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: visual.color.withValues(alpha: .14),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(visual.icon, size: 14, color: visual.color),
-          const SizedBox(width: 5),
-          Text(
-            name.toUpperCase(),
-            style: context.typography.tag.copyWith(color: visual.color),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => context.push('/sports/$id'),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+        decoration: BoxDecoration(
+          color: visual.color.withValues(alpha: .14),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(visual.icon, size: 14, color: visual.color),
+            const SizedBox(width: 5),
+            Text(
+              name.toUpperCase(),
+              style: context.typography.tag.copyWith(color: visual.color),
+            ),
+          ],
+        ),
       ),
     );
   }

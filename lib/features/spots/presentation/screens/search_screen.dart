@@ -26,14 +26,18 @@ const _seasonAll = 'Todo el año';
 const _seasonDry = 'Temporada seca';
 const _seasonRain = 'Temporada de lluvias';
 
-enum _SearchTab { spots, riders, events }
+enum SearchTab { spots, riders, events, sports }
 
 /// Mirrors the "BÚSQUEDA" (`isSearch`) state of
 /// `Deportes Extremos App v2.dc.html` — every filter re-queries
 /// `GET /spots` live (no separate "apply" step), backed 100% by the
-/// backend's new search filters (see `crud_spot.search`), no mocks.
+/// backend's new search filters (see `crud_spot.search`), no mocks. The
+/// "Deportes" tab (browsing the Sport catalog itself, not filtering by
+/// sport) was added later, alongside the new Sport detail screen.
 class SearchScreen extends ConsumerStatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({super.key, this.initialTab = SearchTab.spots});
+
+  final SearchTab initialTab;
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
@@ -43,7 +47,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _queryController = TextEditingController();
   Timer? _debounce;
   String? _query;
-  _SearchTab _tab = _SearchTab.spots;
+  late SearchTab _tab;
 
   final Set<int> _sportIds = {};
   int? _difficulty;
@@ -56,6 +60,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _tab = widget.initialTab;
     _fetchLocationBestEffort();
     _queryController.addListener(_onQueryChanged);
   }
@@ -105,12 +110,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     });
   }
 
-  void _showComingSoon() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).comingSoon)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -156,11 +155,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 14, 18, 0),
               child: _Segmented(
-                options: _SearchTab.values,
+                options: SearchTab.values,
                 labelOf: (tab) => switch (tab) {
-                  _SearchTab.spots => l10n.searchTabSpots,
-                  _SearchTab.riders => l10n.searchTabRiders,
-                  _SearchTab.events => l10n.searchTabEvents,
+                  SearchTab.spots => l10n.searchTabSpots,
+                  SearchTab.riders => l10n.searchTabRiders,
+                  SearchTab.events => l10n.searchTabEvents,
+                  SearchTab.sports => l10n.searchTabSports,
                 },
                 selected: _tab,
                 onSelect: (tab) => setState(() => _tab = tab),
@@ -170,26 +170,28 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(18, 16, 18, 20),
                 children: [
-                  _SectionLabel(l10n.searchSportLabel),
-                  Wrap(
-                    spacing: 9,
-                    runSpacing: 9,
-                    children: [
-                      for (final sport in allSports)
-                        _FilterChip(
-                          label: sport.name,
-                          icon: SportVisual.of(sport.name, colors).icon,
-                          selected: _sportIds.contains(sport.id),
-                          onTap: () => setState(
-                            () => _sportIds.contains(sport.id)
-                                ? _sportIds.remove(sport.id)
-                                : _sportIds.add(sport.id),
+                  if (_tab != SearchTab.sports) ...[
+                    _SectionLabel(l10n.searchSportLabel),
+                    Wrap(
+                      spacing: 9,
+                      runSpacing: 9,
+                      children: [
+                        for (final sport in allSports)
+                          _FilterChip(
+                            label: sport.name,
+                            icon: SportVisual.of(sport.name, colors).icon,
+                            selected: _sportIds.contains(sport.id),
+                            onTap: () => setState(
+                              () => _sportIds.contains(sport.id)
+                                  ? _sportIds.remove(sport.id)
+                                  : _sportIds.add(sport.id),
+                            ),
                           ),
-                        ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
 
-                  if (_tab == _SearchTab.spots) ...[
+                  if (_tab == SearchTab.spots) ...[
                     _SectionLabel(l10n.searchDifficultyLabel, top: 22),
                     _Segmented(
                       options: const [1, 2, 3, 4, 5],
@@ -280,15 +282,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
                   const SizedBox(height: 22),
                   switch (_tab) {
-                    _SearchTab.spots => _SpotResults(query: query),
-                    _SearchTab.riders => _RiderResults(
-                      query: query,
-                      onComingSoon: _showComingSoon,
-                    ),
-                    _SearchTab.events => _EventResults(
-                      query: query,
-                      onComingSoon: _showComingSoon,
-                    ),
+                    SearchTab.spots => _SpotResults(query: query),
+                    SearchTab.riders => _RiderResults(query: query),
+                    SearchTab.events => _EventResults(query: query),
+                    SearchTab.sports => _SportResults(query: _query),
                   },
                 ],
               ),
@@ -523,33 +520,120 @@ class _SpotResults extends ConsumerWidget {
 }
 
 class _RiderResults extends ConsumerWidget {
-  const _RiderResults({required this.query, required this.onComingSoon});
+  const _RiderResults({required this.query});
 
   final SearchQuery query;
-  final VoidCallback onComingSoon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return _ResultsSection(
       resultsAsync: ref.watch(searchRidersProvider(query)),
-      itemBuilder: (rider) =>
-          _RiderResultRow(rider: rider, onTap: onComingSoon),
+      itemBuilder: (rider) => _RiderResultRow(
+        rider: rider,
+        onTap: () => context.push('/riders/${rider.id}'),
+      ),
     );
   }
 }
 
 class _EventResults extends ConsumerWidget {
-  const _EventResults({required this.query, required this.onComingSoon});
+  const _EventResults({required this.query});
 
   final SearchQuery query;
-  final VoidCallback onComingSoon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return _ResultsSection(
       resultsAsync: ref.watch(searchEventsProvider(query)),
-      itemBuilder: (event) =>
-          _EventResultRow(event: event, onTap: onComingSoon),
+      itemBuilder: (event) => _EventResultRow(
+        event: event,
+        onTap: () => context.push('/events/${event.id}'),
+      ),
+    );
+  }
+}
+
+class _SportResults extends ConsumerWidget {
+  const _SportResults({required this.query});
+
+  final String? query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sportsAsync = ref.watch(allSportsProvider);
+    final filtered = sportsAsync.whenData((sports) {
+      if (query == null || query!.isEmpty) return sports;
+      final q = query!.toLowerCase();
+      return sports.where((s) => s.name.toLowerCase().contains(q)).toList();
+    });
+    return _ResultsSection(
+      resultsAsync: filtered,
+      itemBuilder: (sport) => _SportResultRow(
+        sport: sport,
+        onTap: () => context.push('/sports/${sport.id}'),
+      ),
+    );
+  }
+}
+
+class _SportResultRow extends StatelessWidget {
+  const _SportResultRow({required this.sport, required this.onTap});
+
+  final Sport sport;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final visual = SportVisual.of(sport.name, colors);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(11),
+          decoration: BoxDecoration(
+            color: colors.surfaceCard,
+            border: Border.all(color: colors.hairline),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: visual.color.withValues(alpha: .14),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: Icon(visual.icon, size: 20, color: visual.color),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      sport.name,
+                      style: context.typography.title.copyWith(height: 1),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      sport.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.typography.micro,
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Symbols.chevron_right, size: 20, color: colors.text700),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

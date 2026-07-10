@@ -188,6 +188,61 @@
   "createRideConditionBest": "Como nuevo",
   "createRidePhotoRequired": "Agrega al menos una foto",
   "createRideCoverHint": "Toca una foto para elegirla como portada",
+  "riderProfileRidesTitle": "RIDES · {count}",
+  "@riderProfileRidesTitle": {
+    "description": "Título de la sección de rides en el perfil de un rider",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "riderProfileNoRides": "Sin rides todavía",
+  "riderProfileChangeRoleTitle": "CAMBIAR ROL",
+  "riderProfileChangeRoleConfirm": "¿Seguro que quieres cambiar el rol de este rider?",
+  "eventsTitle": "EVENTOS",
+  "eventsCreate": "CREAR",
+  "eventsTabUpcoming": "PRÓXIMOS",
+  "eventsTabNearby": "CERCA",
+  "eventsTabGoing": "VOY",
+  "eventsEmpty": "No hay eventos por ahora",
+  "eventStateActive": "ACTIVO",
+  "eventStateCancelled": "CANCELADO",
+  "eventStateHidden": "OCULTO",
+  "eventOrganizedBy": "Organiza",
+  "eventViewSpot": "Ver spot →",
+  "eventAboutTitle": "SOBRE EL EVENTO",
+  "eventAttendeesTitle": "ASISTENTES · {count}",
+  "@eventAttendeesTitle": {
+    "description": "Título de la sección de asistentes con la cantidad",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "eventInterestedCount": "{count} interesados",
+  "@eventInterestedCount": {
+    "description": "Cantidad de riders interesados (RSVP status=2) en un evento",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "rsvpGoing": "VOY",
+  "rsvpInterested": "ME INTERESA",
+  "rsvpDeclined": "NO VOY",
+  "createEventTitle": "NUEVO EVENTO",
+  "createEventNameLabel": "NOMBRE DEL EVENTO",
+  "createEventNamePlaceholder": "Ej. Jam de bowl…",
+  "createEventStartLabel": "INICIA",
+  "createEventEndLabel": "TERMINA",
+  "createEventEndOptional": "Opcional",
+  "createEventLocationLabel": "UBICACIÓN",
+  "createEventLocationExistingSpot": "SPOT EXISTENTE",
+  "createEventLocationOwnPoint": "PUNTO PROPIO",
+  "createEventPickSpot": "Elegir spot…",
+  "createEventSportsLabel": "DEPORTES",
+  "createEventDescriptionPlaceholder": "Categorías, premios, qué traer…",
+  "createEventPublish": "PUBLICAR EVENTO",
+  "createEventNameRequired": "El nombre es obligatorio",
+  "createEventStartRequired": "La fecha de inicio es obligatoria",
+  "createEventLocationRequired": "Selecciona una ubicación",
   "rideElementsTitle": "ELEMENTOS · {count}",
   "@rideElementsTitle": {
     "description": "Título de la sección de elementos del ride con la cantidad",
@@ -206,5 +261,27 @@
   "drawerEvents": "EVENTOS",
   "drawerCreateSpot": "CREAR SPOT",
   "drawerCreateEvent": "CREAR EVENTO",
-  "drawerLogout": "CERRAR SESIÓN"
+  "drawerLogout": "CERRAR SESIÓN",
+  "settingsFavoriteSportsSection": "Deportes favoritos",
+  "settingsFavoriteSportsHint": "Elegí hasta 10 — el primero que elijas personaliza el menú de abajo",
+  "settingsFavoriteSportsMax": "Ya tenés 10 deportes favoritos, quita uno para agregar otro",
+  "navSport": "Deportes",
+  "searchTabSports": "DEPORTES",
+  "sportRankingSection": "RANKING",
+  "sportTopRidersLabel": "Top riders",
+  "sportNoRidersYet": "Todavía nadie tiene este deporte como favorito",
+  "sportTopSpotsLabel": "Top spots",
+  "sportNoSpotsYet": "Todavía no hay spots calificados para este deporte",
+  "sportEventsSection": "EVENTOS",
+  "sportUpcomingEventsLabel": "Próximos",
+  "sportPastEventsLabel": "Anteriores",
+  "sportNoEventsYet": "No hay eventos de este deporte todavía",
+  "sportTopMediaSection": "MÁS VOTADOS",
+  "sportTopPhotosLabel": "Fotos",
+  "sportTopVideosLabel": "Videos",
+  "sportNoMediaYet": "Todavía no hay contenido votado para este deporte",
+  "rideEdit": "Editar ride",
+  "rideDelete": "Eliminar ride",
+  "rideDeleteConfirmTitle": "¿Eliminar este ride?",
+  "rideDeleteConfirmBody": "Esta acción no se puede deshacer. El ride se eliminará junto con sus elementos."
 }

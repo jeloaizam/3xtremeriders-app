@@ -47,7 +47,9 @@ class SpotCommentApi {
     if (response.statusCode != 201) {
       throw ApiException(response.statusCode, response.body);
     }
-    return SpotComment.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return SpotComment.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
   }
 }
 

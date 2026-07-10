@@ -862,6 +862,228 @@ abstract class AppLocalizations {
   /// **'Toca una foto para elegirla como portada'**
   String get createRideCoverHint;
 
+  /// Título de la sección de rides en el perfil de un rider
+  ///
+  /// In es, this message translates to:
+  /// **'RIDES · {count}'**
+  String riderProfileRidesTitle(int count);
+
+  /// No description provided for @riderProfileNoRides.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin rides todavía'**
+  String get riderProfileNoRides;
+
+  /// No description provided for @riderProfileChangeRoleTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'CAMBIAR ROL'**
+  String get riderProfileChangeRoleTitle;
+
+  /// No description provided for @riderProfileChangeRoleConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres cambiar el rol de este rider?'**
+  String get riderProfileChangeRoleConfirm;
+
+  /// No description provided for @eventsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'EVENTOS'**
+  String get eventsTitle;
+
+  /// No description provided for @eventsCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'CREAR'**
+  String get eventsCreate;
+
+  /// No description provided for @eventsTabUpcoming.
+  ///
+  /// In es, this message translates to:
+  /// **'PRÓXIMOS'**
+  String get eventsTabUpcoming;
+
+  /// No description provided for @eventsTabNearby.
+  ///
+  /// In es, this message translates to:
+  /// **'CERCA'**
+  String get eventsTabNearby;
+
+  /// No description provided for @eventsTabGoing.
+  ///
+  /// In es, this message translates to:
+  /// **'VOY'**
+  String get eventsTabGoing;
+
+  /// No description provided for @eventsEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay eventos por ahora'**
+  String get eventsEmpty;
+
+  /// No description provided for @eventStateActive.
+  ///
+  /// In es, this message translates to:
+  /// **'ACTIVO'**
+  String get eventStateActive;
+
+  /// No description provided for @eventStateCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'CANCELADO'**
+  String get eventStateCancelled;
+
+  /// No description provided for @eventStateHidden.
+  ///
+  /// In es, this message translates to:
+  /// **'OCULTO'**
+  String get eventStateHidden;
+
+  /// No description provided for @eventOrganizedBy.
+  ///
+  /// In es, this message translates to:
+  /// **'Organiza'**
+  String get eventOrganizedBy;
+
+  /// No description provided for @eventViewSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver spot →'**
+  String get eventViewSpot;
+
+  /// No description provided for @eventAboutTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'SOBRE EL EVENTO'**
+  String get eventAboutTitle;
+
+  /// Título de la sección de asistentes con la cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'ASISTENTES · {count}'**
+  String eventAttendeesTitle(int count);
+
+  /// Cantidad de riders interesados (RSVP status=2) en un evento
+  ///
+  /// In es, this message translates to:
+  /// **'{count} interesados'**
+  String eventInterestedCount(int count);
+
+  /// No description provided for @rsvpGoing.
+  ///
+  /// In es, this message translates to:
+  /// **'VOY'**
+  String get rsvpGoing;
+
+  /// No description provided for @rsvpInterested.
+  ///
+  /// In es, this message translates to:
+  /// **'ME INTERESA'**
+  String get rsvpInterested;
+
+  /// No description provided for @rsvpDeclined.
+  ///
+  /// In es, this message translates to:
+  /// **'NO VOY'**
+  String get rsvpDeclined;
+
+  /// No description provided for @createEventTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'NUEVO EVENTO'**
+  String get createEventTitle;
+
+  /// No description provided for @createEventNameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'NOMBRE DEL EVENTO'**
+  String get createEventNameLabel;
+
+  /// No description provided for @createEventNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Jam de bowl…'**
+  String get createEventNamePlaceholder;
+
+  /// No description provided for @createEventStartLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'INICIA'**
+  String get createEventStartLabel;
+
+  /// No description provided for @createEventEndLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'TERMINA'**
+  String get createEventEndLabel;
+
+  /// No description provided for @createEventEndOptional.
+  ///
+  /// In es, this message translates to:
+  /// **'Opcional'**
+  String get createEventEndOptional;
+
+  /// No description provided for @createEventLocationLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'UBICACIÓN'**
+  String get createEventLocationLabel;
+
+  /// No description provided for @createEventLocationExistingSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'SPOT EXISTENTE'**
+  String get createEventLocationExistingSpot;
+
+  /// No description provided for @createEventLocationOwnPoint.
+  ///
+  /// In es, this message translates to:
+  /// **'PUNTO PROPIO'**
+  String get createEventLocationOwnPoint;
+
+  /// No description provided for @createEventPickSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir spot…'**
+  String get createEventPickSpot;
+
+  /// No description provided for @createEventSportsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'DEPORTES'**
+  String get createEventSportsLabel;
+
+  /// No description provided for @createEventDescriptionPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Categorías, premios, qué traer…'**
+  String get createEventDescriptionPlaceholder;
+
+  /// No description provided for @createEventPublish.
+  ///
+  /// In es, this message translates to:
+  /// **'PUBLICAR EVENTO'**
+  String get createEventPublish;
+
+  /// No description provided for @createEventNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El nombre es obligatorio'**
+  String get createEventNameRequired;
+
+  /// No description provided for @createEventStartRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha de inicio es obligatoria'**
+  String get createEventStartRequired;
+
+  /// No description provided for @createEventLocationRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una ubicación'**
+  String get createEventLocationRequired;
+
   /// Título de la sección de elementos del ride con la cantidad
   ///
   /// In es, this message translates to:
@@ -939,6 +1161,138 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'CERRAR SESIÓN'**
   String get drawerLogout;
+
+  /// No description provided for @settingsFavoriteSportsSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Deportes favoritos'**
+  String get settingsFavoriteSportsSection;
+
+  /// No description provided for @settingsFavoriteSportsHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegí hasta 10 — el primero que elijas personaliza el menú de abajo'**
+  String get settingsFavoriteSportsHint;
+
+  /// No description provided for @settingsFavoriteSportsMax.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya tenés 10 deportes favoritos, quita uno para agregar otro'**
+  String get settingsFavoriteSportsMax;
+
+  /// No description provided for @navSport.
+  ///
+  /// In es, this message translates to:
+  /// **'Deportes'**
+  String get navSport;
+
+  /// No description provided for @searchTabSports.
+  ///
+  /// In es, this message translates to:
+  /// **'DEPORTES'**
+  String get searchTabSports;
+
+  /// No description provided for @sportRankingSection.
+  ///
+  /// In es, this message translates to:
+  /// **'RANKING'**
+  String get sportRankingSection;
+
+  /// No description provided for @sportTopRidersLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Top riders'**
+  String get sportTopRidersLabel;
+
+  /// No description provided for @sportNoRidersYet.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía nadie tiene este deporte como favorito'**
+  String get sportNoRidersYet;
+
+  /// No description provided for @sportTopSpotsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Top spots'**
+  String get sportTopSpotsLabel;
+
+  /// No description provided for @sportNoSpotsYet.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay spots calificados para este deporte'**
+  String get sportNoSpotsYet;
+
+  /// No description provided for @sportEventsSection.
+  ///
+  /// In es, this message translates to:
+  /// **'EVENTOS'**
+  String get sportEventsSection;
+
+  /// No description provided for @sportUpcomingEventsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximos'**
+  String get sportUpcomingEventsLabel;
+
+  /// No description provided for @sportPastEventsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Anteriores'**
+  String get sportPastEventsLabel;
+
+  /// No description provided for @sportNoEventsYet.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay eventos de este deporte todavía'**
+  String get sportNoEventsYet;
+
+  /// No description provided for @sportTopMediaSection.
+  ///
+  /// In es, this message translates to:
+  /// **'MÁS VOTADOS'**
+  String get sportTopMediaSection;
+
+  /// No description provided for @sportTopPhotosLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Fotos'**
+  String get sportTopPhotosLabel;
+
+  /// No description provided for @sportTopVideosLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Videos'**
+  String get sportTopVideosLabel;
+
+  /// No description provided for @sportNoMediaYet.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay contenido votado para este deporte'**
+  String get sportNoMediaYet;
+
+  /// No description provided for @rideEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar ride'**
+  String get rideEdit;
+
+  /// No description provided for @rideDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar ride'**
+  String get rideDelete;
+
+  /// No description provided for @rideDeleteConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar este ride?'**
+  String get rideDeleteConfirmTitle;
+
+  /// No description provided for @rideDeleteConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción no se puede deshacer. El ride se eliminará junto con sus elementos.'**
+  String get rideDeleteConfirmBody;
 }
 
 class _AppLocalizationsDelegate

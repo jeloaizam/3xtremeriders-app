@@ -30,13 +30,28 @@ class AppEffects extends ThemeExtension<AppEffects> {
       BoxShadow(color: Color(0x40000000), offset: Offset(0, 2), blurRadius: 8),
     ],
     shadowFloat: [
-      BoxShadow(color: Color(0x99000000), offset: Offset(0, 20), blurRadius: 40, spreadRadius: -12),
+      BoxShadow(
+        color: Color(0x99000000),
+        offset: Offset(0, 20),
+        blurRadius: 40,
+        spreadRadius: -12,
+      ),
     ],
     shadowSheet: [
-      BoxShadow(color: Color(0xB3000000), offset: Offset(0, -18), blurRadius: 40, spreadRadius: -12),
+      BoxShadow(
+        color: Color(0xB3000000),
+        offset: Offset(0, -18),
+        blurRadius: 40,
+        spreadRadius: -12,
+      ),
     ],
     shadowAction: [
-      BoxShadow(color: Color(0x80F6FF99), offset: Offset(0, 10), blurRadius: 22, spreadRadius: -4),
+      BoxShadow(
+        color: Color(0x80F6FF99),
+        offset: Offset(0, 10),
+        blurRadius: 22,
+        spreadRadius: -4,
+      ),
     ],
     easeOut: Cubic(0.22, 1, 0.36, 1),
     durFast: Duration(milliseconds: 200),

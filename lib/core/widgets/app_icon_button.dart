@@ -29,9 +29,7 @@ class AppIconButton extends StatelessWidget {
         ? colors.scrimSoft
         : colors.surfaceCard;
     final borderColor = chrome ? colors.hairlineStrong : colors.hairline;
-    final iconColor = active
-        ? colors.colorOnAction
-        : (color ?? colors.text100);
+    final iconColor = active ? colors.colorOnAction : (color ?? colors.text100);
 
     return Material(
       color: background,

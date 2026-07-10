@@ -54,9 +54,7 @@ class AppTextField extends StatelessWidget {
             child: TextField(
               controller: controller,
               obscureText: obscureText,
-              keyboardType: multiline
-                  ? TextInputType.multiline
-                  : keyboardType,
+              keyboardType: multiline ? TextInputType.multiline : keyboardType,
               minLines: multiline ? 3 : 1,
               maxLines: maxLines ?? (multiline ? 6 : 1),
               style: context.typography.body.copyWith(color: colors.text100),

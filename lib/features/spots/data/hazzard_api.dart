@@ -20,7 +20,9 @@ class HazzardApi {
       throw ApiException(response.statusCode, response.body);
     }
     final data = jsonDecode(response.body) as List<dynamic>;
-    return data.map((json) => Hazzard.fromJson(json as Map<String, dynamic>)).toList();
+    return data
+        .map((json) => Hazzard.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   Future<Hazzard> create({

@@ -6,6 +6,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../../auth/application/auth_providers.dart';
+import '../../../auth/domain/role.dart';
 import '../../../spots/presentation/widgets/photo_viewer_screen.dart';
 import '../../../spots/presentation/widgets/video_player_screen.dart';
 import '../../application/ride_detail.dart';
@@ -35,19 +37,28 @@ class _RideScreenState extends ConsumerState<RideScreen> {
   Widget build(BuildContext context) {
     final detailAsync = ref.watch(rideDetailProvider(widget.rideId));
     final states = ref.watch(rideStatesProvider).value ?? const <RideState>[];
+    final currentRider = ref.watch(currentRiderProvider).value;
 
     return Scaffold(
       body: SafeArea(
         child: detailAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Center(child: Text('$error')),
-          data: (detail) => _RideScreenBody(
-            detail: detail,
-            state: _findState(states, detail.ride.stateId),
-            tab: _tab,
-            onTabChanged: (tab) => setState(() => _tab = tab),
-            onBack: () => context.pop(),
-          ),
+          data: (detail) {
+            final canEdit =
+                currentRider != null &&
+                (currentRider.id == detail.ride.ownerId ||
+                    currentRider.roleId >= roleAdmin);
+            return _RideScreenBody(
+              detail: detail,
+              state: _findState(states, detail.ride.stateId),
+              tab: _tab,
+              onTabChanged: (tab) => setState(() => _tab = tab),
+              onBack: () => context.pop(),
+              canEdit: canEdit,
+              onEdit: () => context.push('/rides/${widget.rideId}/edit'),
+            );
+          },
         ),
       ),
     );
@@ -69,6 +80,8 @@ class _RideScreenBody extends StatelessWidget {
     required this.tab,
     required this.onTabChanged,
     required this.onBack,
+    required this.canEdit,
+    required this.onEdit,
   });
 
   final RideDetailData detail;
@@ -76,6 +89,8 @@ class _RideScreenBody extends StatelessWidget {
   final _MediaTab tab;
   final void Function(_MediaTab tab) onTabChanged;
   final VoidCallback onBack;
+  final bool canEdit;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +127,10 @@ class _RideScreenBody extends StatelessWidget {
                   style: context.typography.tag.copyWith(color: visual.color),
                 ),
               ),
+            if (canEdit) ...[
+              const SizedBox(width: 8),
+              AppIconButton(icon: Symbols.edit, onPressed: onEdit),
+            ],
           ],
         ),
         if (ride.condition != null) ...[

@@ -83,6 +83,46 @@ class RideApi {
     return Ride.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  /// Edits an existing ride's own fields (name/state/condition/cover) —
+  /// distinct from [setCoverPhoto], which only ever sends `cover_photo_id`
+  /// right after creation.
+  Future<Ride> update({
+    required int rideId,
+    String? name,
+    int? stateId,
+    int? condition,
+    int? coverPhotoId,
+    required String idToken,
+  }) async {
+    final response = await http.patch(
+      Uri.parse('${ApiConfig.baseUrl}/rides/$rideId'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': ?name,
+        'state_id': ?stateId,
+        'condition': ?condition,
+        'cover_photo_id': ?coverPhotoId,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Ride.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
+  Future<void> delete({required int rideId, required String idToken}) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/rides/$rideId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
+
   Future<List<RideElement>> getElements(int rideId) async {
     final response = await http.get(
       Uri.parse('${ApiConfig.baseUrl}/rides/$rideId/elements'),
