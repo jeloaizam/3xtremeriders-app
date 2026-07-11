@@ -165,6 +165,52 @@ class RideApi {
     );
   }
 
+  Future<RideElement> updateElement({
+    required int rideId,
+    required int elementId,
+    String? name,
+    String? type,
+    String? brand,
+    String? model,
+    String? description,
+    required String idToken,
+  }) async {
+    final response = await http.patch(
+      Uri.parse('${ApiConfig.baseUrl}/rides/$rideId/elements/$elementId'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': ?name,
+        'type': ?type,
+        'brand': ?brand,
+        'model': ?model,
+        'description': ?description,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return RideElement.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  Future<void> deleteElement({
+    required int rideId,
+    required int elementId,
+    required String idToken,
+  }) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/rides/$rideId/elements/$elementId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
+
   Future<List<RideState>> listStates() async {
     final response = await http.get(
       Uri.parse('${ApiConfig.baseUrl}/ride-states/'),

@@ -13,14 +13,22 @@ import '../../../auth/application/auth_providers.dart';
 import '../../application/ride_detail.dart';
 import '../../application/rides_providers.dart';
 import '../../data/ride_api.dart';
+import '../../domain/ride_element.dart';
 import '../../domain/ride_state.dart';
 import '../../domain/rider_photo.dart';
 
-/// Edits an existing [Ride]'s own fields — name, state, condition, and
-/// which already-tagged photo is the cover. Doesn't touch elements or
-/// media (uploading/tagging new photos/videos only happens during
-/// creation, in `CreateRideScreen` — out of scope here, matching what the
-/// backend's `RideUpdate` schema actually supports).
+class _ElementFormResult {
+  const _ElementFormResult(this.name, this.type);
+  final String name;
+  final String? type;
+}
+
+/// Edits an existing [Ride]'s own fields — name, state, condition, which
+/// already-tagged photo is the cover — plus its elements (add/edit/delete,
+/// each applied immediately). Doesn't touch photos/videos themselves
+/// (uploading/tagging new media only happens during creation, in
+/// `CreateRideScreen` — out of scope here, matching what the backend's
+/// `RideUpdate` schema actually supports).
 class EditRideScreen extends ConsumerStatefulWidget {
   const EditRideScreen({super.key, required this.rideId});
 
@@ -38,6 +46,8 @@ class _EditRideScreenState extends ConsumerState<EditRideScreen> {
   bool _seeded = false;
   bool _saving = false;
   bool _deleting = false;
+  final Set<int> _pendingElements = {};
+  bool _addingElement = false;
 
   @override
   void dispose() {
@@ -154,6 +164,150 @@ class _EditRideScreenState extends ConsumerState<EditRideScreen> {
     }
   }
 
+  Future<_ElementFormResult?> _showElementDialog({RideElement? existing}) {
+    final l10n = AppLocalizations.of(context);
+    final nameController = TextEditingController(text: existing?.name ?? '');
+    final typeController = TextEditingController(text: existing?.type ?? '');
+
+    return showDialog<_ElementFormResult>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: context.colors.surfaceCard,
+        title: Text(
+          existing == null ? l10n.createRideAddElement : l10n.rideEditElement,
+          style: context.typography.title,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppTextField(
+              controller: nameController,
+              placeholder: l10n.createRideElementNamePlaceholder,
+            ),
+            const SizedBox(height: 10),
+            AppTextField(
+              controller: typeController,
+              placeholder: l10n.createRideElementTypePlaceholder,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.dialogCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              if (name.isEmpty) return;
+              final type = typeController.text.trim();
+              Navigator.of(
+                dialogContext,
+              ).pop(_ElementFormResult(name, type.isEmpty ? null : type));
+            },
+            child: Text(existing == null ? l10n.dialogAdd : l10n.settingsSave),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _addElement() async {
+    final result = await _showElementDialog();
+    if (result == null) return;
+
+    setState(() => _addingElement = true);
+    try {
+      final idToken = await ref
+          .read(firebaseAuthProvider)
+          .currentUser
+          ?.getIdToken();
+      if (idToken == null) return;
+
+      await ref
+          .read(rideApiProvider)
+          .addElement(
+            rideId: widget.rideId,
+            name: result.name,
+            type: result.type,
+            idToken: idToken,
+          );
+      ref.invalidate(rideDetailProvider(widget.rideId));
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$error')));
+      }
+    } finally {
+      if (mounted) setState(() => _addingElement = false);
+    }
+  }
+
+  Future<void> _editElement(RideElement element) async {
+    if (_pendingElements.contains(element.id)) return;
+    final result = await _showElementDialog(existing: element);
+    if (result == null) return;
+
+    setState(() => _pendingElements.add(element.id));
+    try {
+      final idToken = await ref
+          .read(firebaseAuthProvider)
+          .currentUser
+          ?.getIdToken();
+      if (idToken == null) return;
+
+      await ref
+          .read(rideApiProvider)
+          .updateElement(
+            rideId: widget.rideId,
+            elementId: element.id,
+            name: result.name,
+            type: result.type,
+            idToken: idToken,
+          );
+      ref.invalidate(rideDetailProvider(widget.rideId));
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$error')));
+      }
+    } finally {
+      if (mounted) setState(() => _pendingElements.remove(element.id));
+    }
+  }
+
+  Future<void> _deleteElement(RideElement element) async {
+    if (_pendingElements.contains(element.id)) return;
+
+    setState(() => _pendingElements.add(element.id));
+    try {
+      final idToken = await ref
+          .read(firebaseAuthProvider)
+          .currentUser
+          ?.getIdToken();
+      if (idToken == null) return;
+
+      await ref
+          .read(rideApiProvider)
+          .deleteElement(
+            rideId: widget.rideId,
+            elementId: element.id,
+            idToken: idToken,
+          );
+      ref.invalidate(rideDetailProvider(widget.rideId));
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$error')));
+      }
+    } finally {
+      if (mounted) setState(() => _pendingElements.remove(element.id));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -206,6 +360,54 @@ class _EditRideScreenState extends ConsumerState<EditRideScreen> {
                             ),
                         ],
                         onChanged: (value) => setState(() => _stateId = value),
+                      ),
+
+                      _SectionLabel(
+                        l10n.rideElementsTitle(detail.elements.length),
+                        top: 18,
+                      ),
+                      if (detail.elements.isEmpty)
+                        Text(
+                          l10n.rideNoElements,
+                          style: context.typography.bodySm,
+                        )
+                      else
+                        for (final element in detail.elements)
+                          _ElementEditRow(
+                            element: element,
+                            busy: _pendingElements.contains(element.id),
+                            onTap: () => _editElement(element),
+                            onDelete: () => _deleteElement(element),
+                          ),
+                      const SizedBox(height: 9),
+                      GestureDetector(
+                        onTap: _addingElement ? null : _addElement,
+                        child: Container(
+                          padding: const EdgeInsets.all(13),
+                          decoration: BoxDecoration(
+                            color: colors.surfaceCard,
+                            border: Border.all(color: colors.hairlineStrong),
+                            borderRadius: BorderRadius.circular(
+                              context.spacing.radiusMd,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Symbols.add_circle,
+                                color: colors.colorBrand,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  l10n.createRideAddElement,
+                                  style: context.typography.bodySm,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
 
                       _SectionLabel(l10n.createRideConditionLabel, top: 18),
@@ -426,6 +628,92 @@ class _CoverThumb extends StatelessWidget {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A single [RideElement] row — tap anywhere to edit, tap the trailing icon
+/// to delete. Dims and disables both while [busy] (a request for this
+/// element is in flight), same guard pattern as Settings' favorite-sport
+/// chips.
+class _ElementEditRow extends StatelessWidget {
+  const _ElementEditRow({
+    required this.element,
+    required this.busy,
+    required this.onTap,
+    required this.onDelete,
+  });
+
+  final RideElement element;
+  final bool busy;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return Opacity(
+      opacity: busy ? .5 : 1,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 9),
+        child: GestureDetector(
+          onTap: busy ? null : onTap,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colors.surfaceCard,
+              border: Border.all(color: colors.hairline),
+              borderRadius: BorderRadius.circular(context.spacing.radiusMd),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: colors.tintInfo,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Symbols.build,
+                    size: 18,
+                    color: colors.colorBrand,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        element.name,
+                        style: context.typography.title.copyWith(height: 1),
+                      ),
+                      if (element.type != null) ...[
+                        const SizedBox(height: 4),
+                        Text(element.type!, style: context.typography.micro),
+                      ],
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: busy ? null : onDelete,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      Symbols.delete,
+                      size: 18,
+                      color: colors.colorDanger,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
