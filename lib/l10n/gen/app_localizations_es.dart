@@ -37,6 +37,43 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loginSignupCta => 'Crear cuenta';
 
   @override
+  String get signupTitle => 'Crear cuenta';
+
+  @override
+  String get signupSubtitle => 'Únete a la comunidad';
+
+  @override
+  String get signupNamePlaceholder => 'Nombre';
+
+  @override
+  String get signupLastNamePlaceholder => 'Apellido';
+
+  @override
+  String get signupNicknamePlaceholder => 'Nickname';
+
+  @override
+  String get signupFieldRequired => 'Este campo es obligatorio';
+
+  @override
+  String get signupButton => 'Registrarme';
+
+  @override
+  String get signupLoginPrompt => '¿Ya tienes cuenta?';
+
+  @override
+  String get signupLoginCta => 'Inicia sesión';
+
+  @override
+  String get completeProfileTitle => 'COMPLETA TU PERFIL';
+
+  @override
+  String get completeProfileBody =>
+      'Nos falta un poco de información tuya para que puedas usar 3xtreme Riders — solo te toma un momento.';
+
+  @override
+  String get completeProfileSave => 'Continuar';
+
+  @override
   String get comingSoon => 'Próximamente';
 
   @override
@@ -52,6 +89,33 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get homeSheetViewSpot => 'VER SPOT';
+
+  @override
+  String get homeLocationGateTitle => 'UBICACIÓN REQUERIDA';
+
+  @override
+  String get homeLocationGateServiceBody =>
+      'Activa el GPS de tu dispositivo para ver el mapa centrado en tu ubicación.';
+
+  @override
+  String get homeLocationGateEnableButton => 'ACTIVAR UBICACIÓN';
+
+  @override
+  String get homeLocationGatePermissionBody =>
+      '3xtreme Riders necesita tu ubicación para mostrarte el mapa y los spots cerca de ti.';
+
+  @override
+  String get homeLocationGateGrantButton => 'DAR PERMISO';
+
+  @override
+  String get homeLocationGateDeniedForeverBody =>
+      'Diste permiso de ubicación \"nunca\". Actívalo desde los ajustes de la app para continuar.';
+
+  @override
+  String get homeLocationGateOpenSettingsButton => 'ABRIR AJUSTES';
+
+  @override
+  String get homeLocationGateRetry => 'REINTENTAR';
 
   @override
   String get navHome => 'Inicio';
@@ -631,6 +695,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rideEdit => 'Editar ride';
+
+  @override
+  String get rideEditElement => 'Editar elemento';
 
   @override
   String get rideDelete => 'Eliminar ride';

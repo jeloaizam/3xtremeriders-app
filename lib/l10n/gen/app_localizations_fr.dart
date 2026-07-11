@@ -37,6 +37,43 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginSignupCta => 'Créer un compte';
 
   @override
+  String get signupTitle => 'Créer un compte';
+
+  @override
+  String get signupSubtitle => 'Rejoins la communauté';
+
+  @override
+  String get signupNamePlaceholder => 'Prénom';
+
+  @override
+  String get signupLastNamePlaceholder => 'Nom de famille';
+
+  @override
+  String get signupNicknamePlaceholder => 'Pseudo';
+
+  @override
+  String get signupFieldRequired => 'Ce champ est obligatoire';
+
+  @override
+  String get signupButton => 'S\'inscrire';
+
+  @override
+  String get signupLoginPrompt => 'Tu as déjà un compte ?';
+
+  @override
+  String get signupLoginCta => 'Connecte-toi';
+
+  @override
+  String get completeProfileTitle => 'COMPLÈTE TON PROFIL';
+
+  @override
+  String get completeProfileBody =>
+      'Il nous manque un peu d\'informations avant que tu puisses utiliser 3xtreme Riders — ça ne prend qu\'un instant.';
+
+  @override
+  String get completeProfileSave => 'Continuer';
+
+  @override
   String get comingSoon => 'Bientôt disponible';
 
   @override
@@ -52,6 +89,33 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get homeSheetViewSpot => 'VOIR LE SPOT';
+
+  @override
+  String get homeLocationGateTitle => 'LOCALISATION REQUISE';
+
+  @override
+  String get homeLocationGateServiceBody =>
+      'Active le GPS de ton appareil pour voir la carte centrée sur ta position.';
+
+  @override
+  String get homeLocationGateEnableButton => 'ACTIVER LA LOCALISATION';
+
+  @override
+  String get homeLocationGatePermissionBody =>
+      '3xtreme Riders a besoin de ta position pour t\'afficher la carte et les spots près de toi.';
+
+  @override
+  String get homeLocationGateGrantButton => 'AUTORISER';
+
+  @override
+  String get homeLocationGateDeniedForeverBody =>
+      'Tu as réglé l\'autorisation de localisation sur \"jamais\". Active-la depuis les paramètres de l\'application pour continuer.';
+
+  @override
+  String get homeLocationGateOpenSettingsButton => 'OUVRIR LES PARAMÈTRES';
+
+  @override
+  String get homeLocationGateRetry => 'RÉESSAYER';
 
   @override
   String get navHome => 'Accueil';
@@ -629,6 +693,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rideEdit => 'Modifier le ride';
+
+  @override
+  String get rideEditElement => 'Modifier l\'élément';
 
   @override
   String get rideDelete => 'Supprimer le ride';

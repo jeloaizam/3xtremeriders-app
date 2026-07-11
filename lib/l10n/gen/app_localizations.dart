@@ -154,6 +154,78 @@ abstract class AppLocalizations {
   /// **'Crear cuenta'**
   String get loginSignupCta;
 
+  /// No description provided for @signupTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get signupTitle;
+
+  /// No description provided for @signupSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Únete a la comunidad'**
+  String get signupSubtitle;
+
+  /// No description provided for @signupNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get signupNamePlaceholder;
+
+  /// No description provided for @signupLastNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Apellido'**
+  String get signupLastNamePlaceholder;
+
+  /// No description provided for @signupNicknamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Nickname'**
+  String get signupNicknamePlaceholder;
+
+  /// No description provided for @signupFieldRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Este campo es obligatorio'**
+  String get signupFieldRequired;
+
+  /// No description provided for @signupButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrarme'**
+  String get signupButton;
+
+  /// No description provided for @signupLoginPrompt.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya tienes cuenta?'**
+  String get signupLoginPrompt;
+
+  /// No description provided for @signupLoginCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión'**
+  String get signupLoginCta;
+
+  /// No description provided for @completeProfileTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'COMPLETA TU PERFIL'**
+  String get completeProfileTitle;
+
+  /// No description provided for @completeProfileBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Nos falta un poco de información tuya para que puedas usar 3xtreme Riders — solo te toma un momento.'**
+  String get completeProfileBody;
+
+  /// No description provided for @completeProfileSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get completeProfileSave;
+
   /// No description provided for @comingSoon.
   ///
   /// In es, this message translates to:
@@ -183,6 +255,54 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'VER SPOT'**
   String get homeSheetViewSpot;
+
+  /// No description provided for @homeLocationGateTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'UBICACIÓN REQUERIDA'**
+  String get homeLocationGateTitle;
+
+  /// No description provided for @homeLocationGateServiceBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Activa el GPS de tu dispositivo para ver el mapa centrado en tu ubicación.'**
+  String get homeLocationGateServiceBody;
+
+  /// No description provided for @homeLocationGateEnableButton.
+  ///
+  /// In es, this message translates to:
+  /// **'ACTIVAR UBICACIÓN'**
+  String get homeLocationGateEnableButton;
+
+  /// No description provided for @homeLocationGatePermissionBody.
+  ///
+  /// In es, this message translates to:
+  /// **'3xtreme Riders necesita tu ubicación para mostrarte el mapa y los spots cerca de ti.'**
+  String get homeLocationGatePermissionBody;
+
+  /// No description provided for @homeLocationGateGrantButton.
+  ///
+  /// In es, this message translates to:
+  /// **'DAR PERMISO'**
+  String get homeLocationGateGrantButton;
+
+  /// No description provided for @homeLocationGateDeniedForeverBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Diste permiso de ubicación \"nunca\". Actívalo desde los ajustes de la app para continuar.'**
+  String get homeLocationGateDeniedForeverBody;
+
+  /// No description provided for @homeLocationGateOpenSettingsButton.
+  ///
+  /// In es, this message translates to:
+  /// **'ABRIR AJUSTES'**
+  String get homeLocationGateOpenSettingsButton;
+
+  /// No description provided for @homeLocationGateRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'REINTENTAR'**
+  String get homeLocationGateRetry;
 
   /// No description provided for @navHome.
   ///
@@ -1275,6 +1395,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Editar ride'**
   String get rideEdit;
+
+  /// No description provided for @rideEditElement.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar elemento'**
+  String get rideEditElement;
 
   /// No description provided for @rideDelete.
   ///
