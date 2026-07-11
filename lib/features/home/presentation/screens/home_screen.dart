@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -33,19 +34,89 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+enum _LocationGate {
+  checking,
+  serviceDisabled,
+  permissionDenied,
+  permissionDeniedForever,
+  ready,
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   MapboxMap? _mapboxMap;
   CircleAnnotationManager? _annotationManager;
   Spot? _selectedSpot;
   final Map<String, Spot> _spotByAnnotationId = {};
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  static final _bogotaCenter = Point(coordinates: Position(-74.0721, 4.7110));
+  _LocationGate _gate = _LocationGate.checking;
+  geo.Position? _riderPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkLocationGate();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Re-checks when the rider comes back from the system location settings
+    // or the app's own settings screen, so they don't have to manually
+    // retry after enabling GPS/granting the permission.
+    if (state == AppLifecycleState.resumed && _gate != _LocationGate.ready) {
+      _checkLocationGate();
+    }
+  }
+
+  /// Same permission dance as `CreateSpotScreen._useCurrentLocation`, but
+  /// blocking: Home can't show a map without a real position, so there's no
+  /// fallback center to fall back to.
+  Future<void> _checkLocationGate() async {
+    if (!await geo.Geolocator.isLocationServiceEnabled()) {
+      if (mounted) setState(() => _gate = _LocationGate.serviceDisabled);
+      return;
+    }
+
+    var permission = await geo.Geolocator.checkPermission();
+    if (permission == geo.LocationPermission.denied) {
+      permission = await geo.Geolocator.requestPermission();
+    }
+    if (permission == geo.LocationPermission.deniedForever) {
+      if (mounted) {
+        setState(() => _gate = _LocationGate.permissionDeniedForever);
+      }
+      return;
+    }
+    if (permission == geo.LocationPermission.denied) {
+      if (mounted) setState(() => _gate = _LocationGate.permissionDenied);
+      return;
+    }
+
+    final position = await geo.Geolocator.getCurrentPosition();
+    if (mounted) {
+      setState(() {
+        _riderPosition = position;
+        _gate = _LocationGate.ready;
+      });
+    }
+  }
 
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
 
-    await mapboxMap.setCamera(CameraOptions(center: _bogotaCenter, zoom: 12.5));
+    final riderPosition = _riderPosition!;
+    final center = Point(
+      coordinates: Position(riderPosition.longitude, riderPosition.latitude),
+    );
+    await mapboxMap.setCamera(CameraOptions(center: center, zoom: 12.5));
 
     final manager = await mapboxMap.annotations.createCircleAnnotationManager();
     _annotationManager = manager;
@@ -93,9 +164,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _onMyLocationTap() async {
     final status = await Permission.location.request();
-    if (!status.isGranted || _mapboxMap == null) return;
-    await _mapboxMap!.location.updateSettings(
+    final mapboxMap = _mapboxMap;
+    if (!status.isGranted || mapboxMap == null) return;
+
+    await mapboxMap.location.updateSettings(
       LocationComponentSettings(enabled: true, pulsingEnabled: true),
+    );
+
+    // Re-fetches the position (the rider may have moved since Home's
+    // initial gate check) and actually recenters the camera — the location
+    // component above only turns on the blue dot, it doesn't move the map.
+    final position = await geo.Geolocator.getCurrentPosition();
+    await mapboxMap.flyTo(
+      CameraOptions(
+        center: Point(
+          coordinates: Position(position.longitude, position.latitude),
+        ),
+        zoom: 14,
+      ),
+      MapAnimationOptions(duration: 800),
     );
   }
 
@@ -112,6 +199,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Home loads, so authenticated calls elsewhere (Spot likes/ratings)
     // don't 401 just because the rider never visited Settings.
     ref.watch(currentRiderProvider);
+
+    if (_gate != _LocationGate.ready) {
+      return _LocationGateScreen(gate: _gate, onRetry: _checkLocationGate);
+    }
 
     // Keeps the map pins in sync whenever the spot list changes (e.g. right
     // after publishing a new spot) — the annotations themselves are an
@@ -372,6 +463,90 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               },
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// Full-screen, non-dismissible gate shown instead of the map while the
+/// rider hasn't turned on GPS and granted location access yet — Home has no
+/// fixed fallback city to fall back to anymore, so it blocks here instead.
+class _LocationGateScreen extends StatelessWidget {
+  const _LocationGateScreen({required this.gate, required this.onRetry});
+
+  final _LocationGate gate;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    if (gate == _LocationGate.checking || gate == _LocationGate.ready) {
+      return Scaffold(
+        backgroundColor: colors.surfaceApp,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final l10n = AppLocalizations.of(context);
+
+    final String body;
+    final String buttonLabel;
+    final VoidCallback onPrimary;
+    switch (gate) {
+      case _LocationGate.serviceDisabled:
+        body = l10n.homeLocationGateServiceBody;
+        buttonLabel = l10n.homeLocationGateEnableButton;
+        onPrimary = () => geo.Geolocator.openLocationSettings();
+      case _LocationGate.permissionDeniedForever:
+        body = l10n.homeLocationGateDeniedForeverBody;
+        buttonLabel = l10n.homeLocationGateOpenSettingsButton;
+        onPrimary = () => geo.Geolocator.openAppSettings();
+      case _LocationGate.permissionDenied:
+      case _LocationGate.checking:
+      case _LocationGate.ready:
+        body = l10n.homeLocationGatePermissionBody;
+        buttonLabel = l10n.homeLocationGateGrantButton;
+        onPrimary = onRetry;
+    }
+
+    return Scaffold(
+      backgroundColor: colors.surfaceApp,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Symbols.location_disabled,
+                size: 56,
+                color: colors.colorBrand,
+              ),
+              const SizedBox(height: 18),
+              Text(
+                l10n.homeLocationGateTitle,
+                style: context.typography.displaySm,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                body,
+                style: context.typography.bodySm.copyWith(
+                  color: colors.textMuted,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              AppButton(label: buttonLabel, onPressed: onPrimary),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: onRetry,
+                child: Text(l10n.homeLocationGateRetry),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
