@@ -387,6 +387,12 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
 
       ref.invalidate(nearbySpotsProvider);
       if (mounted) context.pushReplacement('/spot/${spot.id}');
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$error')));
+      }
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
