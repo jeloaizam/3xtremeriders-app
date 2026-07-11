@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Rider {
 
- int get id;@JsonKey(name: 'firebase_uid') String get firebaseUid;@JsonKey(name: 'role_id') int get roleId; String get email; String get name;@JsonKey(name: 'last_name') String get lastName; String get nickname;@JsonKey(name: 'icon_image') String? get iconImage; String? get bio; String? get city;@JsonKey(name: 'country_id') int? get countryId;@JsonKey(name: 'social_links') Map<String, dynamic>? get socialLinks;@JsonKey(name: 'reputation_pts') int get reputationPts;@JsonKey(name: 'created_date') DateTime get createdDate;@JsonKey(name: 'updated_date') DateTime? get updatedDate;
+ int get id;@JsonKey(name: 'firebase_uid') String get firebaseUid;@JsonKey(name: 'role_id') int get roleId; String get email; String get name;@JsonKey(name: 'last_name') String get lastName; String get nickname;@JsonKey(name: 'icon_image') String? get iconImage; String? get bio;@JsonKey(name: 'city_id') int? get cityId;@JsonKey(name: 'city_text') String? get cityText;@JsonKey(name: 'city_name') String? get cityName;@JsonKey(name: 'country_id') int? get countryId;@JsonKey(name: 'social_links') Map<String, dynamic>? get socialLinks;@JsonKey(name: 'reputation_pts') int get reputationPts;@JsonKey(name: 'created_date') DateTime get createdDate;@JsonKey(name: 'updated_date') DateTime? get updatedDate;
 /// Create a copy of Rider
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RiderCopyWith<Rider> get copyWith => _$RiderCopyWithImpl<Rider>(this as Rider, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Rider&&(identical(other.id, id) || other.id == id)&&(identical(other.firebaseUid, firebaseUid) || other.firebaseUid == firebaseUid)&&(identical(other.roleId, roleId) || other.roleId == roleId)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.city, city) || other.city == city)&&(identical(other.countryId, countryId) || other.countryId == countryId)&&const DeepCollectionEquality().equals(other.socialLinks, socialLinks)&&(identical(other.reputationPts, reputationPts) || other.reputationPts == reputationPts)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Rider&&(identical(other.id, id) || other.id == id)&&(identical(other.firebaseUid, firebaseUid) || other.firebaseUid == firebaseUid)&&(identical(other.roleId, roleId) || other.roleId == roleId)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.cityId, cityId) || other.cityId == cityId)&&(identical(other.cityText, cityText) || other.cityText == cityText)&&(identical(other.cityName, cityName) || other.cityName == cityName)&&(identical(other.countryId, countryId) || other.countryId == countryId)&&const DeepCollectionEquality().equals(other.socialLinks, socialLinks)&&(identical(other.reputationPts, reputationPts) || other.reputationPts == reputationPts)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firebaseUid,roleId,email,name,lastName,nickname,iconImage,bio,city,countryId,const DeepCollectionEquality().hash(socialLinks),reputationPts,createdDate,updatedDate);
+int get hashCode => Object.hash(runtimeType,id,firebaseUid,roleId,email,name,lastName,nickname,iconImage,bio,cityId,cityText,cityName,countryId,const DeepCollectionEquality().hash(socialLinks),reputationPts,createdDate,updatedDate);
 
 @override
 String toString() {
-  return 'Rider(id: $id, firebaseUid: $firebaseUid, roleId: $roleId, email: $email, name: $name, lastName: $lastName, nickname: $nickname, iconImage: $iconImage, bio: $bio, city: $city, countryId: $countryId, socialLinks: $socialLinks, reputationPts: $reputationPts, createdDate: $createdDate, updatedDate: $updatedDate)';
+  return 'Rider(id: $id, firebaseUid: $firebaseUid, roleId: $roleId, email: $email, name: $name, lastName: $lastName, nickname: $nickname, iconImage: $iconImage, bio: $bio, cityId: $cityId, cityText: $cityText, cityName: $cityName, countryId: $countryId, socialLinks: $socialLinks, reputationPts: $reputationPts, createdDate: $createdDate, updatedDate: $updatedDate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RiderCopyWith<$Res>  {
   factory $RiderCopyWith(Rider value, $Res Function(Rider) _then) = _$RiderCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'firebase_uid') String firebaseUid,@JsonKey(name: 'role_id') int roleId, String email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio, String? city,@JsonKey(name: 'country_id') int? countryId,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
+ int id,@JsonKey(name: 'firebase_uid') String firebaseUid,@JsonKey(name: 'role_id') int roleId, String email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio,@JsonKey(name: 'city_id') int? cityId,@JsonKey(name: 'city_text') String? cityText,@JsonKey(name: 'city_name') String? cityName,@JsonKey(name: 'country_id') int? countryId,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
 });
 
 
@@ -65,7 +65,7 @@ class _$RiderCopyWithImpl<$Res>
 
 /// Create a copy of Rider
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firebaseUid = null,Object? roleId = null,Object? email = null,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? city = freezed,Object? countryId = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? createdDate = null,Object? updatedDate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firebaseUid = null,Object? roleId = null,Object? email = null,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? cityId = freezed,Object? cityText = freezed,Object? cityName = freezed,Object? countryId = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? createdDate = null,Object? updatedDate = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firebaseUid: null == firebaseUid ? _self.firebaseUid : firebaseUid // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,9 @@ as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast
 as String,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
 as String,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
-as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String?,cityId: freezed == cityId ? _self.cityId : cityId // ignore: cast_nullable_to_non_nullable
+as int?,cityText: freezed == cityText ? _self.cityText : cityText // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
 as String?,countryId: freezed == countryId ? _self.countryId : countryId // ignore: cast_nullable_to_non_nullable
 as int?,socialLinks: freezed == socialLinks ? _self.socialLinks : socialLinks // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,reputationPts: null == reputationPts ? _self.reputationPts : reputationPts // ignore: cast_nullable_to_non_nullable
@@ -167,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio,  String? city, @JsonKey(name: 'country_id')  int? countryId, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Rider() when $default != null:
-return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.city,_that.countryId,_that.socialLinks,_that.reputationPts,_that.createdDate,_that.updatedDate);case _:
+return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.cityId,_that.cityText,_that.cityName,_that.countryId,_that.socialLinks,_that.reputationPts,_that.createdDate,_that.updatedDate);case _:
   return orElse();
 
 }
@@ -188,10 +190,10 @@ return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio,  String? city, @JsonKey(name: 'country_id')  int? countryId, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)  $default,) {final _that = this;
 switch (_that) {
 case _Rider():
-return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.city,_that.countryId,_that.socialLinks,_that.reputationPts,_that.createdDate,_that.updatedDate);case _:
+return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.cityId,_that.cityText,_that.cityName,_that.countryId,_that.socialLinks,_that.reputationPts,_that.createdDate,_that.updatedDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +210,10 @@ return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio,  String? city, @JsonKey(name: 'country_id')  int? countryId, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,) {final _that = this;
 switch (_that) {
 case _Rider() when $default != null:
-return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.city,_that.countryId,_that.socialLinks,_that.reputationPts,_that.createdDate,_that.updatedDate);case _:
+return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.cityId,_that.cityText,_that.cityName,_that.countryId,_that.socialLinks,_that.reputationPts,_that.createdDate,_that.updatedDate);case _:
   return null;
 
 }
@@ -223,7 +225,7 @@ return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_
 @JsonSerializable()
 
 class _Rider implements Rider {
-  const _Rider({required this.id, @JsonKey(name: 'firebase_uid') required this.firebaseUid, @JsonKey(name: 'role_id') required this.roleId, required this.email, required this.name, @JsonKey(name: 'last_name') required this.lastName, required this.nickname, @JsonKey(name: 'icon_image') this.iconImage, this.bio, this.city, @JsonKey(name: 'country_id') this.countryId, @JsonKey(name: 'social_links') final  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts') required this.reputationPts, @JsonKey(name: 'created_date') required this.createdDate, @JsonKey(name: 'updated_date') this.updatedDate}): _socialLinks = socialLinks;
+  const _Rider({required this.id, @JsonKey(name: 'firebase_uid') required this.firebaseUid, @JsonKey(name: 'role_id') required this.roleId, required this.email, required this.name, @JsonKey(name: 'last_name') required this.lastName, required this.nickname, @JsonKey(name: 'icon_image') this.iconImage, this.bio, @JsonKey(name: 'city_id') this.cityId, @JsonKey(name: 'city_text') this.cityText, @JsonKey(name: 'city_name') this.cityName, @JsonKey(name: 'country_id') this.countryId, @JsonKey(name: 'social_links') final  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts') required this.reputationPts, @JsonKey(name: 'created_date') required this.createdDate, @JsonKey(name: 'updated_date') this.updatedDate}): _socialLinks = socialLinks;
   factory _Rider.fromJson(Map<String, dynamic> json) => _$RiderFromJson(json);
 
 @override final  int id;
@@ -235,7 +237,9 @@ class _Rider implements Rider {
 @override final  String nickname;
 @override@JsonKey(name: 'icon_image') final  String? iconImage;
 @override final  String? bio;
-@override final  String? city;
+@override@JsonKey(name: 'city_id') final  int? cityId;
+@override@JsonKey(name: 'city_text') final  String? cityText;
+@override@JsonKey(name: 'city_name') final  String? cityName;
 @override@JsonKey(name: 'country_id') final  int? countryId;
  final  Map<String, dynamic>? _socialLinks;
 @override@JsonKey(name: 'social_links') Map<String, dynamic>? get socialLinks {
@@ -263,16 +267,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Rider&&(identical(other.id, id) || other.id == id)&&(identical(other.firebaseUid, firebaseUid) || other.firebaseUid == firebaseUid)&&(identical(other.roleId, roleId) || other.roleId == roleId)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.city, city) || other.city == city)&&(identical(other.countryId, countryId) || other.countryId == countryId)&&const DeepCollectionEquality().equals(other._socialLinks, _socialLinks)&&(identical(other.reputationPts, reputationPts) || other.reputationPts == reputationPts)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Rider&&(identical(other.id, id) || other.id == id)&&(identical(other.firebaseUid, firebaseUid) || other.firebaseUid == firebaseUid)&&(identical(other.roleId, roleId) || other.roleId == roleId)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.cityId, cityId) || other.cityId == cityId)&&(identical(other.cityText, cityText) || other.cityText == cityText)&&(identical(other.cityName, cityName) || other.cityName == cityName)&&(identical(other.countryId, countryId) || other.countryId == countryId)&&const DeepCollectionEquality().equals(other._socialLinks, _socialLinks)&&(identical(other.reputationPts, reputationPts) || other.reputationPts == reputationPts)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate)&&(identical(other.updatedDate, updatedDate) || other.updatedDate == updatedDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firebaseUid,roleId,email,name,lastName,nickname,iconImage,bio,city,countryId,const DeepCollectionEquality().hash(_socialLinks),reputationPts,createdDate,updatedDate);
+int get hashCode => Object.hash(runtimeType,id,firebaseUid,roleId,email,name,lastName,nickname,iconImage,bio,cityId,cityText,cityName,countryId,const DeepCollectionEquality().hash(_socialLinks),reputationPts,createdDate,updatedDate);
 
 @override
 String toString() {
-  return 'Rider(id: $id, firebaseUid: $firebaseUid, roleId: $roleId, email: $email, name: $name, lastName: $lastName, nickname: $nickname, iconImage: $iconImage, bio: $bio, city: $city, countryId: $countryId, socialLinks: $socialLinks, reputationPts: $reputationPts, createdDate: $createdDate, updatedDate: $updatedDate)';
+  return 'Rider(id: $id, firebaseUid: $firebaseUid, roleId: $roleId, email: $email, name: $name, lastName: $lastName, nickname: $nickname, iconImage: $iconImage, bio: $bio, cityId: $cityId, cityText: $cityText, cityName: $cityName, countryId: $countryId, socialLinks: $socialLinks, reputationPts: $reputationPts, createdDate: $createdDate, updatedDate: $updatedDate)';
 }
 
 
@@ -283,7 +287,7 @@ abstract mixin class _$RiderCopyWith<$Res> implements $RiderCopyWith<$Res> {
   factory _$RiderCopyWith(_Rider value, $Res Function(_Rider) _then) = __$RiderCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'firebase_uid') String firebaseUid,@JsonKey(name: 'role_id') int roleId, String email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio, String? city,@JsonKey(name: 'country_id') int? countryId,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
+ int id,@JsonKey(name: 'firebase_uid') String firebaseUid,@JsonKey(name: 'role_id') int roleId, String email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio,@JsonKey(name: 'city_id') int? cityId,@JsonKey(name: 'city_text') String? cityText,@JsonKey(name: 'city_name') String? cityName,@JsonKey(name: 'country_id') int? countryId,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
 });
 
 
@@ -300,7 +304,7 @@ class __$RiderCopyWithImpl<$Res>
 
 /// Create a copy of Rider
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firebaseUid = null,Object? roleId = null,Object? email = null,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? city = freezed,Object? countryId = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? createdDate = null,Object? updatedDate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firebaseUid = null,Object? roleId = null,Object? email = null,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? cityId = freezed,Object? cityText = freezed,Object? cityName = freezed,Object? countryId = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? createdDate = null,Object? updatedDate = freezed,}) {
   return _then(_Rider(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firebaseUid: null == firebaseUid ? _self.firebaseUid : firebaseUid // ignore: cast_nullable_to_non_nullable
@@ -311,7 +315,9 @@ as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast
 as String,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
 as String,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
-as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String?,cityId: freezed == cityId ? _self.cityId : cityId // ignore: cast_nullable_to_non_nullable
+as int?,cityText: freezed == cityText ? _self.cityText : cityText // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
 as String?,countryId: freezed == countryId ? _self.countryId : countryId // ignore: cast_nullable_to_non_nullable
 as int?,socialLinks: freezed == socialLinks ? _self._socialLinks : socialLinks // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>?,reputationPts: null == reputationPts ? _self.reputationPts : reputationPts // ignore: cast_nullable_to_non_nullable

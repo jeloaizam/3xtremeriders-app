@@ -16,6 +16,7 @@ class AppTextField extends StatelessWidget {
     this.keyboardType,
     this.multiline = false,
     this.maxLines,
+    this.extraVerticalPadding = 0,
   });
 
   final TextEditingController? controller;
@@ -28,13 +29,20 @@ class AppTextField extends StatelessWidget {
   final bool multiline;
   final int? maxLines;
 
+  /// Added on top of the field's normal (intrinsic) height, split evenly
+  /// top/bottom — e.g. 10 makes the field 10px taller overall.
+  final double extraVerticalPadding;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final spacing = context.spacing;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 14 + extraVerticalPadding / 2,
+      ),
       constraints: multiline ? const BoxConstraints(minHeight: 74) : null,
       decoration: BoxDecoration(
         color: colors.surfaceCard,

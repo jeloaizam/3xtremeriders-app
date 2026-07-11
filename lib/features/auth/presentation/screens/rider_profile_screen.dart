@@ -120,11 +120,11 @@ class _RiderProfileBody extends ConsumerWidget {
                   color: colors.textMuted,
                 ),
               ),
-              if (rider.city != null || country != null) ...[
+              if (rider.cityName != null || country != null) ...[
                 const SizedBox(height: 6),
                 Text(
                   [
-                    if (rider.city != null) rider.city!,
+                    if (rider.cityName != null) rider.cityName!,
                     if (country != null) country.name,
                   ].join(' · '),
                   style: context.typography.meta,

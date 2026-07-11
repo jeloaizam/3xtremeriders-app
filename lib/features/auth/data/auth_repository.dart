@@ -23,6 +23,13 @@ class AuthRepository {
     );
   }
 
+  Future<void> signUpWithEmailPassword(String email, String password) {
+    return _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
   Future<void> signInWithGoogle() async {
     if (!_googleSignInReady) {
       await _googleSignIn.initialize();

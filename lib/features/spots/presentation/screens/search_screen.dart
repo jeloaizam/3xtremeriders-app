@@ -675,9 +675,10 @@ class _RiderResultRow extends StatelessWidget {
                       rider.nickname,
                       style: context.typography.title.copyWith(height: 1),
                     ),
-                    if (rider.city != null && rider.city!.isNotEmpty) ...[
+                    if (rider.cityName != null &&
+                        rider.cityName!.isNotEmpty) ...[
                       const SizedBox(height: 5),
-                      Text(rider.city!, style: context.typography.micro),
+                      Text(rider.cityName!, style: context.typography.micro),
                     ],
                   ],
                 ),

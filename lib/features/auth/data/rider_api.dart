@@ -54,6 +54,13 @@ class RiderApi {
   /// non-null fields are sent, matching the backend's partial-update schema.
   /// `roleId` is only accepted by the backend when the caller is an admin
   /// (self-edits of other fields still require being the profile's owner).
+  ///
+  /// `cityId`/`cityText` are mutually exclusive (a country either has a
+  /// city catalog or falls back to free text) — `clearCityId`/
+  /// `clearCityText` force an explicit `null` through instead of omitting
+  /// the key, so switching from one mode to the other actually clears the
+  /// stale side instead of leaving it stuck in the response's `city_name`
+  /// resolution (which prefers `city_id` whenever it's set).
   Future<Rider> update({
     required int riderId,
     required String idToken,
@@ -61,7 +68,10 @@ class RiderApi {
     String? lastName,
     String? nickname,
     String? bio,
-    String? city,
+    int? cityId,
+    bool clearCityId = false,
+    String? cityText,
+    bool clearCityText = false,
     int? countryId,
     int? roleId,
   }) async {
@@ -76,7 +86,8 @@ class RiderApi {
         'last_name': ?lastName,
         'nickname': ?nickname,
         'bio': ?bio,
-        'city': ?city,
+        if (clearCityId) 'city_id': null else 'city_id': ?cityId,
+        if (clearCityText) 'city_text': null else 'city_text': ?cityText,
         'country_id': ?countryId,
         'role_id': ?roleId,
       }),

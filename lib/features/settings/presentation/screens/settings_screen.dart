@@ -20,7 +20,9 @@ import '../../../auth/domain/rider_sport.dart';
 import '../../../spots/application/spots_providers.dart';
 import '../../../spots/domain/sport.dart';
 import '../../../spots/presentation/sport_visuals.dart';
+import '../../data/city_api.dart';
 import '../../data/country_api.dart';
+import '../widgets/city_selector.dart';
 
 /// No dedicated design file exists for Settings in the source project —
 /// built from the same core components (SegmentedControl, Switch,
@@ -37,10 +39,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _nicknameController = TextEditingController();
-  final _cityController = TextEditingController();
   final _bioController = TextEditingController();
+  final _cityTextController = TextEditingController();
 
   int? _countryId;
+  int? _cityId;
   bool _seeded = false;
   bool _saving = false;
   final Set<int> _pendingFavoriteSports = {};
@@ -50,8 +53,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _nameController.dispose();
     _lastNameController.dispose();
     _nicknameController.dispose();
-    _cityController.dispose();
     _bioController.dispose();
+    _cityTextController.dispose();
     super.dispose();
   }
 
@@ -60,23 +63,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _nameController.text = rider.name;
     _lastNameController.text = rider.lastName;
     _nicknameController.text = rider.nickname;
-    _cityController.text = rider.city ?? '';
     _bioController.text = rider.bio ?? '';
     _countryId = rider.countryId;
+    _cityId = rider.cityId;
+    _cityTextController.text = rider.cityText ?? '';
     _seeded = true;
   }
 
   Future<void> _save() async {
     setState(() => _saving = true);
     try {
+      // Whichever of city dropdown/free-text was actually shown for the
+      // chosen country (see CitySelector) is authoritative — re-checking
+      // the live catalog here instead of trusting both local fields at
+      // once avoids sending a stale leftover from a previously-selected
+      // country that used the other mode.
+      final countryId = _countryId;
+      final cities = countryId == null
+          ? null
+          : ref.read(citiesProvider(countryId)).value;
+      final usingCatalog = cities != null && cities.isNotEmpty;
+      final cityText = _cityTextController.text.trim();
+
       await ref
           .read(currentRiderProvider.notifier)
           .updateProfile(
             name: _nameController.text.trim(),
             lastName: _lastNameController.text.trim(),
             nickname: _nicknameController.text.trim(),
-            city: _cityController.text.trim(),
             bio: _bioController.text.trim(),
+            cityId: usingCatalog ? _cityId : null,
+            cityText: usingCatalog
+                ? null
+                : (cityText.isEmpty ? null : cityText),
             countryId: _countryId,
           );
       if (mounted) {
@@ -239,12 +258,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   icon: Symbols.alternate_email,
                 ),
                 const SizedBox(height: 11),
-                AppTextField(
-                  controller: _cityController,
-                  placeholder: l10n.settingsCityLabel,
-                  icon: Symbols.location_city,
-                ),
-                const SizedBox(height: 11),
                 countriesAsync.when(
                   loading: () => const LinearProgressIndicator(),
                   error: (error, _) => Text('$error'),
@@ -252,6 +265,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     icon: Symbols.public,
                     placeholder: l10n.settingsCountryLabel,
                     value: _countryId,
+                    extraVerticalPadding: 10,
                     items: [
                       for (final country in countries)
                         DropdownMenuItem(
@@ -259,8 +273,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           child: Text(country.name),
                         ),
                     ],
-                    onChanged: (id) => setState(() => _countryId = id),
+                    onChanged: (id) => setState(() {
+                      _countryId = id;
+                      _cityId = null;
+                      _cityTextController.clear();
+                    }),
                   ),
+                ),
+                const SizedBox(height: 11),
+                CitySelector(
+                  countryId: _countryId,
+                  cityId: _cityId,
+                  cityTextController: _cityTextController,
+                  onCityIdChanged: (id) => setState(() => _cityId = id),
                 ),
                 const SizedBox(height: 11),
                 AppTextField(

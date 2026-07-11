@@ -2,8 +2,10 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/application/auth_providers.dart';
+import '../../features/auth/presentation/screens/complete_profile_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/rider_profile_screen.dart';
+import '../../features/auth/presentation/screens/signup_screen.dart';
 import '../../features/events/presentation/screens/create_event_screen.dart';
 import '../../features/events/presentation/screens/event_screen.dart';
 import '../../features/events/presentation/screens/events_list_screen.dart';
@@ -25,6 +27,12 @@ part 'app_router.g.dart';
 GoRouter appRouter(Ref ref) {
   final refreshNotifier = GoRouterRefreshNotifier();
   ref.listen(isAuthenticatedProvider, (_, _) => refreshNotifier.notify());
+  // Without this, the router never re-evaluates `redirect` once the rider
+  // profile finishes resolving asynchronously after login — the exact same
+  // class of ordering bug already hit once before with `isAuthenticated`
+  // alone (see project memory). Needed for the `/complete-profile` gate
+  // below, which depends on `currentRiderProvider`'s resolved value.
+  ref.listen(currentRiderProvider, (_, _) => refreshNotifier.notify());
   ref.onDispose(refreshNotifier.dispose);
 
   return GoRouter(
@@ -32,13 +40,33 @@ GoRouter appRouter(Ref ref) {
     refreshListenable: refreshNotifier,
     redirect: (context, state) {
       final authenticated = ref.read(isAuthenticatedProvider);
-      final loggingIn = state.matchedLocation == '/login';
+      final loggingIn =
+          state.matchedLocation == '/login' ||
+          state.matchedLocation == '/signup';
       if (!authenticated && !loggingIn) return '/login';
-      if (authenticated && loggingIn) return '/home';
+      if (!authenticated) return null;
+
+      // Mandatory profile-completion gate — only relevant once
+      // authenticated. `.value` reads null while `currentRiderProvider` is
+      // still resolving; treated as "not blocking yet" rather than forced,
+      // to avoid bouncing the rider mid-sync.
+      final needsCompletion = ref.read(needsProfileCompletionProvider);
+      final onCompletion = state.matchedLocation == '/complete-profile';
+      if (needsCompletion && !onCompletion) return '/complete-profile';
+      if (!needsCompletion && onCompletion) return '/home';
+      if (loggingIn) return needsCompletion ? '/complete-profile' : '/home';
       return null;
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: '/complete-profile',
+        builder: (context, state) => const CompleteProfileScreen(),
+      ),
       GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
       GoRoute(
         path: '/settings',

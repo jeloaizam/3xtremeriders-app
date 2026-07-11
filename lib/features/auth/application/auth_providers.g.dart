@@ -205,6 +205,182 @@ final class IsAuthenticatedProvider
 
 String _$isAuthenticatedHash() => r'7e4b76e019a785102d684103bb31a7554dde248f';
 
+/// Real profile data collected by `SignupScreen` right before creating the
+/// Firebase account, consumed once by [CurrentRider.build] the first time
+/// it syncs a brand-new rider. Exists to win an unavoidable race: the
+/// moment Firebase auth state flips, the router redirects and something
+/// else may end up triggering [CurrentRider]'s first build before the
+/// signup screen itself would ever get a chance to call `sync()` with the
+/// real values — since the backend only uses the *first* sync's body for a
+/// given firebase_uid, whoever calls it first wins. Setting this
+/// synchronously before Firebase even creates the account sidesteps the
+/// race entirely: no matter who ends up triggering the actual network
+/// call, it reads the pending values that are already sitting here.
+
+@ProviderFor(PendingSignupProfile)
+final pendingSignupProfileProvider = PendingSignupProfileProvider._();
+
+/// Real profile data collected by `SignupScreen` right before creating the
+/// Firebase account, consumed once by [CurrentRider.build] the first time
+/// it syncs a brand-new rider. Exists to win an unavoidable race: the
+/// moment Firebase auth state flips, the router redirects and something
+/// else may end up triggering [CurrentRider]'s first build before the
+/// signup screen itself would ever get a chance to call `sync()` with the
+/// real values — since the backend only uses the *first* sync's body for a
+/// given firebase_uid, whoever calls it first wins. Setting this
+/// synchronously before Firebase even creates the account sidesteps the
+/// race entirely: no matter who ends up triggering the actual network
+/// call, it reads the pending values that are already sitting here.
+final class PendingSignupProfileProvider
+    extends
+        $NotifierProvider<
+          PendingSignupProfile,
+          ({String lastName, String name, String nickname})?
+        > {
+  /// Real profile data collected by `SignupScreen` right before creating the
+  /// Firebase account, consumed once by [CurrentRider.build] the first time
+  /// it syncs a brand-new rider. Exists to win an unavoidable race: the
+  /// moment Firebase auth state flips, the router redirects and something
+  /// else may end up triggering [CurrentRider]'s first build before the
+  /// signup screen itself would ever get a chance to call `sync()` with the
+  /// real values — since the backend only uses the *first* sync's body for a
+  /// given firebase_uid, whoever calls it first wins. Setting this
+  /// synchronously before Firebase even creates the account sidesteps the
+  /// race entirely: no matter who ends up triggering the actual network
+  /// call, it reads the pending values that are already sitting here.
+  PendingSignupProfileProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pendingSignupProfileProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$pendingSignupProfileHash();
+
+  @$internal
+  @override
+  PendingSignupProfile create() => PendingSignupProfile();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(
+    ({String lastName, String name, String nickname})? value,
+  ) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<
+            ({String lastName, String name, String nickname})?
+          >(value),
+    );
+  }
+}
+
+String _$pendingSignupProfileHash() =>
+    r'18b0c5301ad50f1ee227f0904d0854492cc8b2a0';
+
+/// Real profile data collected by `SignupScreen` right before creating the
+/// Firebase account, consumed once by [CurrentRider.build] the first time
+/// it syncs a brand-new rider. Exists to win an unavoidable race: the
+/// moment Firebase auth state flips, the router redirects and something
+/// else may end up triggering [CurrentRider]'s first build before the
+/// signup screen itself would ever get a chance to call `sync()` with the
+/// real values — since the backend only uses the *first* sync's body for a
+/// given firebase_uid, whoever calls it first wins. Setting this
+/// synchronously before Firebase even creates the account sidesteps the
+/// race entirely: no matter who ends up triggering the actual network
+/// call, it reads the pending values that are already sitting here.
+
+abstract class _$PendingSignupProfile
+    extends $Notifier<({String lastName, String name, String nickname})?> {
+  ({String lastName, String name, String nickname})? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              ({String lastName, String name, String nickname})?,
+              ({String lastName, String name, String nickname})?
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                ({String lastName, String name, String nickname})?,
+                ({String lastName, String name, String nickname})?
+              >,
+              ({String lastName, String name, String nickname})?,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// True once a signed-in rider's profile is missing the bare minimum
+/// (nickname) — in practice this only happens for a brand-new social
+/// sign-in (Google today), since email sign-up always goes through
+/// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+/// mandatory `/complete-profile` redirect.
+
+@ProviderFor(needsProfileCompletion)
+final needsProfileCompletionProvider = NeedsProfileCompletionProvider._();
+
+/// True once a signed-in rider's profile is missing the bare minimum
+/// (nickname) — in practice this only happens for a brand-new social
+/// sign-in (Google today), since email sign-up always goes through
+/// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+/// mandatory `/complete-profile` redirect.
+
+final class NeedsProfileCompletionProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// True once a signed-in rider's profile is missing the bare minimum
+  /// (nickname) — in practice this only happens for a brand-new social
+  /// sign-in (Google today), since email sign-up always goes through
+  /// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+  /// mandatory `/complete-profile` redirect.
+  NeedsProfileCompletionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'needsProfileCompletionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$needsProfileCompletionHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return needsProfileCompletion(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$needsProfileCompletionHash() =>
+    r'76b136470937c237616e288339a0fd1f1b36873f';
+
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the
 /// placeholder profile fields and just returns the stored profile — real
@@ -260,7 +436,7 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'4a95965b103735d122ed280ce459366b546e8dc9';
+String _$currentRiderHash() => r'9acc9e94bcbf264cdac32d11e6febf35a7861d2b';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the

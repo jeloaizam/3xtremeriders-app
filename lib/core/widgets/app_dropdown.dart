@@ -12,6 +12,7 @@ class AppDropdown<T> extends StatelessWidget {
     this.onChanged,
     this.placeholder,
     this.icon,
+    this.extraVerticalPadding = 0,
   });
 
   final List<DropdownMenuItem<T>> items;
@@ -20,13 +21,20 @@ class AppDropdown<T> extends StatelessWidget {
   final String? placeholder;
   final IconData? icon;
 
+  /// Added on top of the field's normal (intrinsic) height, split evenly
+  /// top/bottom — e.g. 10 makes the field 10px taller overall.
+  final double extraVerticalPadding;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final spacing = context.spacing;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
+      padding: EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: extraVerticalPadding / 2,
+      ),
       decoration: BoxDecoration(
         color: colors.surfaceCard,
         border: Border.all(color: colors.hairlineStrong),
