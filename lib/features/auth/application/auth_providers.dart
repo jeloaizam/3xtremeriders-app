@@ -116,10 +116,14 @@ class CurrentRider extends _$CurrentRider {
   /// every save exactly one of `cityId`/`cityText` should end up set and
   /// the other cleared, matching whichever mode (catalog dropdown vs.
   /// manual text) the rider was actually shown for their chosen country.
+  /// `iconImage` follows the same always-explicit convention — Settings
+  /// always resends the rider's current avatar URL (or `null` to clear it)
+  /// on every save, since it's the sole owner of that field too.
   Future<void> updateProfile({
     String? name,
     String? lastName,
     String? nickname,
+    String? iconImage,
     String? bio,
     int? cityId,
     String? cityText,
@@ -140,6 +144,8 @@ class CurrentRider extends _$CurrentRider {
           name: name,
           lastName: lastName,
           nickname: nickname,
+          iconImage: iconImage,
+          clearIconImage: iconImage == null,
           bio: bio,
           cityId: cityId,
           clearCityId: cityId == null,

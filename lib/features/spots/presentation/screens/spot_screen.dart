@@ -253,6 +253,7 @@ class _SpotScreenBody extends StatelessWidget {
                         initial: detail.creator.nickname.isNotEmpty
                             ? detail.creator.nickname[0].toUpperCase()
                             : '?',
+                        imageUrl: detail.creator.iconImage,
                         size: AppAvatarSize.sm,
                       ),
                       const SizedBox(width: 10),
@@ -1260,6 +1261,7 @@ class _CommentRow extends StatelessWidget {
             initial: author.nickname.isNotEmpty
                 ? author.nickname[0].toUpperCase()
                 : '?',
+            imageUrl: author.iconImage,
             size: AppAvatarSize.sm,
           ),
           const SizedBox(width: 11),

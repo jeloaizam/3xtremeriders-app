@@ -352,6 +352,36 @@ abstract class AppLocalizations {
   /// **'Perfil'**
   String get settingsProfileSection;
 
+  /// No description provided for @settingsAvatarCamera.
+  ///
+  /// In es, this message translates to:
+  /// **'Tomar foto'**
+  String get settingsAvatarCamera;
+
+  /// No description provided for @settingsAvatarGallery.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir de la galería'**
+  String get settingsAvatarGallery;
+
+  /// No description provided for @settingsAvatarRemove.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar foto'**
+  String get settingsAvatarRemove;
+
+  /// No description provided for @settingsAvatarReframe.
+  ///
+  /// In es, this message translates to:
+  /// **'Reencuadrar foto'**
+  String get settingsAvatarReframe;
+
+  /// No description provided for @settingsAvatarCropTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustar foto'**
+  String get settingsAvatarCropTitle;
+
   /// No description provided for @settingsNameLabel.
   ///
   /// In es, this message translates to:

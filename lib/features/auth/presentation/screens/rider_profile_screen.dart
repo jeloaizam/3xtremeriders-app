@@ -109,6 +109,7 @@ class _RiderProfileBody extends ConsumerWidget {
                 initial: rider.nickname.isNotEmpty
                     ? rider.nickname[0].toUpperCase()
                     : '?',
+                imageUrl: rider.iconImage,
                 size: AppAvatarSize.xl,
               ),
               const SizedBox(height: 12),

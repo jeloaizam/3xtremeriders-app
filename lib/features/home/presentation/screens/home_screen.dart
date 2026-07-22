@@ -304,7 +304,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           const SizedBox(width: 10),
                           GestureDetector(
                             onTap: () => context.push('/settings'),
-                            child: const AppAvatar(initial: 'M'),
+                            child: AppAvatar(
+                              initial:
+                                  rider != null && rider.nickname.isNotEmpty
+                                  ? rider.nickname[0].toUpperCase()
+                                  : '?',
+                              imageUrl: rider?.iconImage,
+                            ),
                           ),
                         ],
                       ),
@@ -798,6 +804,7 @@ class _AppDrawer extends ConsumerWidget {
                       initial: rider != null && rider.nickname.isNotEmpty
                           ? rider.nickname[0].toUpperCase()
                           : '?',
+                      imageUrl: rider?.iconImage,
                     ),
                     const SizedBox(width: 13),
                     Expanded(

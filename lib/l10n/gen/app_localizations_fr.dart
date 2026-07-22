@@ -142,6 +142,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsProfileSection => 'Profil';
 
   @override
+  String get settingsAvatarCamera => 'Prendre une photo';
+
+  @override
+  String get settingsAvatarGallery => 'Choisir dans la galerie';
+
+  @override
+  String get settingsAvatarRemove => 'Supprimer la photo';
+
+  @override
+  String get settingsAvatarReframe => 'Recadrer la photo';
+
+  @override
+  String get settingsAvatarCropTitle => 'Ajuster la photo';
+
+  @override
   String get settingsNameLabel => 'Prénom';
 
   @override

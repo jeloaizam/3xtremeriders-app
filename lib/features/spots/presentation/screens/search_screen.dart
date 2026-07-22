@@ -665,6 +665,7 @@ class _RiderResultRow extends StatelessWidget {
                 initial: rider.nickname.isNotEmpty
                     ? rider.nickname[0].toUpperCase()
                     : '?',
+                imageUrl: rider.iconImage,
               ),
               const SizedBox(width: 12),
               Expanded(

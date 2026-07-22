@@ -61,12 +61,17 @@ class RiderApi {
   /// the key, so switching from one mode to the other actually clears the
   /// stale side instead of leaving it stuck in the response's `city_name`
   /// resolution (which prefers `city_id` whenever it's set).
+  ///
+  /// `clearIconImage` mirrors the same explicit-null convention, for
+  /// removing a rider's avatar rather than just leaving it unset.
   Future<Rider> update({
     required int riderId,
     required String idToken,
     String? name,
     String? lastName,
     String? nickname,
+    String? iconImage,
+    bool clearIconImage = false,
     String? bio,
     int? cityId,
     bool clearCityId = false,
@@ -85,6 +90,7 @@ class RiderApi {
         'name': ?name,
         'last_name': ?lastName,
         'nickname': ?nickname,
+        if (clearIconImage) 'icon_image': null else 'icon_image': ?iconImage,
         'bio': ?bio,
         if (clearCityId) 'city_id': null else 'city_id': ?cityId,
         if (clearCityText) 'city_text': null else 'city_text': ?cityText,

@@ -1,10 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/locale/locale_provider.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/storage/storage_api.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dropdown.dart';
 import '../../../../core/widgets/app_segmented_control.dart';
@@ -44,6 +51,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   int? _countryId;
   int? _cityId;
+  String? _iconImage;
+  bool _uploadingAvatar = false;
   bool _seeded = false;
   bool _saving = false;
   final Set<int> _pendingFavoriteSports = {};
@@ -67,7 +76,149 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _countryId = rider.countryId;
     _cityId = rider.cityId;
     _cityTextController.text = rider.cityText ?? '';
+    _iconImage = rider.iconImage;
     _seeded = true;
+  }
+
+  Future<void> _pickAvatar() async {
+    final l10n = AppLocalizations.of(context);
+    // `Object` return type so the "remove" tile (a String sentinel) can be
+    // told apart from an actually-picked ImageSource, and from a plain
+    // barrier-tap dismissal (null) which should do nothing at all.
+    final choice = await showModalBottomSheet<Object>(
+      context: context,
+      backgroundColor: context.colors.surfaceCard,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Symbols.photo_camera),
+              title: Text(l10n.settingsAvatarCamera),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Symbols.photo_library),
+              title: Text(l10n.settingsAvatarGallery),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
+            ),
+            if (_iconImage != null) ...[
+              ListTile(
+                leading: const Icon(Symbols.crop),
+                title: Text(l10n.settingsAvatarReframe),
+                onTap: () => Navigator.of(sheetContext).pop('reframe'),
+              ),
+              ListTile(
+                leading: const Icon(Symbols.delete),
+                title: Text(l10n.settingsAvatarRemove),
+                onTap: () => Navigator.of(sheetContext).pop('remove'),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+    if (choice == null) return;
+    if (choice == 'remove') {
+      setState(() => _iconImage = null);
+      return;
+    }
+
+    // Both branches below resolve to a local file to hand the cropper —
+    // "reframe" re-downloads the already-uploaded photo instead of making
+    // the rider pick it again from camera/gallery just to move the crop.
+    String sourcePath;
+    String sourceName;
+    if (choice == 'reframe') {
+      final currentUrl = _iconImage;
+      if (currentUrl == null) return;
+      setState(() => _uploadingAvatar = true);
+      try {
+        final response = await http.get(Uri.parse(currentUrl));
+        if (response.statusCode != 200) {
+          throw ApiException(response.statusCode, response.body);
+        }
+        final tempDir = await Directory.systemTemp.createTemp('avatar_reframe');
+        final tempFile = File('${tempDir.path}/current_avatar.jpg');
+        await tempFile.writeAsBytes(response.bodyBytes);
+        sourcePath = tempFile.path;
+        sourceName = 'avatar.jpg';
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('$e')));
+        }
+        return;
+      } finally {
+        if (mounted) setState(() => _uploadingAvatar = false);
+      }
+    } else {
+      final file = await ImagePicker().pickImage(
+        source: choice as ImageSource,
+        maxWidth: 1600,
+        imageQuality: 90,
+      );
+      if (file == null) return;
+      sourcePath = file.path;
+      sourceName = file.name;
+    }
+    if (!mounted) return;
+
+    // Lets the rider pick which part of the photo ends up inside the
+    // circular avatar instead of always trusting AppAvatar's automatic
+    // center-crop, which frequently cuts off faces on non-square photos.
+    final colors = context.colors;
+    final cropped = await ImageCropper().cropImage(
+      sourcePath: sourcePath,
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressQuality: 90,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: l10n.settingsAvatarCropTitle,
+          toolbarColor: colors.bg850,
+          toolbarWidgetColor: colors.text100,
+          backgroundColor: colors.bg850,
+          activeControlsWidgetColor: colors.colorAction,
+          cropStyle: CropStyle.circle,
+          lockAspectRatio: true,
+        ),
+        IOSUiSettings(
+          title: l10n.settingsAvatarCropTitle,
+          cropStyle: CropStyle.circle,
+          aspectRatioLockEnabled: true,
+        ),
+      ],
+    );
+    if (cropped == null) return;
+
+    final firebaseUid = ref.read(firebaseAuthProvider).currentUser?.uid;
+    if (firebaseUid == null) return;
+
+    setState(() => _uploadingAvatar = true);
+    try {
+      // Must match the published Storage rule exactly:
+      // `riders/{firebaseUid}/profile/{fileName}`, keyed by the Firebase
+      // UID (not the backend's numeric rider id) since the rule checks
+      // `request.auth.uid == firebaseUid`.
+      final url = await ref
+          .read(storageApiProvider)
+          .uploadFile(
+            path:
+                'riders/$firebaseUid/profile/'
+                '${DateTime.now().millisecondsSinceEpoch}_$sourceName',
+            file: File(cropped.path),
+          );
+      if (mounted) setState(() => _iconImage = url);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$e')));
+      }
+    } finally {
+      if (mounted) setState(() => _uploadingAvatar = false);
+    }
   }
 
   Future<void> _save() async {
@@ -91,6 +242,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             name: _nameController.text.trim(),
             lastName: _lastNameController.text.trim(),
             nickname: _nicknameController.text.trim(),
+            iconImage: _iconImage,
             bio: _bioController.text.trim(),
             cityId: usingCatalog ? _cityId : null,
             cityText: usingCatalog
@@ -238,6 +390,59 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 20 + MediaQuery.of(context).padding.bottom,
               ),
               children: [
+                Center(
+                  child: GestureDetector(
+                    onTap: _uploadingAvatar ? null : _pickAvatar,
+                    child: Stack(
+                      children: [
+                        Opacity(
+                          opacity: _uploadingAvatar ? .5 : 1,
+                          child: AppAvatar(
+                            size: AppAvatarSize.xl,
+                            imageUrl: _iconImage,
+                            initial: rider.nickname.isNotEmpty
+                                ? rider.nickname[0].toUpperCase()
+                                : '?',
+                          ),
+                        ),
+                        if (_uploadingAvatar)
+                          Positioned.fill(
+                            child: Center(
+                              child: SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: context.colors.text100,
+                                ),
+                              ),
+                            ),
+                          ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: context.colors.colorAction,
+                              border: Border.all(
+                                color: context.colors.bg850,
+                                width: 2,
+                              ),
+                            ),
+                            child: Icon(
+                              Symbols.photo_camera,
+                              size: 15,
+                              color: context.colors.bg850,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
                 _SectionTitle(l10n.settingsProfileSection),
                 const SizedBox(height: 12),
                 AppTextField(
