@@ -53,6 +53,7 @@ class AppDropdown<T> extends StatelessWidget {
                 items: items,
                 onChanged: onChanged,
                 isExpanded: true,
+                menuMaxHeight: 350,
                 icon: Icon(
                   Icons.expand_more,
                   color: colors.textMuted,
