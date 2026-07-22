@@ -1,5 +1,6 @@
 # Build-time secrets (e.g. Mapbox token) — see dart_define.example.json
 dart_define.local.json
+dart_define.prod.json
 
 # Miscellaneous
 *.class
