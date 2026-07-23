@@ -14,6 +14,9 @@ abstract class RiderSport with _$RiderSport {
     @JsonKey(name: 'rider_id') required int riderId,
     @JsonKey(name: 'sport_id') required int sportId,
     required int order,
+    // True si el rider tiene spots propios publicados con este deporte —
+    // el backend lo calcula al vuelo (no es una columna real).
+    @JsonKey(name: 'has_linked_spots') @Default(false) bool hasLinkedSpots,
   }) = _RiderSport;
 
   factory RiderSport.fromJson(Map<String, dynamic> json) =>

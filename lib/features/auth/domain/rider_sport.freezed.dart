@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RiderSport {
 
- int get id;@JsonKey(name: 'rider_id') int get riderId;@JsonKey(name: 'sport_id') int get sportId; int get order;
+ int get id;@JsonKey(name: 'rider_id') int get riderId;@JsonKey(name: 'sport_id') int get sportId; int get order;@JsonKey(name: 'has_linked_spots') bool get hasLinkedSpots;
 /// Create a copy of RiderSport
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RiderSportCopyWith<RiderSport> get copyWith => _$RiderSportCopyWithImpl<RiderSp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RiderSport&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.order, order) || other.order == order));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RiderSport&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.order, order) || other.order == order)&&(identical(other.hasLinkedSpots, hasLinkedSpots) || other.hasLinkedSpots == hasLinkedSpots));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,riderId,sportId,order);
+int get hashCode => Object.hash(runtimeType,id,riderId,sportId,order,hasLinkedSpots);
 
 @override
 String toString() {
-  return 'RiderSport(id: $id, riderId: $riderId, sportId: $sportId, order: $order)';
+  return 'RiderSport(id: $id, riderId: $riderId, sportId: $sportId, order: $order, hasLinkedSpots: $hasLinkedSpots)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RiderSportCopyWith<$Res>  {
   factory $RiderSportCopyWith(RiderSport value, $Res Function(RiderSport) _then) = _$RiderSportCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'sport_id') int sportId, int order
+ int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'sport_id') int sportId, int order,@JsonKey(name: 'has_linked_spots') bool hasLinkedSpots
 });
 
 
@@ -65,13 +65,14 @@ class _$RiderSportCopyWithImpl<$Res>
 
 /// Create a copy of RiderSport
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? riderId = null,Object? sportId = null,Object? order = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? riderId = null,Object? sportId = null,Object? order = null,Object? hasLinkedSpots = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,riderId: null == riderId ? _self.riderId : riderId // ignore: cast_nullable_to_non_nullable
 as int,sportId: null == sportId ? _self.sportId : sportId // ignore: cast_nullable_to_non_nullable
 as int,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
-as int,
+as int,hasLinkedSpots: null == hasLinkedSpots ? _self.hasLinkedSpots : hasLinkedSpots // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'sport_id')  int sportId,  int order)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'sport_id')  int sportId,  int order, @JsonKey(name: 'has_linked_spots')  bool hasLinkedSpots)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RiderSport() when $default != null:
-return $default(_that.id,_that.riderId,_that.sportId,_that.order);case _:
+return $default(_that.id,_that.riderId,_that.sportId,_that.order,_that.hasLinkedSpots);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.id,_that.riderId,_that.sportId,_that.order);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'sport_id')  int sportId,  int order)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'sport_id')  int sportId,  int order, @JsonKey(name: 'has_linked_spots')  bool hasLinkedSpots)  $default,) {final _that = this;
 switch (_that) {
 case _RiderSport():
-return $default(_that.id,_that.riderId,_that.sportId,_that.order);case _:
+return $default(_that.id,_that.riderId,_that.sportId,_that.order,_that.hasLinkedSpots);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.riderId,_that.sportId,_that.order);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'sport_id')  int sportId,  int order)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'sport_id')  int sportId,  int order, @JsonKey(name: 'has_linked_spots')  bool hasLinkedSpots)?  $default,) {final _that = this;
 switch (_that) {
 case _RiderSport() when $default != null:
-return $default(_that.id,_that.riderId,_that.sportId,_that.order);case _:
+return $default(_that.id,_that.riderId,_that.sportId,_that.order,_that.hasLinkedSpots);case _:
   return null;
 
 }
@@ -212,13 +213,14 @@ return $default(_that.id,_that.riderId,_that.sportId,_that.order);case _:
 @JsonSerializable()
 
 class _RiderSport implements RiderSport {
-  const _RiderSport({required this.id, @JsonKey(name: 'rider_id') required this.riderId, @JsonKey(name: 'sport_id') required this.sportId, required this.order});
+  const _RiderSport({required this.id, @JsonKey(name: 'rider_id') required this.riderId, @JsonKey(name: 'sport_id') required this.sportId, required this.order, @JsonKey(name: 'has_linked_spots') this.hasLinkedSpots = false});
   factory _RiderSport.fromJson(Map<String, dynamic> json) => _$RiderSportFromJson(json);
 
 @override final  int id;
 @override@JsonKey(name: 'rider_id') final  int riderId;
 @override@JsonKey(name: 'sport_id') final  int sportId;
 @override final  int order;
+@override@JsonKey(name: 'has_linked_spots') final  bool hasLinkedSpots;
 
 /// Create a copy of RiderSport
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RiderSport&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.order, order) || other.order == order));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RiderSport&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.order, order) || other.order == order)&&(identical(other.hasLinkedSpots, hasLinkedSpots) || other.hasLinkedSpots == hasLinkedSpots));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,riderId,sportId,order);
+int get hashCode => Object.hash(runtimeType,id,riderId,sportId,order,hasLinkedSpots);
 
 @override
 String toString() {
-  return 'RiderSport(id: $id, riderId: $riderId, sportId: $sportId, order: $order)';
+  return 'RiderSport(id: $id, riderId: $riderId, sportId: $sportId, order: $order, hasLinkedSpots: $hasLinkedSpots)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$RiderSportCopyWith<$Res> implements $RiderSportCopyWith<$
   factory _$RiderSportCopyWith(_RiderSport value, $Res Function(_RiderSport) _then) = __$RiderSportCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'sport_id') int sportId, int order
+ int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'sport_id') int sportId, int order,@JsonKey(name: 'has_linked_spots') bool hasLinkedSpots
 });
 
 
@@ -270,13 +272,14 @@ class __$RiderSportCopyWithImpl<$Res>
 
 /// Create a copy of RiderSport
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? riderId = null,Object? sportId = null,Object? order = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? riderId = null,Object? sportId = null,Object? order = null,Object? hasLinkedSpots = null,}) {
   return _then(_RiderSport(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,riderId: null == riderId ? _self.riderId : riderId // ignore: cast_nullable_to_non_nullable
 as int,sportId: null == sportId ? _self.sportId : sportId // ignore: cast_nullable_to_non_nullable
 as int,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
-as int,
+as int,hasLinkedSpots: null == hasLinkedSpots ? _self.hasLinkedSpots : hasLinkedSpots // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

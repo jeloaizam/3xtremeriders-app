@@ -61,6 +61,35 @@ class RiderSportApi {
       throw ApiException(response.statusCode, response.body);
     }
   }
+
+  /// Replaces the rider's whole favorite-sports order in one call —
+  /// `sportIds` must contain exactly the same sports the rider already has
+  /// favorited, just reordered. The backend applies this as a single
+  /// delete-then-reinsert transaction (see `crud_rider_sport.reorder`)
+  /// because a series of individual PATCHes can't swap two `order` values
+  /// without transiently violating the DB's unique(rider_id, order)
+  /// constraint.
+  Future<List<RiderSport>> reorder({
+    required int riderId,
+    required List<int> sportIds,
+    required String idToken,
+  }) async {
+    final response = await http.put(
+      Uri.parse('${ApiConfig.baseUrl}/riders/$riderId/sports/'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'sport_ids': sportIds}),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    final data = jsonDecode(response.body) as List<dynamic>;
+    return data
+        .map((json) => RiderSport.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
 }
 
 @riverpod
