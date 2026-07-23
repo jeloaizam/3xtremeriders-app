@@ -338,7 +338,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       final t = (sin(_pulsePhase * halo.speed) + 1) / 2;
       halo.annotation.circleRadius = halo.baseRadius + halo.amplitude * t;
       halo.annotation.circleOpacity = halo.baseOpacity * (1 - t * 0.6);
-      manager.update(halo.annotation);
+      // Fire-and-forget on purpose (awaiting here would serialize every
+      // halo's update behind the last one) — but that means an update can
+      // land on the native side just after a concurrent `_syncHalos()`
+      // deletes this same annotation (e.g. right after a tap), which
+      // throws "Annotation has not been added on the map". Harmless
+      // (the next sync already has the corrected set), just silence it.
+      manager.update(halo.annotation).catchError((_) {});
     }
   }
 
