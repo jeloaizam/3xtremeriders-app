@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/sport_badge_shape.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 
 /// The empty "insert cartridge" slot at the end of the favorites row —
-/// tapping it opens the arcade sport picker. Dashed outline so it reads as
-/// an empty slot rather than another filled/glowing sport button.
+/// tapping it opens the arcade sport picker. Dashed hexagon outline (same
+/// silhouette as [SportBadgePainter]) so it reads as an empty badge slot
+/// rather than another filled/glowing sport button.
 class AddSportButton extends StatefulWidget {
   const AddSportButton({super.key, required this.onTap, this.size = 76});
 
@@ -44,9 +46,8 @@ class _AddSportButtonState extends State<AddSportButton> {
                   duration: const Duration(milliseconds: 110),
                   curve: Curves.easeOut,
                   child: CustomPaint(
-                    painter: _DashedBorderPainter(
+                    painter: DashedSportBadgePainter(
                       color: _pressed ? colors.colorAction : colors.text500,
-                      radius: context.spacing.radiusLg,
                     ),
                     child: SizedBox(
                       width: widget.size,
@@ -74,42 +75,4 @@ class _AddSportButtonState extends State<AddSportButton> {
       ),
     );
   }
-}
-
-class _DashedBorderPainter extends CustomPainter {
-  const _DashedBorderPainter({required this.color, required this.radius});
-
-  final Color color;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rrect = RRect.fromRectAndRadius(
-      Offset.zero & size,
-      Radius.circular(radius),
-    );
-    final path = Path()..addRRect(rrect);
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5;
-
-    const dashWidth = 6.0;
-    const gapWidth = 5.0;
-    for (final metric in path.computeMetrics()) {
-      var distance = 0.0;
-      while (distance < metric.length) {
-        final next = distance + dashWidth;
-        canvas.drawPath(
-          metric.extractPath(distance, next.clamp(0, metric.length)),
-          paint,
-        );
-        distance = next + gapWidth;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _DashedBorderPainter oldDelegate) =>
-      oldDelegate.color != color || oldDelegate.radius != radius;
 }

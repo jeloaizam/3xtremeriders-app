@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../features/spots/domain/sport.dart';
 import '../../features/spots/presentation/sport_visuals.dart';
 import '../theme/app_theme.dart';
+import 'sport_badge_shape.dart';
 
 /// A single "arcade cabinet button" for a sport — big glowing icon tile with
 /// its name printed below, like a character-select screen. Shared across
@@ -93,51 +94,36 @@ class _ArcadeSportButtonState extends State<ArcadeSportButton> {
                     scale: _pressed ? 0.9 : 1,
                     duration: const Duration(milliseconds: 110),
                     curve: Curves.easeOut,
-                    child: Container(
+                    child: SizedBox(
                       width: widget.size,
                       height: widget.size,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          context.spacing.radiusLg,
-                        ),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            visual.color.withValues(alpha: .28),
-                            colors.surface700,
+                      child: CustomPaint(
+                        painter: SportBadgePainter(
+                          gradientColors: [
+                            visual.color,
+                            Color.lerp(visual.color, Colors.black, .4)!,
                           ],
+                          borderColor: widget.selected
+                              ? colors.colorAction
+                              : colors.text100,
                         ),
-                        border: Border.all(
-                          color: visual.color,
-                          width: widget.selected ? 3.5 : 2.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: visual.color.withValues(
-                              alpha: widget.selected ? .8 : .55,
-                            ),
-                            blurRadius: widget.selected ? 26 : 18,
-                            spreadRadius: widget.selected ? -1 : -3,
-                          ),
-                        ],
-                      ),
-                      child: widget.busy
-                          ? Center(
-                              child: SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.4,
-                                  color: visual.color,
+                        child: Center(
+                          child: widget.busy
+                              ? SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.4,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Icon(
+                                  visual.icon,
+                                  size: widget.size * 0.4,
+                                  color: Colors.white,
                                 ),
-                              ),
-                            )
-                          : Icon(
-                              visual.icon,
-                              size: widget.size * 0.44,
-                              color: visual.color,
-                            ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
