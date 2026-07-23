@@ -89,6 +89,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   bool _fetchingLocation = false;
   bool _submitting = false;
   bool _showErrors = false;
+  bool _seededActiveSport = false;
 
   @override
   void dispose() {
@@ -307,6 +308,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   bool get _isValid =>
       _nameController.text.trim().isNotEmpty &&
       _descriptionController.text.trim().isNotEmpty &&
+      _sportIds.isNotEmpty &&
       _latitude != null &&
       _longitude != null;
 
@@ -353,10 +355,22 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
               idToken: idToken,
             );
       }
+      // The spot's first selected sport tags whichever media gets uploaded
+      // right here — harmless when there's only one (the backend resolves
+      // it automatically either way), and a valid member of the spot's own
+      // sports when there are several, so it always passes validation. A
+      // rider can re-tag or add more sport-specific media afterward via
+      // the "+" button on the spot's own media gallery.
+      final firstSportId = _sportIds.first;
       if (_videoUrl != null) {
         await ref
             .read(spotVideoApiProvider)
-            .create(spotId: spot.id, url: _videoUrl!, idToken: idToken);
+            .create(
+              spotId: spot.id,
+              url: _videoUrl!,
+              sportId: firstSportId,
+              idToken: idToken,
+            );
       }
       if (_photoFile != null) {
         final url = await ref
@@ -369,7 +383,12 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
             );
         await ref
             .read(spotPhotoApiProvider)
-            .create(spotId: spot.id, url: url, idToken: idToken);
+            .create(
+              spotId: spot.id,
+              url: url,
+              sportId: firstSportId,
+              idToken: idToken,
+            );
       }
       if (_videoFile != null) {
         final url = await ref
@@ -382,7 +401,12 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
             );
         await ref
             .read(spotVideoApiProvider)
-            .create(spotId: spot.id, url: url, idToken: idToken);
+            .create(
+              spotId: spot.id,
+              url: url,
+              sportId: firstSportId,
+              idToken: idToken,
+            );
       }
 
       ref.invalidate(nearbySpotsProvider);
@@ -403,6 +427,18 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final allSports = ref.watch(allSportsProvider).value ?? const <Sport>[];
+
+    // Preselects the rider's active sport once (they're still free to
+    // deselect it — this only ever adds it the first time it resolves).
+    if (!_seededActiveSport) {
+      final activeSportId = ref.watch(effectiveActiveSportIdProvider).value;
+      if (activeSportId != null) {
+        _seededActiveSport = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) setState(() => _sportIds.add(activeSportId));
+        });
+      }
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -454,6 +490,8 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                         ),
                     ],
                   ),
+                  if (_showErrors && _sportIds.isEmpty)
+                    _ErrorText(l10n.createSpotSportRequired),
 
                   _SectionLabel(l10n.createSpotLocationLabel, top: 18),
                   GestureDetector(

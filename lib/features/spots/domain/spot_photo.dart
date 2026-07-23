@@ -9,6 +9,7 @@ abstract class SpotPhoto with _$SpotPhoto {
   const factory SpotPhoto({
     required int id,
     @JsonKey(name: 'spot_id') required int spotId,
+    @JsonKey(name: 'sport_id') int? sportId,
     required String url,
     String? caption,
     @JsonKey(name: 'vote_count') required int voteCount,

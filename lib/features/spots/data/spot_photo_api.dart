@@ -12,9 +12,10 @@ part 'spot_photo_api.g.dart';
 /// Talks to the backend's `/spots/{id}/photos` endpoint
 /// (`app/routers/photo.py`) — already returned ranked by `vote_count` desc.
 class SpotPhotoApi {
-  Future<List<SpotPhoto>> listBySpot(int spotId) async {
+  Future<List<SpotPhoto>> listBySpot(int spotId, {int? sportId}) async {
+    final query = sportId == null ? '' : '?sport_id=$sportId';
     final response = await http.get(
-      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/photos'),
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/photos$query'),
     );
     if (response.statusCode != 200) {
       throw ApiException(response.statusCode, response.body);
@@ -25,10 +26,13 @@ class SpotPhotoApi {
         .toList();
   }
 
+  /// `sportId` is required by the backend when the spot has 2+ sports,
+  /// auto-resolved (and safe to omit) when it only has one.
   Future<SpotPhoto> create({
     required int spotId,
     required String url,
     String? caption,
+    int? sportId,
     required String idToken,
   }) async {
     final response = await http.post(
@@ -37,7 +41,7 @@ class SpotPhotoApi {
         'Authorization': 'Bearer $idToken',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({'url': url, 'caption': ?caption}),
+      body: jsonEncode({'url': url, 'caption': ?caption, 'sport_id': ?sportId}),
     );
     if (response.statusCode != 201) {
       throw ApiException(response.statusCode, response.body);

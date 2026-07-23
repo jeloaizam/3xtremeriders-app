@@ -250,6 +250,54 @@ abstract class AppLocalizations {
   /// **'CERCA DE TI'**
   String get homeNearYou;
 
+  /// No description provided for @homeNavCustomizeMap.
+  ///
+  /// In es, this message translates to:
+  /// **'Mapa'**
+  String get homeNavCustomizeMap;
+
+  /// No description provided for @homeActiveSportPickerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige tu deporte activo'**
+  String get homeActiveSportPickerTitle;
+
+  /// No description provided for @homeActiveSportPickerHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Prioriza este deporte en tu mapa y precarga el picker al crear un spot'**
+  String get homeActiveSportPickerHint;
+
+  /// No description provided for @homeActiveSportPickerEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes deportes favoritos — agrégalos desde Ajustes'**
+  String get homeActiveSportPickerEmpty;
+
+  /// No description provided for @homeMapFilterTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Personalizar mapa'**
+  String get homeMapFilterTitle;
+
+  /// No description provided for @homeMapFilterHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige qué deportes se ven en tu mapa y en \"Cerca de ti\"'**
+  String get homeMapFilterHint;
+
+  /// No description provided for @homeMapFilterAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get homeMapFilterAll;
+
+  /// No description provided for @homeMapFilterNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguno'**
+  String get homeMapFilterNone;
+
   /// No description provided for @homeSheetViewSpot.
   ///
   /// In es, this message translates to:
@@ -621,6 +669,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'GALERÍA COMPLETA'**
   String get spotMediaLibraryTitle;
+
+  /// No description provided for @spotMediaSportPickerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Para cuál deporte es?'**
+  String get spotMediaSportPickerTitle;
 
   /// No description provided for @createSpotTitle.
   ///
@@ -1264,6 +1318,12 @@ abstract class AppLocalizations {
   /// **'La descripción es obligatoria'**
   String get createSpotDescriptionRequired;
 
+  /// No description provided for @createSpotSportRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige al menos un deporte'**
+  String get createSpotSportRequired;
+
   /// No description provided for @dialogCancel.
   ///
   /// In es, this message translates to:
@@ -1321,14 +1381,38 @@ abstract class AppLocalizations {
   /// No description provided for @settingsFavoriteSportsHint.
   ///
   /// In es, this message translates to:
-  /// **'Elegí hasta 10 — el primero que elijas personaliza el menú de abajo'**
+  /// **'Elige hasta 10 — el primero que elijas personaliza el menú de abajo'**
   String get settingsFavoriteSportsHint;
 
   /// No description provided for @settingsFavoriteSportsMax.
   ///
   /// In es, this message translates to:
-  /// **'Ya tenés 10 deportes favoritos, quita uno para agregar otro'**
+  /// **'Ya tienes 10 deportes favoritos, quita uno para agregar otro'**
   String get settingsFavoriteSportsMax;
+
+  /// No description provided for @settingsFavoriteSportsAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar'**
+  String get settingsFavoriteSportsAdd;
+
+  /// No description provided for @settingsFavoriteSportsPickerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige tu deporte'**
+  String get settingsFavoriteSportsPickerTitle;
+
+  /// No description provided for @settingsFavoriteSportsPickerHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca un ícono para agregarlo a tus favoritos'**
+  String get settingsFavoriteSportsPickerHint;
+
+  /// No description provided for @settingsFavoriteSportsLocked.
+  ///
+  /// In es, this message translates to:
+  /// **'No puedes quitar este deporte: tienes spots publicados con él'**
+  String get settingsFavoriteSportsLocked;
 
   /// No description provided for @navSport.
   ///

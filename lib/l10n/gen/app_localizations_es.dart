@@ -88,6 +88,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeNearYou => 'CERCA DE TI';
 
   @override
+  String get homeNavCustomizeMap => 'Mapa';
+
+  @override
+  String get homeActiveSportPickerTitle => 'Elige tu deporte activo';
+
+  @override
+  String get homeActiveSportPickerHint =>
+      'Prioriza este deporte en tu mapa y precarga el picker al crear un spot';
+
+  @override
+  String get homeActiveSportPickerEmpty =>
+      'Aún no tienes deportes favoritos — agrégalos desde Ajustes';
+
+  @override
+  String get homeMapFilterTitle => 'Personalizar mapa';
+
+  @override
+  String get homeMapFilterHint =>
+      'Elige qué deportes se ven en tu mapa y en \"Cerca de ti\"';
+
+  @override
+  String get homeMapFilterAll => 'Todos';
+
+  @override
+  String get homeMapFilterNone => 'Ninguno';
+
+  @override
   String get homeSheetViewSpot => 'VER SPOT';
 
   @override
@@ -285,6 +312,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get spotMediaLibraryTitle => 'GALERÍA COMPLETA';
+
+  @override
+  String get spotMediaSportPickerTitle => '¿Para cuál deporte es?';
 
   @override
   String get createSpotTitle => 'NUEVO SPOT';
@@ -626,6 +656,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createSpotDescriptionRequired => 'La descripción es obligatoria';
 
   @override
+  String get createSpotSportRequired => 'Elige al menos un deporte';
+
+  @override
   String get dialogCancel => 'Cancelar';
 
   @override
@@ -654,11 +687,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsFavoriteSportsHint =>
-      'Elegí hasta 10 — el primero que elijas personaliza el menú de abajo';
+      'Elige hasta 10 — el primero que elijas personaliza el menú de abajo';
 
   @override
   String get settingsFavoriteSportsMax =>
-      'Ya tenés 10 deportes favoritos, quita uno para agregar otro';
+      'Ya tienes 10 deportes favoritos, quita uno para agregar otro';
+
+  @override
+  String get settingsFavoriteSportsAdd => 'Agregar';
+
+  @override
+  String get settingsFavoriteSportsPickerTitle => 'Elige tu deporte';
+
+  @override
+  String get settingsFavoriteSportsPickerHint =>
+      'Toca un ícono para agregarlo a tus favoritos';
+
+  @override
+  String get settingsFavoriteSportsLocked =>
+      'No puedes quitar este deporte: tienes spots publicados con él';
 
   @override
   String get navSport => 'Deportes';

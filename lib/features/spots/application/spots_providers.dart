@@ -83,17 +83,20 @@ Future<List<SpotElement>> spotElements(Ref ref, int spotId) {
 }
 
 /// A spot's photos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. `sportId` scopes the
+/// ranking to one of the spot's sports (null = every photo on the spot,
+/// only meaningful for spots with a single sport or legacy untagged media).
 @Riverpod(keepAlive: true)
-Future<List<SpotPhoto>> spotPhotos(Ref ref, int spotId) {
-  return ref.read(spotPhotoApiProvider).listBySpot(spotId);
+Future<List<SpotPhoto>> spotPhotos(Ref ref, int spotId, int? sportId) {
+  return ref.read(spotPhotoApiProvider).listBySpot(spotId, sportId: sportId);
 }
 
 /// A spot's videos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. See [spotPhotos] for
+/// what `sportId` does.
 @Riverpod(keepAlive: true)
-Future<List<SpotVideo>> spotVideos(Ref ref, int spotId) {
-  return ref.read(spotVideoApiProvider).listBySpot(spotId);
+Future<List<SpotVideo>> spotVideos(Ref ref, int spotId, int? sportId) {
+  return ref.read(spotVideoApiProvider).listBySpot(spotId, sportId: sportId);
 }
 
 /// Whether the signed-in rider has already voted each of a spot's photos,
@@ -101,8 +104,8 @@ Future<List<SpotVideo>> spotVideos(Ref ref, int spotId) {
 /// One `/votes/check` call per photo (N+1, acceptable given spots only have
 /// a handful of photos).
 @Riverpod(keepAlive: true)
-Future<Map<int, bool>> spotPhotoVotes(Ref ref, int spotId) async {
-  final photos = await ref.watch(spotPhotosProvider(spotId).future);
+Future<Map<int, bool>> spotPhotoVotes(Ref ref, int spotId, int? sportId) async {
+  final photos = await ref.watch(spotPhotosProvider(spotId, sportId).future);
   return _checkVotes(
     ref,
     targetType: 'photo',
@@ -112,8 +115,8 @@ Future<Map<int, bool>> spotPhotoVotes(Ref ref, int spotId) async {
 
 /// Same as [spotPhotoVotes] but for videos.
 @Riverpod(keepAlive: true)
-Future<Map<int, bool>> spotVideoVotes(Ref ref, int spotId) async {
-  final videos = await ref.watch(spotVideosProvider(spotId).future);
+Future<Map<int, bool>> spotVideoVotes(Ref ref, int spotId, int? sportId) async {
+  final videos = await ref.watch(spotVideosProvider(spotId, sportId).future);
   return _checkVotes(
     ref,
     targetType: 'video',

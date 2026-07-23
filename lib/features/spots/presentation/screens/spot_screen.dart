@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/storage/storage_api.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -14,10 +18,13 @@ import '../../application/spot_detail.dart';
 import '../../application/spots_providers.dart';
 import '../../data/spot_comment_api.dart';
 import '../../data/spot_hazard_rating_api.dart';
+import '../../data/spot_photo_api.dart';
 import '../../data/spot_rating_api.dart';
+import '../../data/spot_video_api.dart';
 import '../../data/vote_api.dart';
 import '../../domain/hazzard.dart';
 import '../../domain/spot_element.dart';
+import '../../domain/sport.dart';
 import '../sport_visuals.dart';
 import '../widgets/stat_tile.dart';
 import '../widgets/video_player_screen.dart';
@@ -460,6 +467,9 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
     with AutomaticKeepAliveClientMixin<_MediaGallery> {
   _MediaTab _tab = _MediaTab.video;
   final Set<int> _votingIds = {};
+  int? _sportFilter;
+  bool _seededSportFilter = false;
+  bool _uploading = false;
 
   // Keeps this widget (and its video/photo tab selection) alive once it
   // scrolls out of the enclosing ListView's viewport + cache extent —
@@ -501,13 +511,147 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
       // below rather than surfacing an error for something already in sync.
     } finally {
       if (isVideo) {
-        ref.invalidate(spotVideosProvider(widget.spotId));
-        ref.invalidate(spotVideoVotesProvider(widget.spotId));
+        ref.invalidate(spotVideosProvider(widget.spotId, _sportFilter));
+        ref.invalidate(spotVideoVotesProvider(widget.spotId, _sportFilter));
       } else {
-        ref.invalidate(spotPhotosProvider(widget.spotId));
-        ref.invalidate(spotPhotoVotesProvider(widget.spotId));
+        ref.invalidate(spotPhotosProvider(widget.spotId, _sportFilter));
+        ref.invalidate(spotPhotoVotesProvider(widget.spotId, _sportFilter));
       }
       if (mounted) setState(() => _votingIds.remove(targetId));
+    }
+  }
+
+  Future<ImageSource?> _pickImageSource() {
+    final l10n = AppLocalizations.of(context);
+    return showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: context.colors.surfaceCard,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Symbols.photo_camera),
+              title: Text(l10n.createSpotUseCamera),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Symbols.photo_library),
+              title: Text(l10n.createSpotUseGallery),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Only shown when the spot has 2+ sports — a single-sport spot resolves
+  /// this automatically server-side, no need to ask.
+  Future<int?> _pickMediaSport(List<Sport> sports) {
+    final colors = context.colors;
+    return showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: colors.surfaceCard,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Text(
+                AppLocalizations.of(context).spotMediaSportPickerTitle,
+                style: context.typography.title,
+              ),
+            ),
+            for (final sport in sports)
+              ListTile(
+                leading: Icon(
+                  SportVisual.of(sport.name, colors).icon,
+                  color: SportVisual.of(sport.name, colors).color,
+                ),
+                title: Text(sport.name),
+                onTap: () => Navigator.of(sheetContext).pop(sport.id),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _addMedia(List<Sport> sports) async {
+    if (_uploading) return;
+    final isVideo = _tab == _MediaTab.video;
+
+    int? sportId;
+    if (sports.length > 1) {
+      sportId = await _pickMediaSport(sports);
+      if (sportId == null) return;
+    } else if (sports.length == 1) {
+      sportId = sports.first.id;
+    }
+    if (!mounted) return;
+
+    final source = await _pickImageSource();
+    if (source == null) return;
+
+    final picker = ImagePicker();
+    final file = isVideo
+        ? await picker.pickVideo(
+            source: source,
+            maxDuration: const Duration(minutes: 2),
+          )
+        : await picker.pickImage(
+            source: source,
+            maxWidth: 1600,
+            imageQuality: 85,
+          );
+    if (file == null) return;
+
+    setState(() => _uploading = true);
+    try {
+      final user = ref.read(firebaseAuthProvider).currentUser;
+      final idToken = await user?.getIdToken();
+      if (idToken == null) return;
+
+      final url = await ref
+          .read(storageApiProvider)
+          .uploadFile(
+            path:
+                'spots/${widget.spotId}/${isVideo ? 'videos' : 'photos'}/'
+                '${DateTime.now().millisecondsSinceEpoch}_${file.name}',
+            file: File(file.path),
+          );
+
+      if (isVideo) {
+        await ref
+            .read(spotVideoApiProvider)
+            .create(
+              spotId: widget.spotId,
+              url: url,
+              sportId: sportId,
+              idToken: idToken,
+            );
+        ref.invalidate(spotVideosProvider(widget.spotId, _sportFilter));
+      } else {
+        await ref
+            .read(spotPhotoApiProvider)
+            .create(
+              spotId: widget.spotId,
+              url: url,
+              sportId: sportId,
+              idToken: idToken,
+            );
+        ref.invalidate(spotPhotosProvider(widget.spotId, _sportFilter));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$e')));
+      }
+    } finally {
+      if (mounted) setState(() => _uploading = false);
     }
   }
 
@@ -516,14 +660,41 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
     super.build(context);
     final colors = context.colors;
     final l10n = AppLocalizations.of(context);
+    final sports =
+        ref.watch(spotSportsProvider(widget.spotId)).value ?? const <Sport>[];
+
+    // Seeds the sport filter once the spot's sports AND the rider's active
+    // sport have both resolved — waiting on `hasValue` (not just checking
+    // for null) avoids locking in the wrong default while it's still
+    // loading. Only relevant for 2+ sport spots; otherwise every photo/
+    // video already carries the spot's one sport, so no filter is needed.
+    final activeSportIdAsync = ref.watch(effectiveActiveSportIdProvider);
+    if (!_seededSportFilter &&
+        sports.length > 1 &&
+        activeSportIdAsync.hasValue) {
+      final activeSportId = activeSportIdAsync.value;
+      _sportFilter = sports.any((s) => s.id == activeSportId)
+          ? activeSportId
+          : sports.first.id;
+      _seededSportFilter = true;
+    }
+
     final photos =
-        ref.watch(spotPhotosProvider(widget.spotId)).value ?? const [];
+        ref.watch(spotPhotosProvider(widget.spotId, _sportFilter)).value ??
+        const [];
     final videos =
-        ref.watch(spotVideosProvider(widget.spotId)).value ?? const [];
+        ref.watch(spotVideosProvider(widget.spotId, _sportFilter)).value ??
+        const [];
     final isVideo = _tab == _MediaTab.video;
     final votes = isVideo
-        ? ref.watch(spotVideoVotesProvider(widget.spotId)).value ?? const {}
-        : ref.watch(spotPhotoVotesProvider(widget.spotId)).value ?? const {};
+        ? ref
+                  .watch(spotVideoVotesProvider(widget.spotId, _sportFilter))
+                  .value ??
+              const {}
+        : ref
+                  .watch(spotPhotoVotesProvider(widget.spotId, _sportFilter))
+                  .value ??
+              const {};
     final items = isVideo
         ? [
             for (final v in videos)
@@ -655,6 +826,56 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
             ),
           ],
         ),
+        if (sports.length > 1)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
+            child: SizedBox(
+              height: 32,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: sports.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  final sport = sports[index];
+                  final visual = SportVisual.of(sport.name, colors);
+                  final selected = _sportFilter == sport.id;
+                  return GestureDetector(
+                    onTap: () => setState(() => _sportFilter = sport.id),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: selected ? colors.tintBlue : colors.surfaceCard,
+                        border: Border.all(
+                          color: selected ? visual.color : colors.hairline,
+                        ),
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            visual.icon,
+                            size: 15,
+                            color: selected ? visual.color : colors.text300,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            sport.name.toUpperCase(),
+                            style: context.typography.tag.copyWith(
+                              color: selected ? visual.color : colors.text300,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
           child: Row(
@@ -683,12 +904,16 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
                     builder: (_) => SpotMediaLibraryScreen(
                       spotId: widget.spotId,
                       initialIsVideo: isVideo,
+                      sportId: _sportFilter,
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 8),
-              AppIconButton(icon: Symbols.add, onPressed: widget.onComingSoon),
+              AppIconButton(
+                icon: Symbols.add,
+                onPressed: _uploading ? null : () => _addMedia(sports),
+              ),
             ],
           ),
         ),

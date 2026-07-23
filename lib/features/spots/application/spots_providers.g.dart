@@ -496,13 +496,17 @@ final class SpotElementsFamily extends $Family
 }
 
 /// A spot's photos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. `sportId` scopes the
+/// ranking to one of the spot's sports (null = every photo on the spot,
+/// only meaningful for spots with a single sport or legacy untagged media).
 
 @ProviderFor(spotPhotos)
 final spotPhotosProvider = SpotPhotosFamily._();
 
 /// A spot's photos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. `sportId` scopes the
+/// ranking to one of the spot's sports (null = every photo on the spot,
+/// only meaningful for spots with a single sport or legacy untagged media).
 
 final class SpotPhotosProvider
     extends
@@ -513,10 +517,12 @@ final class SpotPhotosProvider
         >
     with $FutureModifier<List<SpotPhoto>>, $FutureProvider<List<SpotPhoto>> {
   /// A spot's photos, ranked by vote count (backend already orders them) —
-  /// used by the Spot detail screen's media gallery.
+  /// used by the Spot detail screen's media gallery. `sportId` scopes the
+  /// ranking to one of the spot's sports (null = every photo on the spot,
+  /// only meaningful for spots with a single sport or legacy untagged media).
   SpotPhotosProvider._({
     required SpotPhotosFamily super.from,
-    required int super.argument,
+    required (int, int?) super.argument,
   }) : super(
          retry: null,
          name: r'spotPhotosProvider',
@@ -532,7 +538,7 @@ final class SpotPhotosProvider
   String toString() {
     return r'spotPhotosProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -543,8 +549,8 @@ final class SpotPhotosProvider
 
   @override
   FutureOr<List<SpotPhoto>> create(Ref ref) {
-    final argument = this.argument as int;
-    return spotPhotos(ref, argument);
+    final argument = this.argument as (int, int?);
+    return spotPhotos(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -558,13 +564,15 @@ final class SpotPhotosProvider
   }
 }
 
-String _$spotPhotosHash() => r'fda54800f68fc41b49329c28eb12398d0aba52f3';
+String _$spotPhotosHash() => r'296e12e37d8fabb749d54a71902d2e1994001930';
 
 /// A spot's photos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. `sportId` scopes the
+/// ranking to one of the spot's sports (null = every photo on the spot,
+/// only meaningful for spots with a single sport or legacy untagged media).
 
 final class SpotPhotosFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<SpotPhoto>>, int> {
+    with $FunctionalFamilyOverride<FutureOr<List<SpotPhoto>>, (int, int?)> {
   SpotPhotosFamily._()
     : super(
         retry: null,
@@ -575,23 +583,27 @@ final class SpotPhotosFamily extends $Family
       );
 
   /// A spot's photos, ranked by vote count (backend already orders them) —
-  /// used by the Spot detail screen's media gallery.
+  /// used by the Spot detail screen's media gallery. `sportId` scopes the
+  /// ranking to one of the spot's sports (null = every photo on the spot,
+  /// only meaningful for spots with a single sport or legacy untagged media).
 
-  SpotPhotosProvider call(int spotId) =>
-      SpotPhotosProvider._(argument: spotId, from: this);
+  SpotPhotosProvider call(int spotId, int? sportId) =>
+      SpotPhotosProvider._(argument: (spotId, sportId), from: this);
 
   @override
   String toString() => r'spotPhotosProvider';
 }
 
 /// A spot's videos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. See [spotPhotos] for
+/// what `sportId` does.
 
 @ProviderFor(spotVideos)
 final spotVideosProvider = SpotVideosFamily._();
 
 /// A spot's videos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. See [spotPhotos] for
+/// what `sportId` does.
 
 final class SpotVideosProvider
     extends
@@ -602,10 +614,11 @@ final class SpotVideosProvider
         >
     with $FutureModifier<List<SpotVideo>>, $FutureProvider<List<SpotVideo>> {
   /// A spot's videos, ranked by vote count (backend already orders them) —
-  /// used by the Spot detail screen's media gallery.
+  /// used by the Spot detail screen's media gallery. See [spotPhotos] for
+  /// what `sportId` does.
   SpotVideosProvider._({
     required SpotVideosFamily super.from,
-    required int super.argument,
+    required (int, int?) super.argument,
   }) : super(
          retry: null,
          name: r'spotVideosProvider',
@@ -621,7 +634,7 @@ final class SpotVideosProvider
   String toString() {
     return r'spotVideosProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -632,8 +645,8 @@ final class SpotVideosProvider
 
   @override
   FutureOr<List<SpotVideo>> create(Ref ref) {
-    final argument = this.argument as int;
-    return spotVideos(ref, argument);
+    final argument = this.argument as (int, int?);
+    return spotVideos(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -647,13 +660,14 @@ final class SpotVideosProvider
   }
 }
 
-String _$spotVideosHash() => r'578679fd24051d0e6f3fdded9dee9d395d08a507';
+String _$spotVideosHash() => r'bfcacf9fa2d32c5f2d993a19adda7199be2b50fb';
 
 /// A spot's videos, ranked by vote count (backend already orders them) —
-/// used by the Spot detail screen's media gallery.
+/// used by the Spot detail screen's media gallery. See [spotPhotos] for
+/// what `sportId` does.
 
 final class SpotVideosFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<SpotVideo>>, int> {
+    with $FunctionalFamilyOverride<FutureOr<List<SpotVideo>>, (int, int?)> {
   SpotVideosFamily._()
     : super(
         retry: null,
@@ -664,10 +678,11 @@ final class SpotVideosFamily extends $Family
       );
 
   /// A spot's videos, ranked by vote count (backend already orders them) —
-  /// used by the Spot detail screen's media gallery.
+  /// used by the Spot detail screen's media gallery. See [spotPhotos] for
+  /// what `sportId` does.
 
-  SpotVideosProvider call(int spotId) =>
-      SpotVideosProvider._(argument: spotId, from: this);
+  SpotVideosProvider call(int spotId, int? sportId) =>
+      SpotVideosProvider._(argument: (spotId, sportId), from: this);
 
   @override
   String toString() => r'spotVideosProvider';
@@ -700,7 +715,7 @@ final class SpotPhotoVotesProvider
   /// a handful of photos).
   SpotPhotoVotesProvider._({
     required SpotPhotoVotesFamily super.from,
-    required int super.argument,
+    required (int, int?) super.argument,
   }) : super(
          retry: null,
          name: r'spotPhotoVotesProvider',
@@ -716,7 +731,7 @@ final class SpotPhotoVotesProvider
   String toString() {
     return r'spotPhotoVotesProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -727,8 +742,8 @@ final class SpotPhotoVotesProvider
 
   @override
   FutureOr<Map<int, bool>> create(Ref ref) {
-    final argument = this.argument as int;
-    return spotPhotoVotes(ref, argument);
+    final argument = this.argument as (int, int?);
+    return spotPhotoVotes(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -742,7 +757,7 @@ final class SpotPhotoVotesProvider
   }
 }
 
-String _$spotPhotoVotesHash() => r'c92f1e795b4073e85668312e784f627f9e417500';
+String _$spotPhotoVotesHash() => r'8e4140498afca7e672e5f3a2d706d8ab7068ef0a';
 
 /// Whether the signed-in rider has already voted each of a spot's photos,
 /// keyed by photo id — drives the filled/outline heart on each media tile.
@@ -750,7 +765,7 @@ String _$spotPhotoVotesHash() => r'c92f1e795b4073e85668312e784f627f9e417500';
 /// a handful of photos).
 
 final class SpotPhotoVotesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Map<int, bool>>, int> {
+    with $FunctionalFamilyOverride<FutureOr<Map<int, bool>>, (int, int?)> {
   SpotPhotoVotesFamily._()
     : super(
         retry: null,
@@ -765,8 +780,8 @@ final class SpotPhotoVotesFamily extends $Family
   /// One `/votes/check` call per photo (N+1, acceptable given spots only have
   /// a handful of photos).
 
-  SpotPhotoVotesProvider call(int spotId) =>
-      SpotPhotoVotesProvider._(argument: spotId, from: this);
+  SpotPhotoVotesProvider call(int spotId, int? sportId) =>
+      SpotPhotoVotesProvider._(argument: (spotId, sportId), from: this);
 
   @override
   String toString() => r'spotPhotoVotesProvider';
@@ -790,7 +805,7 @@ final class SpotVideoVotesProvider
   /// Same as [spotPhotoVotes] but for videos.
   SpotVideoVotesProvider._({
     required SpotVideoVotesFamily super.from,
-    required int super.argument,
+    required (int, int?) super.argument,
   }) : super(
          retry: null,
          name: r'spotVideoVotesProvider',
@@ -806,7 +821,7 @@ final class SpotVideoVotesProvider
   String toString() {
     return r'spotVideoVotesProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -817,8 +832,8 @@ final class SpotVideoVotesProvider
 
   @override
   FutureOr<Map<int, bool>> create(Ref ref) {
-    final argument = this.argument as int;
-    return spotVideoVotes(ref, argument);
+    final argument = this.argument as (int, int?);
+    return spotVideoVotes(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -832,12 +847,12 @@ final class SpotVideoVotesProvider
   }
 }
 
-String _$spotVideoVotesHash() => r'6155fbcb392e518f8139fcce9b10eb67a5317511';
+String _$spotVideoVotesHash() => r'03f07b7f74e3992b2332a6d00fb3d1fd531b1055';
 
 /// Same as [spotPhotoVotes] but for videos.
 
 final class SpotVideoVotesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Map<int, bool>>, int> {
+    with $FunctionalFamilyOverride<FutureOr<Map<int, bool>>, (int, int?)> {
   SpotVideoVotesFamily._()
     : super(
         retry: null,
@@ -849,8 +864,8 @@ final class SpotVideoVotesFamily extends $Family
 
   /// Same as [spotPhotoVotes] but for videos.
 
-  SpotVideoVotesProvider call(int spotId) =>
-      SpotVideoVotesProvider._(argument: spotId, from: this);
+  SpotVideoVotesProvider call(int spotId, int? sportId) =>
+      SpotVideoVotesProvider._(argument: (spotId, sportId), from: this);
 
   @override
   String toString() => r'spotVideoVotesProvider';

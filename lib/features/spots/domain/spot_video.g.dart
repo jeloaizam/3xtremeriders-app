@@ -9,6 +9,7 @@ part of 'spot_video.dart';
 _SpotVideo _$SpotVideoFromJson(Map<String, dynamic> json) => _SpotVideo(
   id: (json['id'] as num).toInt(),
   spotId: (json['spot_id'] as num).toInt(),
+  sportId: (json['sport_id'] as num?)?.toInt(),
   url: json['url'] as String,
   provider: json['provider'] as String?,
   caption: json['caption'] as String?,
@@ -19,6 +20,7 @@ Map<String, dynamic> _$SpotVideoToJson(_SpotVideo instance) =>
     <String, dynamic>{
       'id': instance.id,
       'spot_id': instance.spotId,
+      'sport_id': instance.sportId,
       'url': instance.url,
       'provider': instance.provider,
       'caption': instance.caption,

@@ -20,10 +20,15 @@ class SpotMediaLibraryScreen extends ConsumerStatefulWidget {
     super.key,
     required this.spotId,
     required this.initialIsVideo,
+    this.sportId,
   });
 
   final int spotId;
   final bool initialIsVideo;
+
+  /// Whichever sport's ranking was showing in the gallery when "MÁS" was
+  /// tapped — null means "every sport" (single-sport or untagged spots).
+  final int? sportId;
 
   @override
   ConsumerState<SpotMediaLibraryScreen> createState() =>
@@ -66,11 +71,11 @@ class _SpotMediaLibraryScreenState
       // below rather than surfacing an error for something already in sync.
     } finally {
       if (_isVideo) {
-        ref.invalidate(spotVideosProvider(widget.spotId));
-        ref.invalidate(spotVideoVotesProvider(widget.spotId));
+        ref.invalidate(spotVideosProvider(widget.spotId, widget.sportId));
+        ref.invalidate(spotVideoVotesProvider(widget.spotId, widget.sportId));
       } else {
-        ref.invalidate(spotPhotosProvider(widget.spotId));
-        ref.invalidate(spotPhotoVotesProvider(widget.spotId));
+        ref.invalidate(spotPhotosProvider(widget.spotId, widget.sportId));
+        ref.invalidate(spotPhotoVotesProvider(widget.spotId, widget.sportId));
       }
       if (mounted) setState(() => _votingIds.remove(targetId));
     }
@@ -91,12 +96,20 @@ class _SpotMediaLibraryScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final photos =
-        ref.watch(spotPhotosProvider(widget.spotId)).value ?? const [];
+        ref.watch(spotPhotosProvider(widget.spotId, widget.sportId)).value ??
+        const [];
     final videos =
-        ref.watch(spotVideosProvider(widget.spotId)).value ?? const [];
+        ref.watch(spotVideosProvider(widget.spotId, widget.sportId)).value ??
+        const [];
     final votes = _isVideo
-        ? ref.watch(spotVideoVotesProvider(widget.spotId)).value ?? const {}
-        : ref.watch(spotPhotoVotesProvider(widget.spotId)).value ?? const {};
+        ? ref
+                  .watch(spotVideoVotesProvider(widget.spotId, widget.sportId))
+                  .value ??
+              const {}
+        : ref
+                  .watch(spotPhotoVotesProvider(widget.spotId, widget.sportId))
+                  .value ??
+              const {};
     final items = _isVideo
         ? [
             for (final v in videos)

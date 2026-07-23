@@ -88,6 +88,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeNearYou => 'NEAR YOU';
 
   @override
+  String get homeNavCustomizeMap => 'Map';
+
+  @override
+  String get homeActiveSportPickerTitle => 'Choose your active sport';
+
+  @override
+  String get homeActiveSportPickerHint =>
+      'Prioritizes this sport on your map and preloads the picker when creating a spot';
+
+  @override
+  String get homeActiveSportPickerEmpty =>
+      'You don\'t have favorite sports yet — add some from Settings';
+
+  @override
+  String get homeMapFilterTitle => 'Customize map';
+
+  @override
+  String get homeMapFilterHint =>
+      'Choose which sports show on your map and in \"Near you\"';
+
+  @override
+  String get homeMapFilterAll => 'All';
+
+  @override
+  String get homeMapFilterNone => 'None';
+
+  @override
   String get homeSheetViewSpot => 'VIEW SPOT';
 
   @override
@@ -285,6 +312,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get spotMediaLibraryTitle => 'FULL GALLERY';
+
+  @override
+  String get spotMediaSportPickerTitle => 'Which sport is this for?';
 
   @override
   String get createSpotTitle => 'NEW SPOT';
@@ -626,6 +656,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createSpotDescriptionRequired => 'Description is required';
 
   @override
+  String get createSpotSportRequired => 'Pick at least one sport';
+
+  @override
   String get dialogCancel => 'Cancel';
 
   @override
@@ -659,6 +692,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsFavoriteSportsMax =>
       'You already have 10 favorite sports, remove one to add another';
+
+  @override
+  String get settingsFavoriteSportsAdd => 'Add';
+
+  @override
+  String get settingsFavoriteSportsPickerTitle => 'Choose your sport';
+
+  @override
+  String get settingsFavoriteSportsPickerHint =>
+      'Tap an icon to add it to your favorites';
+
+  @override
+  String get settingsFavoriteSportsLocked =>
+      'You can\'t remove this sport: you have spots published with it';
 
   @override
   String get navSport => 'Sports';

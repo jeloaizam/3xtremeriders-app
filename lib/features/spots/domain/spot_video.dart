@@ -9,6 +9,7 @@ abstract class SpotVideo with _$SpotVideo {
   const factory SpotVideo({
     required int id,
     @JsonKey(name: 'spot_id') required int spotId,
+    @JsonKey(name: 'sport_id') int? sportId,
     required String url,
     String? provider,
     String? caption,

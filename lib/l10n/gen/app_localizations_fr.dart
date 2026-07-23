@@ -88,6 +88,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeNearYou => 'PRÈS DE TOI';
 
   @override
+  String get homeNavCustomizeMap => 'Carte';
+
+  @override
+  String get homeActiveSportPickerTitle => 'Choisis ton sport actif';
+
+  @override
+  String get homeActiveSportPickerHint =>
+      'Priorise ce sport sur ta carte et présélectionne le picker à la création d\'un spot';
+
+  @override
+  String get homeActiveSportPickerEmpty =>
+      'Tu n\'as pas encore de sports favoris — ajoute-en depuis Réglages';
+
+  @override
+  String get homeMapFilterTitle => 'Personnaliser la carte';
+
+  @override
+  String get homeMapFilterHint =>
+      'Choisis quels sports s\'affichent sur ta carte et dans \"Près de toi\"';
+
+  @override
+  String get homeMapFilterAll => 'Tous';
+
+  @override
+  String get homeMapFilterNone => 'Aucun';
+
+  @override
   String get homeSheetViewSpot => 'VOIR LE SPOT';
 
   @override
@@ -285,6 +312,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get spotMediaLibraryTitle => 'GALERIE COMPLÈTE';
+
+  @override
+  String get spotMediaSportPickerTitle => 'Pour quel sport ?';
 
   @override
   String get createSpotTitle => 'NOUVEAU SPOT';
@@ -627,6 +657,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get createSpotDescriptionRequired => 'La description est obligatoire';
 
   @override
+  String get createSpotSportRequired => 'Choisis au moins un sport';
+
+  @override
   String get dialogCancel => 'Annuler';
 
   @override
@@ -660,6 +693,20 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsFavoriteSportsMax =>
       'Tu as déjà 10 sports favoris, enlève-en un pour en ajouter un autre';
+
+  @override
+  String get settingsFavoriteSportsAdd => 'Ajouter';
+
+  @override
+  String get settingsFavoriteSportsPickerTitle => 'Choisis ton sport';
+
+  @override
+  String get settingsFavoriteSportsPickerHint =>
+      'Touche une icône pour l\'ajouter à tes favoris';
+
+  @override
+  String get settingsFavoriteSportsLocked =>
+      'Tu ne peux pas enlever ce sport : tu as des spots publiés avec lui';
 
   @override
   String get navSport => 'Sports';
