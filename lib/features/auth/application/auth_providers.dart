@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/auth_api.dart';
 import '../data/rider_api.dart';
 import '../domain/rider.dart';
+import '../domain/rider_sport.dart';
+import 'rider_sports_providers.dart';
 
 part 'auth_providers.g.dart';
 
@@ -69,6 +71,24 @@ class PendingSignupProfile extends _$PendingSignupProfile {
 bool needsProfileCompletion(Ref ref) {
   final rider = ref.watch(currentRiderProvider).value;
   return rider != null && rider.nickname.trim().isEmpty;
+}
+
+/// The rider's "current" sport — `Rider.activeSportId` once they've picked
+/// one explicitly, falling back to their #1 favorite (lowest `order`) while
+/// it's still unset. Drives Home's bottom-nav sport icon, the carousel's
+/// sort order, and the sport preselected when creating a new spot.
+@riverpod
+Future<int?> effectiveActiveSportId(Ref ref) async {
+  final rider = await ref.watch(currentRiderProvider.future);
+  if (rider == null) return null;
+  if (rider.activeSportId != null) return rider.activeSportId;
+
+  final favorites = await ref.watch(riderSportsProvider(rider.id).future);
+  RiderSport? top;
+  for (final rs in favorites) {
+    if (top == null || rs.order < top.order) top = rs;
+  }
+  return top?.sportId;
 }
 
 /// The backend Rider profile for the current Firebase user, synced via
@@ -152,6 +172,43 @@ class CurrentRider extends _$CurrentRider {
           cityText: cityText,
           clearCityText: cityText == null,
           countryId: countryId,
+        );
+    state = AsyncData(updated);
+  }
+
+  /// Sets the rider's "active" sport — see [effectiveActiveSportId].
+  Future<void> setActiveSport(int sportId) async {
+    final rider = state.value;
+    final user = ref.read(firebaseAuthProvider).currentUser;
+    if (rider == null || user == null) return;
+
+    final idToken = await user.getIdToken();
+    if (idToken == null) return;
+
+    final updated = await ref
+        .read(riderApiProvider)
+        .update(riderId: rider.id, idToken: idToken, activeSportId: sportId);
+    state = AsyncData(updated);
+  }
+
+  /// Sets which sports show on Home's map ("Personalizar mapa"). `null`
+  /// clears the filter (show every sport, including future ones); an
+  /// explicit list — even empty — is the active filter.
+  Future<void> setMapSportFilter(List<int>? sportIds) async {
+    final rider = state.value;
+    final user = ref.read(firebaseAuthProvider).currentUser;
+    if (rider == null || user == null) return;
+
+    final idToken = await user.getIdToken();
+    if (idToken == null) return;
+
+    final updated = await ref
+        .read(riderApiProvider)
+        .update(
+          riderId: rider.id,
+          idToken: idToken,
+          mapSportFilter: sportIds,
+          clearMapSportFilter: sportIds == null,
         );
     state = AsyncData(updated);
   }

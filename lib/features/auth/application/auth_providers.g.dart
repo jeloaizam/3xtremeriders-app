@@ -381,6 +381,54 @@ final class NeedsProfileCompletionProvider
 String _$needsProfileCompletionHash() =>
     r'76b136470937c237616e288339a0fd1f1b36873f';
 
+/// The rider's "current" sport — `Rider.activeSportId` once they've picked
+/// one explicitly, falling back to their #1 favorite (lowest `order`) while
+/// it's still unset. Drives Home's bottom-nav sport icon, the carousel's
+/// sort order, and the sport preselected when creating a new spot.
+
+@ProviderFor(effectiveActiveSportId)
+final effectiveActiveSportIdProvider = EffectiveActiveSportIdProvider._();
+
+/// The rider's "current" sport — `Rider.activeSportId` once they've picked
+/// one explicitly, falling back to their #1 favorite (lowest `order`) while
+/// it's still unset. Drives Home's bottom-nav sport icon, the carousel's
+/// sort order, and the sport preselected when creating a new spot.
+
+final class EffectiveActiveSportIdProvider
+    extends $FunctionalProvider<AsyncValue<int?>, int?, FutureOr<int?>>
+    with $FutureModifier<int?>, $FutureProvider<int?> {
+  /// The rider's "current" sport — `Rider.activeSportId` once they've picked
+  /// one explicitly, falling back to their #1 favorite (lowest `order`) while
+  /// it's still unset. Drives Home's bottom-nav sport icon, the carousel's
+  /// sort order, and the sport preselected when creating a new spot.
+  EffectiveActiveSportIdProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'effectiveActiveSportIdProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$effectiveActiveSportIdHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int?> create(Ref ref) {
+    return effectiveActiveSportId(ref);
+  }
+}
+
+String _$effectiveActiveSportIdHash() =>
+    r'dc451e5a18e33689fdab35d9abfe76104a013031';
+
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the
 /// placeholder profile fields and just returns the stored profile — real
@@ -436,7 +484,7 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'9acc9e94bcbf264cdac32d11e6febf35a7861d2b';
+String _$currentRiderHash() => r'44f3d96215815fe2143b57046af9a067be47f5c6';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the

@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart' as geo;
@@ -6,6 +10,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_bottom_nav.dart';
@@ -14,9 +19,7 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
-import '../../../auth/application/rider_sports_providers.dart';
 import '../../../auth/data/auth_repository.dart';
-import '../../../auth/domain/rider_sport.dart';
 import '../../../auth/domain/role.dart';
 import '../../../spots/application/spots_providers.dart';
 import '../../../spots/domain/spot.dart';
@@ -24,6 +27,9 @@ import '../../../spots/domain/sport.dart';
 import '../../../spots/presentation/screens/search_screen.dart' show SearchTab;
 import '../../../spots/presentation/sport_visuals.dart';
 import '../../../spots/presentation/widgets/spot_card.dart';
+import '../map_pin_renderer.dart';
+import '../widgets/active_sport_picker_sheet.dart';
+import '../widgets/map_sport_filter_sheet.dart';
 
 /// Mirrors `ui_kits/mobile/HomeScreen.jsx` from the design project, with a
 /// real interactive Mapbox map replacing the design's static mock background.
@@ -45,9 +51,14 @@ enum _LocationGate {
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
   MapboxMap? _mapboxMap;
-  CircleAnnotationManager? _annotationManager;
+  PointAnnotationManager? _pinManager;
+  CircleAnnotationManager? _haloManager;
   Spot? _selectedSpot;
   final Map<String, Spot> _spotByAnnotationId = {};
+  List<Spot> _lastSpots = [];
+  final List<_PulsingHalo> _pulsingHalos = [];
+  Timer? _pulseTimer;
+  double _pulsePhase = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   _LocationGate _gate = _LocationGate.checking;
@@ -62,6 +73,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void dispose() {
+    _pulseTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -118,48 +130,229 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
     await mapboxMap.setCamera(CameraOptions(center: center, zoom: 12.5));
 
-    final manager = await mapboxMap.annotations.createCircleAnnotationManager();
-    _annotationManager = manager;
+    // Halo manager created first so its circle layer sits *below* the pin
+    // manager's point layer — otherwise the pulsing halos would render on
+    // top of (and hide) the sport icons.
+    _haloManager = await mapboxMap.annotations.createCircleAnnotationManager();
+    final pinManager = await mapboxMap.annotations
+        .createPointAnnotationManager();
+    _pinManager = pinManager;
 
     final spots = await ref.read(nearbySpotsProvider.future);
     await _refreshAnnotations(spots);
 
-    manager.tapEvents(
+    pinManager.tapEvents(
       onTap: (annotation) {
         final spot = _spotByAnnotationId[annotation.id];
-        if (spot != null && mounted) setState(() => _selectedSpot = spot);
+        if (spot != null) _selectSpot(spot);
       },
     );
+
+    _pulseTimer = Timer.periodic(
+      const Duration(milliseconds: 60),
+      (_) => _tickPulse(),
+    );
+  }
+
+  void _selectSpot(Spot? spot) {
+    if (!mounted) return;
+    setState(() => _selectedSpot = spot);
+    _syncHalos();
+  }
+
+  /// Applies "Personalizar mapa" (`Rider.mapSportFilter`) — spots with no
+  /// sport tagged always show (there's nothing to filter them by), since
+  /// hiding them would just make old spots disappear with no way back.
+  List<Spot> _applyMapFilter(List<Spot> spots) {
+    final filter = ref.read(currentRiderProvider).value?.mapSportFilter;
+    if (filter == null) return spots;
+    final filterSet = filter.toSet();
+    return [
+      for (final spot in spots)
+        if (spot.sportIds.isEmpty || spot.sportIds.any(filterSet.contains))
+          spot,
+    ];
+  }
+
+  bool _sameFilter(List<int>? a, List<int>? b) {
+    if (a == null || b == null) return a == b;
+    if (a.length != b.length) return false;
+    return a.toSet().containsAll(b);
   }
 
   /// Rebuilds the map pins from scratch — called on first load and whenever
   /// `nearbySpotsProvider` changes (e.g. right after creating a new spot),
   /// since annotations aren't reactively tied to the provider on their own.
   Future<void> _refreshAnnotations(List<Spot> spots) async {
-    final manager = _annotationManager;
+    final manager = _pinManager;
     if (manager == null) return;
+
+    final visible = _applyMapFilter(spots);
+    _lastSpots = visible;
 
     await manager.deleteAll();
     if (!mounted) return;
     _spotByAnnotationId.clear();
 
-    final pinBorderColor = context.colors.bg850.toARGB32();
-    final pinColor = context.colors.colorBrand.toARGB32();
-    final options = [
-      for (final spot in spots)
-        CircleAnnotationOptions(
+    final colors = context.colors;
+    final allSports = await ref.read(allSportsProvider.future);
+    final sportById = {for (final sport in allSports) sport.id: sport};
+    if (!mounted) return;
+
+    final options = <PointAnnotationOptions>[];
+    for (final spot in visible) {
+      final sports = [
+        for (final id in spot.sportIds)
+          if (sportById[id] != null) sportById[id]!,
+      ];
+      final image = await _pinImageFor(sports, colors);
+      options.add(
+        PointAnnotationOptions(
           geometry: Point(coordinates: Position(spot.longitude, spot.latitude)),
-          circleRadius: 9,
-          circleColor: pinColor,
-          circleStrokeWidth: 2,
-          circleStrokeColor: pinBorderColor,
+          image: image,
+          iconSize: sports.length <= 1 ? 0.5 : 0.55,
         ),
-    ];
+      );
+    }
+    if (!mounted) return;
+
     final created = await manager.createMulti(options);
     for (var i = 0; i < created.length; i++) {
       final annotation = created[i];
-      if (annotation != null) _spotByAnnotationId[annotation.id] = spots[i];
+      if (annotation != null) _spotByAnnotationId[annotation.id] = visible[i];
     }
+
+    await _syncHalos();
+  }
+
+  /// Resolves which pin image a spot should use: one sport shows that
+  /// sport's icon, several show a "featured spot" badge (like a well-known
+  /// skatepark that hosts multiple disciplines), none falls back to a
+  /// plain dot (only possible for spots published before sport selection
+  /// became mandatory).
+  Future<Uint8List> _pinImageFor(List<Sport> sports, AppColors colors) {
+    if (sports.isEmpty) {
+      return MapPinRenderer.genericPin(
+        color: colors.colorBrand,
+        borderColor: colors.bg850,
+      );
+    }
+    if (sports.length == 1) {
+      final visual = SportVisual.of(sports.first.name, colors);
+      return MapPinRenderer.singleSport(
+        icon: visual.icon,
+        color: visual.color,
+        bgColor: colors.surface700,
+      );
+    }
+    final shown = sports.take(3).toList();
+    return MapPinRenderer.multiSportBadge(
+      icons: [for (final s in shown) SportVisual.of(s.name, colors).icon],
+      iconColors: [for (final s in shown) SportVisual.of(s.name, colors).color],
+      badgeColor: colors.colorAction,
+      bgColor: colors.surface700,
+      overflowCount: sports.length > 3 ? sports.length - 3 : 0,
+    );
+  }
+
+  /// Rebuilds the pulsing halo circles: a subtle one under each of the 5
+  /// spots closest to the rider, plus a brighter/faster one under whichever
+  /// spot is currently selected. Called whenever the spot list or the
+  /// selection changes — cheap enough since it's at most 6 annotations.
+  Future<void> _syncHalos() async {
+    final haloManager = _haloManager;
+    if (haloManager == null) return;
+
+    await haloManager.deleteAll();
+    _pulsingHalos.clear();
+    if (!mounted) return;
+
+    final colors = context.colors;
+    final riderPosition = _riderPosition;
+
+    if (riderPosition != null && _lastSpots.isNotEmpty) {
+      final nearest = [..._lastSpots]
+        ..sort(
+          (a, b) => _distanceMeters(
+            riderPosition,
+            a,
+          ).compareTo(_distanceMeters(riderPosition, b)),
+        );
+      final options = [
+        for (final spot in nearest.take(5))
+          CircleAnnotationOptions(
+            geometry: Point(
+              coordinates: Position(spot.longitude, spot.latitude),
+            ),
+            circleRadius: 16,
+            circleColor: colors.colorBrand.toARGB32(),
+            circleOpacity: .2,
+          ),
+      ];
+      final created = await haloManager.createMulti(options);
+      for (final annotation in created) {
+        if (annotation == null) continue;
+        _pulsingHalos.add(
+          _PulsingHalo(
+            annotation: annotation,
+            baseRadius: 16,
+            amplitude: 5,
+            baseOpacity: .2,
+            speed: 1,
+          ),
+        );
+      }
+    }
+
+    final selected = _selectedSpot;
+    if (selected != null) {
+      final annotation = await haloManager.create(
+        CircleAnnotationOptions(
+          geometry: Point(
+            coordinates: Position(selected.longitude, selected.latitude),
+          ),
+          circleRadius: 22,
+          circleColor: colors.colorAction.toARGB32(),
+          circleOpacity: .32,
+        ),
+      );
+      _pulsingHalos.add(
+        _PulsingHalo(
+          annotation: annotation,
+          baseRadius: 22,
+          amplitude: 8,
+          baseOpacity: .32,
+          speed: 2.4,
+        ),
+      );
+    }
+  }
+
+  /// Drives the "radar ping" look: radius grows while opacity fades, on a
+  /// loop — each halo's `speed` controls how fast it cycles.
+  void _tickPulse() {
+    final manager = _haloManager;
+    if (manager == null || _pulsingHalos.isEmpty) return;
+    _pulsePhase += 0.06;
+    for (final halo in _pulsingHalos) {
+      final t = (sin(_pulsePhase * halo.speed) + 1) / 2;
+      halo.annotation.circleRadius = halo.baseRadius + halo.amplitude * t;
+      halo.annotation.circleOpacity = halo.baseOpacity * (1 - t * 0.6);
+      manager.update(halo.annotation);
+    }
+  }
+
+  double _distanceMeters(geo.Position from, Spot to) {
+    const earthRadiusMeters = 6371000.0;
+    final lat1 = from.latitude * pi / 180;
+    final lat2 = to.latitude * pi / 180;
+    final dLat = (to.latitude - from.latitude) * pi / 180;
+    final dLng = (to.longitude - from.longitude) * pi / 180;
+    final a =
+        sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLng / 2) * sin(dLng / 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadiusMeters * c;
   }
 
   Future<void> _onMyLocationTap() async {
@@ -174,7 +367,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     // Re-fetches the position (the rider may have moved since Home's
     // initial gate check) and actually recenters the camera — the location
     // component above only turns on the blue dot, it doesn't move the map.
+    // Also updates `_riderPosition` so the "nearest spots" halo tracks the
+    // rider's live location instead of staying pinned to where Home first
+    // checked the gate.
     final position = await geo.Geolocator.getCurrentPosition();
+    if (mounted) setState(() => _riderPosition = position);
+    await _syncHalos();
     await mapboxMap.flyTo(
       CameraOptions(
         center: Point(
@@ -213,29 +411,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       if (spots != null) _refreshAnnotations(spots);
     });
 
+    // Same idea, but for "Personalizar mapa" — the spot list itself hasn't
+    // changed, only which sports are filtered, so this needs its own
+    // listener to trigger a redraw with the new filter applied.
+    ref.listen(currentRiderProvider, (previous, next) {
+      final prevFilter = previous?.value?.mapSportFilter;
+      final nextFilter = next.value?.mapSportFilter;
+      if (_sameFilter(prevFilter, nextFilter)) return;
+      final spots = ref.read(nearbySpotsProvider).value;
+      if (spots != null) _refreshAnnotations(spots);
+    });
+
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final spotsAsync = ref.watch(nearbySpotsProvider);
 
     final rider = ref.watch(currentRiderProvider).value;
-    final riderSports = rider != null
-        ? ref.watch(riderSportsProvider(rider.id)).value ?? const <RiderSport>[]
-        : const <RiderSport>[];
     final allSports = ref.watch(allSportsProvider).value ?? const <Sport>[];
+    final activeSportId = ref.watch(effectiveActiveSportIdProvider).value;
 
-    RiderSport? topFavorite;
-    for (final rs in riderSports) {
-      if (topFavorite == null || rs.order < topFavorite.order) topFavorite = rs;
-    }
-    Sport? favoriteSport;
-    if (topFavorite != null) {
+    Sport? activeSport;
+    if (activeSportId != null) {
       for (final sport in allSports) {
-        if (sport.id == topFavorite.sportId) {
-          favoriteSport = sport;
+        if (sport.id == activeSportId) {
+          activeSport = sport;
           break;
         }
       }
     }
+
+    // null = no filter (every sport shown) — see MapSportFilterSheet.
+    final mapFilter = rider?.mapSportFilter?.toSet();
 
     return Scaffold(
       key: _scaffoldKey,
@@ -378,22 +584,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
                     error: (error, _) => Center(child: Text('$error')),
-                    data: (spots) => ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: spots.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 12),
-                      itemBuilder: (context, index) {
-                        final spot = spots[index];
-                        return SizedBox(
-                          width: 200,
-                          child: SpotCard(
-                            spot: spot,
-                            onTap: () => setState(() => _selectedSpot = spot),
-                          ),
-                        );
-                      },
-                    ),
+                    data: (spots) {
+                      final visible = mapFilter == null
+                          ? spots
+                          : [
+                              for (final spot in spots)
+                                if (spot.sportIds.isEmpty ||
+                                    spot.sportIds.any(mapFilter.contains))
+                                  spot,
+                            ];
+                      // Spots matching the active sport bubble to the
+                      // front — same set, just reordered, so nothing
+                      // disappears just because it's not the active sport.
+                      final matching = activeSportId == null
+                          ? const <Spot>[]
+                          : [
+                              for (final spot in visible)
+                                if (spot.sportIds.contains(activeSportId)) spot,
+                            ];
+                      final rest = activeSportId == null
+                          ? visible
+                          : [
+                              for (final spot in visible)
+                                if (!spot.sportIds.contains(activeSportId))
+                                  spot,
+                            ];
+                      final ordered = [...matching, ...rest];
+
+                      return ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: ordered.length,
+                        separatorBuilder: (_, _) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          final spot = ordered[index];
+                          return SizedBox(
+                            width: 200,
+                            child: SpotCard(
+                              spot: spot,
+                              onTap: () => _selectSpot(spot),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
               ],
@@ -410,8 +644,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 items: [
                   AppBottomNavItem(
                     id: 'buscar',
-                    icon: Symbols.search,
-                    label: l10n.navSearch.toUpperCase(),
+                    icon: Symbols.tune,
+                    label: l10n.homeNavCustomizeMap.toUpperCase(),
                   ),
                   AppBottomNavItem(
                     id: 'menu',
@@ -425,10 +659,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                   AppBottomNavItem(
                     id: 'sport',
-                    icon: favoriteSport != null
-                        ? SportVisual.of(favoriteSport.name, colors).icon
+                    icon: activeSport != null
+                        ? SportVisual.of(activeSport.name, colors).icon
                         : Symbols.sports,
-                    label: (favoriteSport?.name ?? l10n.navSport).toUpperCase(),
+                    label: (activeSport?.name ?? l10n.navSport).toUpperCase(),
+                    enableDoubleTap: true,
                   ),
                   AppBottomNavItem(
                     id: 'ajustes',
@@ -442,17 +677,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   } else if (id == 'menu') {
                     _scaffoldKey.currentState?.openDrawer();
                   } else if (id == 'buscar') {
-                    context.push('/search');
+                    MapSportFilterSheet.show(context);
                   } else if (id == 'ride') {
                     context.push('/rides');
                   } else if (id == 'sport') {
-                    if (favoriteSport != null) {
-                      context.push('/sports/${favoriteSport.id}');
+                    if (activeSport != null) {
+                      context.push('/sports/${activeSport.id}');
                     } else {
                       context.push('/search', extra: SearchTab.sports);
                     }
                   } else {
                     _showComingSoon();
+                  }
+                },
+                onDoubleTap: (id) {
+                  if (id == 'sport' && rider != null) {
+                    ActiveSportPickerSheet.show(context, riderId: rider.id);
                   }
                 },
               ),
@@ -461,10 +701,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           if (_selectedSpot != null)
             _QuickViewSheet(
               spot: _selectedSpot!,
-              onClose: () => setState(() => _selectedSpot = null),
+              onClose: () => _selectSpot(null),
               onViewSpot: () {
                 final spot = _selectedSpot!;
-                setState(() => _selectedSpot = null);
+                _selectSpot(null);
                 context.push('/spot/${spot.id}');
               },
             ),
@@ -472,6 +712,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       ),
     );
   }
+}
+
+/// One pulsing halo circle tracked by `_HomeScreenState._tickPulse` — either
+/// one of the 5 "nearby spots" halos or the single "selected spot" one.
+class _PulsingHalo {
+  _PulsingHalo({
+    required this.annotation,
+    required this.baseRadius,
+    required this.amplitude,
+    required this.baseOpacity,
+    required this.speed,
+  });
+
+  final CircleAnnotation annotation;
+  final double baseRadius;
+  final double amplitude;
+  final double baseOpacity;
+  final double speed;
 }
 
 /// Full-screen, non-dismissible gate shown instead of the map while the

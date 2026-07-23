@@ -28,6 +28,9 @@ abstract class Spot with _$Spot {
     @JsonKey(name: 'cover_video_url') String? coverVideoUrl,
     @JsonKey(name: 'created_date') required DateTime createdDate,
     @JsonKey(name: 'updated_date') DateTime? updatedDate,
+    // Drives the map pin icon: one sport shows its icon, several show the
+    // multi-sport badge — resolved client-side against `allSportsProvider`.
+    @JsonKey(name: 'sport_ids') @Default([]) List<int> sportIds,
   }) = _Spot;
 
   factory Spot.fromJson(Map<String, dynamic> json) => _$SpotFromJson(json);

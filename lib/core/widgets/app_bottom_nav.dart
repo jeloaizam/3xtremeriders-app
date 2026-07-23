@@ -7,11 +7,18 @@ class AppBottomNavItem {
     required this.id,
     required this.icon,
     required this.label,
+    this.enableDoubleTap = false,
   });
 
   final String id;
   final IconData icon;
   final String label;
+
+  /// Wires `InkWell.onDoubleTap` for just this item — left off (the
+  /// default) for every other item so they stay snappy single-tap, since
+  /// InkWell's tap-vs-double-tap disambiguation adds a short delay only to
+  /// items that actually listen for a double tap.
+  final bool enableDoubleTap;
 }
 
 /// Fixed bottom tab bar. Active item glows yellow.
@@ -22,11 +29,15 @@ class AppBottomNav extends StatelessWidget {
     required this.items,
     required this.active,
     this.onSelect,
+    this.onDoubleTap,
   });
 
   final List<AppBottomNavItem> items;
   final String active;
   final ValueChanged<String>? onSelect;
+
+  /// Only fires for items with `enableDoubleTap: true`.
+  final ValueChanged<String>? onDoubleTap;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +58,9 @@ class AppBottomNav extends StatelessWidget {
               item: item,
               isActive: item.id == active,
               onTap: () => onSelect?.call(item.id),
+              onDoubleTap: item.enableDoubleTap
+                  ? () => onDoubleTap?.call(item.id)
+                  : null,
             ),
         ],
       ),
@@ -59,11 +73,13 @@ class _NavButton extends StatelessWidget {
     required this.item,
     required this.isActive,
     required this.onTap,
+    this.onDoubleTap,
   });
 
   final AppBottomNavItem item;
   final bool isActive;
   final VoidCallback onTap;
+  final VoidCallback? onDoubleTap;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +88,7 @@ class _NavButton extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
+      onDoubleTap: onDoubleTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(

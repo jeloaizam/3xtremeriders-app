@@ -30,6 +30,11 @@ _Spot _$SpotFromJson(Map<String, dynamic> json) => _Spot(
   updatedDate: json['updated_date'] == null
       ? null
       : DateTime.parse(json['updated_date'] as String),
+  sportIds:
+      (json['sport_ids'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$SpotToJson(_Spot instance) => <String, dynamic>{
@@ -54,4 +59,5 @@ Map<String, dynamic> _$SpotToJson(_Spot instance) => <String, dynamic>{
   'cover_video_url': instance.coverVideoUrl,
   'created_date': instance.createdDate.toIso8601String(),
   'updated_date': instance.updatedDate?.toIso8601String(),
+  'sport_ids': instance.sportIds,
 };

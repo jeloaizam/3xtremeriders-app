@@ -64,6 +64,11 @@ class RiderApi {
   ///
   /// `clearIconImage` mirrors the same explicit-null convention, for
   /// removing a rider's avatar rather than just leaving it unset.
+  ///
+  /// `clearMapSportFilter` sends an explicit `null` to mean "no filter,
+  /// show every sport" (including ones added to the catalog later) — as
+  /// opposed to passing every current sport id, which would be a frozen
+  /// snapshot that stops covering newly-added sports.
   Future<Rider> update({
     required int riderId,
     required String idToken,
@@ -79,6 +84,9 @@ class RiderApi {
     bool clearCityText = false,
     int? countryId,
     int? roleId,
+    int? activeSportId,
+    List<int>? mapSportFilter,
+    bool clearMapSportFilter = false,
   }) async {
     final response = await http.patch(
       Uri.parse('${ApiConfig.baseUrl}/riders/$riderId'),
@@ -96,6 +104,11 @@ class RiderApi {
         if (clearCityText) 'city_text': null else 'city_text': ?cityText,
         'country_id': ?countryId,
         'role_id': ?roleId,
+        'active_sport_id': ?activeSportId,
+        if (clearMapSportFilter)
+          'map_sport_filter': null
+        else
+          'map_sport_filter': ?mapSportFilter,
       }),
     );
     if (response.statusCode != 200) {

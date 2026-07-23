@@ -22,6 +22,15 @@ abstract class Rider with _$Rider {
     @JsonKey(name: 'country_id') int? countryId,
     @JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,
     @JsonKey(name: 'reputation_pts') required int reputationPts,
+    // The rider's "current" sport — prioritizes Home's ordering and
+    // preselects the sport picker when creating a spot. Null until the
+    // rider explicitly picks one (see `needsProfileCompletionProvider`'s
+    // sibling `effectiveActiveSport` in auth_providers.dart for the
+    // favorite-#1 fallback used while this is unset).
+    @JsonKey(name: 'active_sport_id') int? activeSportId,
+    // Sport ids the rider chose to show on Home's map ("Personalizar
+    // mapa") — null means no filter (show every sport).
+    @JsonKey(name: 'map_sport_filter') List<int>? mapSportFilter,
     @JsonKey(name: 'created_date') required DateTime createdDate,
     @JsonKey(name: 'updated_date') DateTime? updatedDate,
   }) = _Rider;

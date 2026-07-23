@@ -22,6 +22,10 @@ _Rider _$RiderFromJson(Map<String, dynamic> json) => _Rider(
   countryId: (json['country_id'] as num?)?.toInt(),
   socialLinks: json['social_links'] as Map<String, dynamic>?,
   reputationPts: (json['reputation_pts'] as num).toInt(),
+  activeSportId: (json['active_sport_id'] as num?)?.toInt(),
+  mapSportFilter: (json['map_sport_filter'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
   createdDate: DateTime.parse(json['created_date'] as String),
   updatedDate: json['updated_date'] == null
       ? null
@@ -44,6 +48,8 @@ Map<String, dynamic> _$RiderToJson(_Rider instance) => <String, dynamic>{
   'country_id': instance.countryId,
   'social_links': instance.socialLinks,
   'reputation_pts': instance.reputationPts,
+  'active_sport_id': instance.activeSportId,
+  'map_sport_filter': instance.mapSportFilter,
   'created_date': instance.createdDate.toIso8601String(),
   'updated_date': instance.updatedDate?.toIso8601String(),
 };
