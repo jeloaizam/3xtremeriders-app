@@ -12,6 +12,15 @@ import '../widgets/photo_viewer_screen.dart';
 import '../widgets/video_player_screen.dart';
 import 'spot_screen.dart' show MediaTile;
 
+/// Common shape for a photo or video tile — `thumbnailUrl` is always null
+/// for photos (the photo itself is already an image).
+typedef _MediaItem = ({
+  int id,
+  String url,
+  int voteCount,
+  String? thumbnailUrl,
+});
+
 /// Browses **all** of a spot's photos or videos (not just the top-4 cover
 /// preview shown on [SpotScreen]'s media gallery), each ranked by vote count
 /// and votable in place — opened from the gallery's "MÁS" button.
@@ -111,13 +120,23 @@ class _SpotMediaLibraryScreenState
                   .value ??
               const {};
     final items = _isVideo
-        ? [
+        ? <_MediaItem>[
             for (final v in videos)
-              (id: v.id, url: v.url, voteCount: v.voteCount),
+              (
+                id: v.id,
+                url: v.url,
+                voteCount: v.voteCount,
+                thumbnailUrl: v.thumbnailUrl,
+              ),
           ]
-        : [
+        : <_MediaItem>[
             for (final p in photos)
-              (id: p.id, url: p.url, voteCount: p.voteCount),
+              (
+                id: p.id,
+                url: p.url,
+                voteCount: p.voteCount,
+                thumbnailUrl: null,
+              ),
           ];
 
     return Scaffold(
@@ -187,6 +206,7 @@ class _SpotMediaLibraryScreenState
                         return MediaTile(
                           url: item.url,
                           isVideo: _isVideo,
+                          thumbnailUrl: item.thumbnailUrl,
                           badge: '#${index + 1}',
                           big: false,
                           onTap: () => _openItem(item.url),

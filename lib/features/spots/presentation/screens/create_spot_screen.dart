@@ -9,7 +9,9 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide ImageSource;
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../core/storage/media_size_guard.dart';
 import '../../../../core/storage/storage_api.dart';
+import '../../../../core/storage/video_thumbnail_helper.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dropdown.dart';
@@ -302,6 +304,20 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
       await probe.dispose();
     }
 
+    // Caught here (before upload) instead of letting Firebase Storage's
+    // security rule reject the write — that failure surfaces as a
+    // confusing `storage/unauthorized`, not anything mentioning size.
+    if (await exceedsSpotMediaSizeLimit(file.path)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).spotVideoTooLarge),
+          ),
+        );
+      }
+      return;
+    }
+
     if (mounted) setState(() => _videoFile = file);
   }
 
@@ -335,78 +351,106 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
             idToken: idToken,
           );
 
-      for (final type in _elementTypes) {
-        await ref
-            .read(spotApiProvider)
-            .addElement(
-              spotId: spot.id,
-              name: type,
-              type: type,
-              idToken: idToken,
-            );
-      }
-      for (final hazard in _hazards) {
-        await ref
-            .read(hazzardApiProvider)
-            .create(
-              spotId: spot.id,
-              name: hazard.name,
-              severity: hazard.severity,
-              idToken: idToken,
-            );
-      }
-      // The spot's first selected sport tags whichever media gets uploaded
-      // right here — harmless when there's only one (the backend resolves
-      // it automatically either way), and a valid member of the spot's own
-      // sports when there are several, so it always passes validation. A
-      // rider can re-tag or add more sport-specific media afterward via
-      // the "+" button on the spot's own media gallery.
-      final firstSportId = _sportIds.first;
-      if (_videoUrl != null) {
-        await ref
-            .read(spotVideoApiProvider)
-            .create(
-              spotId: spot.id,
-              url: _videoUrl!,
-              sportId: firstSportId,
-              idToken: idToken,
-            );
-      }
-      if (_photoFile != null) {
-        final url = await ref
-            .read(storageApiProvider)
-            .uploadFile(
-              path:
-                  'spots/${spot.id}/photos/'
-                  '${DateTime.now().millisecondsSinceEpoch}_${_photoFile!.name}',
-              file: File(_photoFile!.path),
-            );
-        await ref
-            .read(spotPhotoApiProvider)
-            .create(
-              spotId: spot.id,
-              url: url,
-              sportId: firstSportId,
-              idToken: idToken,
-            );
-      }
-      if (_videoFile != null) {
-        final url = await ref
-            .read(storageApiProvider)
-            .uploadFile(
-              path:
-                  'spots/${spot.id}/videos/'
-                  '${DateTime.now().millisecondsSinceEpoch}_${_videoFile!.name}',
-              file: File(_videoFile!.path),
-            );
-        await ref
-            .read(spotVideoApiProvider)
-            .create(
-              spotId: spot.id,
-              url: url,
-              sportId: firstSportId,
-              idToken: idToken,
-            );
+      // From here on the spot itself already exists on the backend — if
+      // anything below fails (most likely a media upload), the rider still
+      // needs to land on their new spot instead of seeing a bare error and
+      // assuming nothing was created, so this is a separate try/catch that
+      // just warns instead of blocking navigation.
+      try {
+        for (final type in _elementTypes) {
+          await ref
+              .read(spotApiProvider)
+              .addElement(
+                spotId: spot.id,
+                name: type,
+                type: type,
+                idToken: idToken,
+              );
+        }
+        for (final hazard in _hazards) {
+          await ref
+              .read(hazzardApiProvider)
+              .create(
+                spotId: spot.id,
+                name: hazard.name,
+                severity: hazard.severity,
+                idToken: idToken,
+              );
+        }
+        // The spot's first selected sport tags whichever media gets
+        // uploaded right here — harmless when there's only one (the
+        // backend resolves it automatically either way), and a valid
+        // member of the spot's own sports when there are several, so it
+        // always passes validation. A rider can re-tag or add more
+        // sport-specific media afterward via the "+" button on the spot's
+        // own media gallery.
+        final firstSportId = _sportIds.first;
+        if (_videoUrl != null) {
+          await ref
+              .read(spotVideoApiProvider)
+              .create(
+                spotId: spot.id,
+                url: _videoUrl!,
+                sportId: firstSportId,
+                idToken: idToken,
+              );
+        }
+        if (_photoFile != null) {
+          final url = await ref
+              .read(storageApiProvider)
+              .uploadFile(
+                path:
+                    'spots/${spot.id}/photos/'
+                    '${DateTime.now().millisecondsSinceEpoch}_${_photoFile!.name}',
+                file: File(_photoFile!.path),
+              );
+          await ref
+              .read(spotPhotoApiProvider)
+              .create(
+                spotId: spot.id,
+                url: url,
+                sportId: firstSportId,
+                idToken: idToken,
+              );
+        }
+        if (_videoFile != null) {
+          final timestamp = DateTime.now().millisecondsSinceEpoch;
+          final url = await ref
+              .read(storageApiProvider)
+              .uploadFile(
+                path:
+                    'spots/${spot.id}/videos/${timestamp}_${_videoFile!.name}',
+                file: File(_videoFile!.path),
+              );
+          final thumbnailPath = await generateVideoThumbnail(_videoFile!.path);
+          final thumbnailUrl = thumbnailPath == null
+              ? null
+              : await ref
+                    .read(storageApiProvider)
+                    .uploadFile(
+                      path: 'spots/${spot.id}/videos/${timestamp}_thumb.jpg',
+                      file: File(thumbnailPath),
+                    );
+          await ref
+              .read(spotVideoApiProvider)
+              .create(
+                spotId: spot.id,
+                url: url,
+                sportId: firstSportId,
+                thumbnailUrl: thumbnailUrl,
+                idToken: idToken,
+              );
+        }
+      } catch (error) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).createSpotPartialFailure('$error'),
+              ),
+            ),
+          );
+        }
       }
 
       ref.invalidate(nearbySpotsProvider);
@@ -721,6 +765,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                           label: l10n.createSpotUploadPhoto,
                           onTap: _pickPhoto,
                           done: _photoFile != null,
+                          onRemove: () => setState(() => _photoFile = null),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -731,6 +776,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                           label: l10n.createSpotUploadVideo,
                           onTap: _pickVideo,
                           done: _videoFile != null,
+                          onRemove: () => setState(() => _videoFile = null),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -741,6 +787,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                           label: l10n.createSpotLinkVideo,
                           onTap: _linkVideo,
                           done: _videoUrl != null,
+                          onRemove: () => setState(() => _videoUrl = null),
                         ),
                       ),
                     ],
@@ -861,6 +908,7 @@ class _MediaButton extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.done = false,
+    this.onRemove,
   });
 
   final IconData icon;
@@ -869,32 +917,65 @@ class _MediaButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool done;
 
+  /// Shown as a small "x" badge in the corner once `done` — lets the rider
+  /// deselect the photo/video/link they picked without having to replace
+  /// it with another one just to change their mind.
+  final VoidCallback? onRemove;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
-        decoration: BoxDecoration(
-          color: colors.surfaceCard,
-          border: Border.all(
-            color: done ? colors.colorRating : colors.hairlineStrong,
-          ),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Column(
-          children: [
-            Icon(done ? Symbols.check_circle : icon, size: 26, color: color),
-            const SizedBox(height: 7),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: context.typography.title.copyWith(fontSize: 11),
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
+            decoration: BoxDecoration(
+              color: colors.surfaceCard,
+              border: Border.all(
+                color: done ? colors.colorRating : colors.hairlineStrong,
+              ),
+              borderRadius: BorderRadius.circular(14),
             ),
-          ],
+            child: Column(
+              children: [
+                Icon(
+                  done ? Symbols.check_circle : icon,
+                  size: 26,
+                  color: color,
+                ),
+                const SizedBox(height: 7),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: context.typography.title.copyWith(fontSize: 11),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
+        if (done && onRemove != null)
+          Positioned(
+            top: -6,
+            right: -6,
+            child: GestureDetector(
+              onTap: onRemove,
+              child: Container(
+                width: 20,
+                height: 20,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: colors.colorDanger,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colors.bg850, width: 2),
+                ),
+                child: Icon(Symbols.close, size: 13, color: colors.bg850),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

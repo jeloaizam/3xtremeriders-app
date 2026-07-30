@@ -140,6 +140,14 @@
   "searchTabRiders": "RIDERS",
   "searchTabEvents": "EVENTS",
   "createSpotVideoTooLong": "Video can't be longer than 1:30 minutes",
+  "spotVideoTooLarge": "The video is too large (max 70 MB) — use a shorter or lower-quality one",
+  "createSpotPartialFailure": "The spot was created, but something failed to upload: {error}. You can add it again from the spot.",
+  "@createSpotPartialFailure": {
+    "description": "Shown when the spot was already created but a later element/hazard/photo/video failed to attach",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
   "ridesTitle": "MY RIDES",
   "ridesEmpty": "You don't have any rides yet",
   "rideStateActive": "ACTIVE",

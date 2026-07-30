@@ -33,6 +33,7 @@ class SpotVideoApi {
     required String url,
     String? provider,
     int? sportId,
+    String? thumbnailUrl,
     required String idToken,
   }) async {
     final response = await http.post(
@@ -45,6 +46,7 @@ class SpotVideoApi {
         'url': url,
         'provider': ?provider,
         'sport_id': ?sportId,
+        'thumbnail_url': ?thumbnailUrl,
       }),
     );
     if (response.statusCode != 201) {

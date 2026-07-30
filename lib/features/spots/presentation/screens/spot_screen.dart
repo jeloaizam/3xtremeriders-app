@@ -7,7 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/storage/media_size_guard.dart';
 import '../../../../core/storage/storage_api.dart';
+import '../../../../core/storage/video_thumbnail_helper.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -442,6 +445,16 @@ void _openVideo(BuildContext context, String url) {
 
 enum _MediaTab { video, photo }
 
+/// Common shape for a photo or video tile in the gallery — `thumbnailUrl`
+/// is always null for photos (the photo itself is already an image, no
+/// separate thumbnail needed).
+typedef _MediaItem = ({
+  int id,
+  String url,
+  int voteCount,
+  String? thumbnailUrl,
+});
+
 /// Cover gallery: video and photo have **independent** rankings by vote
 /// count (the backend already ranks `/photos` and `/videos` this way) —
 /// "VIDEO"/"IMAGEN" below switch which one is showing, each with its own
@@ -608,28 +621,54 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
           );
     if (file == null) return;
 
+    // Caught here (before upload) instead of letting Firebase Storage's
+    // security rule reject the write — that failure surfaces as a
+    // confusing `storage/unauthorized`, not anything mentioning size.
+    if (isVideo && await exceedsSpotMediaSizeLimit(file.path)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).spotVideoTooLarge),
+          ),
+        );
+      }
+      return;
+    }
+
     setState(() => _uploading = true);
     try {
       final user = ref.read(firebaseAuthProvider).currentUser;
       final idToken = await user?.getIdToken();
       if (idToken == null) return;
 
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
       final url = await ref
           .read(storageApiProvider)
           .uploadFile(
             path:
                 'spots/${widget.spotId}/${isVideo ? 'videos' : 'photos'}/'
-                '${DateTime.now().millisecondsSinceEpoch}_${file.name}',
+                '${timestamp}_${file.name}',
             file: File(file.path),
           );
 
       if (isVideo) {
+        final thumbnailPath = await generateVideoThumbnail(file.path);
+        final thumbnailUrl = thumbnailPath == null
+            ? null
+            : await ref
+                  .read(storageApiProvider)
+                  .uploadFile(
+                    path:
+                        'spots/${widget.spotId}/videos/${timestamp}_thumb.jpg',
+                    file: File(thumbnailPath),
+                  );
         await ref
             .read(spotVideoApiProvider)
             .create(
               spotId: widget.spotId,
               url: url,
               sportId: sportId,
+              thumbnailUrl: thumbnailUrl,
               idToken: idToken,
             );
         ref.invalidate(spotVideosProvider(widget.spotId, _sportFilter));
@@ -696,13 +735,23 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
                   .value ??
               const {};
     final items = isVideo
-        ? [
+        ? <_MediaItem>[
             for (final v in videos)
-              (id: v.id, url: v.url, voteCount: v.voteCount),
+              (
+                id: v.id,
+                url: v.url,
+                voteCount: v.voteCount,
+                thumbnailUrl: v.thumbnailUrl,
+              ),
           ]
-        : [
+        : <_MediaItem>[
             for (final p in photos)
-              (id: p.id, url: p.url, voteCount: p.voteCount),
+              (
+                id: p.id,
+                url: p.url,
+                voteCount: p.voteCount,
+                thumbnailUrl: null,
+              ),
           ];
     final urls = [for (final item in items) item.url];
     final badgeLabel = isVideo ? 'VIDEO' : 'FOTO';
@@ -743,6 +792,7 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
                           child: MediaTile(
                             url: items[0].url,
                             isVideo: isVideo,
+                            thumbnailUrl: items[0].thumbnailUrl,
                             badge: '$badgeLabel · #1',
                             big: true,
                             onTap: isVideo
@@ -770,6 +820,7 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
                                     child: MediaTile(
                                       url: items[i].url,
                                       isVideo: isVideo,
+                                      thumbnailUrl: items[i].thumbnailUrl,
                                       badge: '$badgeLabel · #${i + 1}',
                                       big: false,
                                       onTap: isVideo
@@ -968,6 +1019,7 @@ class MediaTile extends StatelessWidget {
     required this.isVideo,
     required this.badge,
     required this.big,
+    this.thumbnailUrl,
     this.onTap,
     this.voteCount,
     this.voted = false,
@@ -979,11 +1031,28 @@ class MediaTile extends StatelessWidget {
   final bool isVideo;
   final String badge;
   final bool big;
+
+  /// A static JPEG grabbed from the video's first frame at upload time —
+  /// null for externally-linked videos (no local file to grab a frame
+  /// from) or ones uploaded before this existed, which fall back to a
+  /// flat placeholder with just the play icon.
+  final String? thumbnailUrl;
   final VoidCallback? onTap;
   final int? voteCount;
   final bool voted;
   final bool busy;
   final VoidCallback? onToggleVote;
+
+  Widget _placeholder(AppColors colors) => Container(
+    color: colors.surfaceMedia,
+    alignment: Alignment.center,
+    child: Icon(
+      Symbols.play_circle,
+      fill: 1,
+      size: big ? 52 : 22,
+      color: colors.colorAction,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -997,16 +1066,27 @@ class MediaTile extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             if (isVideo)
-              Container(
-                color: colors.surfaceMedia,
-                alignment: Alignment.center,
-                child: Icon(
-                  Symbols.play_circle,
-                  fill: 1,
-                  size: big ? 52 : 22,
-                  color: colors.colorAction,
-                ),
-              )
+              thumbnailUrl == null
+                  ? _placeholder(colors)
+                  : Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.network(
+                          thumbnailUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              _placeholder(colors),
+                        ),
+                        Center(
+                          child: Icon(
+                            Symbols.play_circle,
+                            fill: 1,
+                            size: big ? 52 : 22,
+                            color: colors.colorAction,
+                          ),
+                        ),
+                      ],
+                    )
             else
               Image.network(
                 url,

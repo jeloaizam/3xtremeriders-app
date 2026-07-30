@@ -13,6 +13,7 @@ _SpotVideo _$SpotVideoFromJson(Map<String, dynamic> json) => _SpotVideo(
   url: json['url'] as String,
   provider: json['provider'] as String?,
   caption: json['caption'] as String?,
+  thumbnailUrl: json['thumbnail_url'] as String?,
   voteCount: (json['vote_count'] as num).toInt(),
 );
 
@@ -24,5 +25,6 @@ Map<String, dynamic> _$SpotVideoToJson(_SpotVideo instance) =>
       'url': instance.url,
       'provider': instance.provider,
       'caption': instance.caption,
+      'thumbnail_url': instance.thumbnailUrl,
       'vote_count': instance.voteCount,
     };

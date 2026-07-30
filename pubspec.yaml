@@ -50,6 +50,8 @@ dependencies:
   firebase_storage: ^13.0.7
   image_picker: ^1.2.0
   video_player: ^2.10.0
+  fc_native_video_thumbnail: ^3.0.1
+  path_provider: ^2.1.5
   chewie: ^1.13.0
   http: ^1.6.0
   google_sign_in: ^7.2.0

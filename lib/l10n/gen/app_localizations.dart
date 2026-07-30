@@ -940,6 +940,18 @@ abstract class AppLocalizations {
   /// **'El video no puede durar más de 1:30 minutos'**
   String get createSpotVideoTooLong;
 
+  /// No description provided for @spotVideoTooLarge.
+  ///
+  /// In es, this message translates to:
+  /// **'El video pesa demasiado (máximo 70 MB) — usa uno más corto o de menor calidad'**
+  String get spotVideoTooLarge;
+
+  /// Mostrado cuando el spot ya se creó pero un elemento/peligro/foto/video posterior falló al agregarse
+  ///
+  /// In es, this message translates to:
+  /// **'El spot se creó, pero algo no se pudo subir: {error}. Puedes agregarlo de nuevo desde el spot.'**
+  String createSpotPartialFailure(String error);
+
   /// No description provided for @ridesTitle.
   ///
   /// In es, this message translates to:

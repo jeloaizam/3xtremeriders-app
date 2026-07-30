@@ -13,6 +13,7 @@ abstract class SpotVideo with _$SpotVideo {
     required String url,
     String? provider,
     String? caption,
+    @JsonKey(name: 'thumbnail_url') String? thumbnailUrl,
     @JsonKey(name: 'vote_count') required int voteCount,
   }) = _SpotVideo;
 

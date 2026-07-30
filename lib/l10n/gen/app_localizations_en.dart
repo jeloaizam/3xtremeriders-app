@@ -456,6 +456,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Video can\'t be longer than 1:30 minutes';
 
   @override
+  String get spotVideoTooLarge =>
+      'The video is too large (max 70 MB) — use a shorter or lower-quality one';
+
+  @override
+  String createSpotPartialFailure(String error) {
+    return 'The spot was created, but something failed to upload: $error. You can add it again from the spot.';
+  }
+
+  @override
   String get ridesTitle => 'MY RIDES';
 
   @override
