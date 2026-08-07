@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../application/spots_providers.dart';
 import '../../domain/spot.dart';
@@ -41,12 +42,12 @@ class SpotCard extends ConsumerWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Container(
-                  width: 58,
-                  height: 58,
-                  decoration: BoxDecoration(
-                    color: colors.surfaceMedia,
-                    borderRadius: BorderRadius.circular(spacing.radiusSm),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(spacing.radiusSm),
+                  child: SizedBox(
+                    width: 58,
+                    height: 58,
+                    child: _Thumbnail(spot: spot, colors: colors),
                   ),
                 ),
                 Positioned(
@@ -105,5 +106,59 @@ class SpotCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+/// The card's 58x58 thumbnail — shows the actual cover photo/video-thumbnail
+/// image for whichever media type has more likes (`spot.topMediaType`),
+/// falling back to a plain icon when there's no image to show yet (a video
+/// with no thumbnail, or a spot with no media at all).
+class _Thumbnail extends StatelessWidget {
+  const _Thumbnail({required this.spot, required this.colors});
+
+  final Spot spot;
+  final AppColors colors;
+
+  Widget _placeholder(IconData icon) => Container(
+    color: colors.surfaceMedia,
+    alignment: Alignment.center,
+    child: Icon(icon, fill: 1, size: 22, color: colors.text700),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    if (spot.topMediaType == 'photo' && spot.coverPhotoUrl != null) {
+      return Image.network(
+        spot.coverPhotoUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            _placeholder(Symbols.photo_camera),
+      );
+    }
+    if (spot.topMediaType == 'video') {
+      if (spot.coverVideoThumbnailUrl == null) {
+        return _placeholder(Symbols.videocam);
+      }
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.network(
+            spot.coverVideoThumbnailUrl!,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                _placeholder(Symbols.videocam),
+          ),
+          Center(
+            child: Icon(
+              Symbols.play_circle,
+              fill: 1,
+              size: 20,
+              color: colors.colorAction,
+            ),
+          ),
+        ],
+      );
+    }
+    return _placeholder(Symbols.location_on);
   }
 }

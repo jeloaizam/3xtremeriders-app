@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show Factory;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart' hide Position;
@@ -51,6 +55,8 @@ const _seasonOptions = [
 // yet, so not implemented here.
 const _maxVideoDuration = Duration(seconds: 90);
 
+const _previewZoom = 15.0;
+
 const _difficultyLabels = {
   1: '1 · Principiante',
   2: '2 · Básico',
@@ -88,6 +94,12 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   String? _bestSeason;
   double? _latitude;
   double? _longitude;
+  // The raw GPS fix, used only to key the preview `MapWidget` (see below) —
+  // kept separate from `_latitude`/`_longitude` so those can be updated on
+  // every pan frame without forcing Flutter to tear down and recreate the
+  // whole native map mid-drag.
+  double? _anchorLatitude;
+  double? _anchorLongitude;
   bool _fetchingLocation = false;
   bool _submitting = false;
   bool _showErrors = false;
@@ -124,10 +136,38 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
       setState(() {
         _latitude = position.latitude;
         _longitude = position.longitude;
+        _anchorLatitude = position.latitude;
+        _anchorLongitude = position.longitude;
       });
     } finally {
       if (mounted) setState(() => _fetchingLocation = false);
     }
+  }
+
+  Future<void> _onPreviewMapCreated(MapboxMap map) async {
+    // Only panning is allowed — zoom/rotate/pitch stay locked so the
+    // preview stays a simple "drag to nudge the pin" control.
+    await map.gestures.updateSettings(
+      GesturesSettings(
+        scrollEnabled: true,
+        pinchToZoomEnabled: false,
+        doubleTapToZoomInEnabled: false,
+        quickZoomEnabled: false,
+        rotateEnabled: false,
+        pitchEnabled: false,
+      ),
+    );
+  }
+
+  /// Fires continuously while the preview map is panned — keeps
+  /// `_latitude`/`_longitude` in sync with wherever the fixed, center-screen
+  /// pin actually points at, so a rider can correct GPS drift by hand.
+  void _onPreviewCameraChanged(CameraChangedEventData data) {
+    final center = data.cameraState.center.coordinates;
+    setState(() {
+      _latitude = center.lat.toDouble();
+      _longitude = center.lng.toDouble();
+    });
   }
 
   Future<void> _addHazard() async {
@@ -441,7 +481,22 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                 idToken: idToken,
               );
         }
-      } catch (error) {
+      } catch (error, stackTrace) {
+        // The spot itself already saved fine at this point — this only
+        // covers elements/hazards/media, which the rider might not notice
+        // failed if they miss the SnackBar. Recorded as non-fatal so a
+        // failed upload in the field (bad connection, Storage rejection,
+        // etc.) leaves a trace we can actually look at afterward.
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            error,
+            stackTrace,
+            reason:
+                'create_spot_screen: element/hazard/media upload failed '
+                'after spot ${spot.id} was created',
+            fatal: false,
+          ),
+        );
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -587,23 +642,43 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                           fit: StackFit.expand,
                           children: [
                             MapWidget(
-                              // Forces a fresh MapWidget (and camera) each
-                              // time the fetched coordinates change — this
-                              // preview has no interactive controller to
-                              // just re-center an existing map instance.
-                              key: ValueKey('$_latitude,$_longitude'),
-                              styleUri: MapboxStyles.DARK,
-                              onMapCreated: (map) => map.setCamera(
-                                CameraOptions(
-                                  center: Point(
-                                    coordinates: Position(
-                                      _longitude!,
-                                      _latitude!,
-                                    ),
-                                  ),
-                                  zoom: 15,
-                                ),
+                              // Keyed on the *anchor* (the raw GPS fix), not
+                              // on `_latitude`/`_longitude` — those now
+                              // change continuously while the rider drags
+                              // to adjust the pin, and rebuilding the whole
+                              // MapWidget mid-drag would reset the camera
+                              // and interrupt the gesture. A fresh instance
+                              // is only needed when "usar ubicación actual"
+                              // is tapped again for a brand new GPS fix.
+                              key: ValueKey(
+                                '$_anchorLatitude,$_anchorLongitude',
                               ),
+                              styleUri: MapboxStyles.DARK,
+                              onMapCreated: (map) {
+                                _onPreviewMapCreated(map);
+                                map.setCamera(
+                                  CameraOptions(
+                                    center: Point(
+                                      coordinates: Position(
+                                        _longitude!,
+                                        _latitude!,
+                                      ),
+                                    ),
+                                    zoom: _previewZoom,
+                                  ),
+                                );
+                              },
+                              onCameraChangeListener: _onPreviewCameraChanged,
+                              // This preview sits inside the form's
+                              // scrolling `ListView` — without eagerly
+                              // claiming the gesture, the ListView's own
+                              // scroll recognizer wins the arena and the
+                              // map never sees the drag at all.
+                              gestureRecognizers: {
+                                Factory<OneSequenceGestureRecognizer>(
+                                  () => EagerGestureRecognizer(),
+                                ),
+                              },
                             ),
                             IgnorePointer(
                               child: Center(
@@ -617,6 +692,13 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      l10n.createSpotAdjustPinHint,
+                      style: context.typography.micro.copyWith(
+                        color: colors.textMuted,
                       ),
                     ),
                   ],

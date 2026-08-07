@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -13,6 +15,18 @@ import 'l10n/gen/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Sends both fatal crashes and any error explicitly reported via
+  // `FirebaseCrashlytics.instance.recordError(...)` to the Firebase console —
+  // without this, a field-testing failure (e.g. a media upload error caught
+  // and shown only as a transient SnackBar) leaves no trace anywhere once
+  // the rider dismisses it.
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   MapboxOptions.setAccessToken(mapboxAccessToken);
   final persistedLocale = await loadPersistedLocale();
   runApp(

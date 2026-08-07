@@ -17,6 +17,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../auth/domain/role.dart';
 import '../../application/spot_detail.dart';
 import '../../application/spots_providers.dart';
 import '../../data/spot_comment_api.dart';
@@ -126,22 +127,31 @@ class _SpotScreenState extends ConsumerState<SpotScreen> {
   @override
   Widget build(BuildContext context) {
     final detailAsync = ref.watch(spotDetailProvider(widget.spotId));
+    final currentRider = ref.watch(currentRiderProvider).value;
 
     return Scaffold(
       body: SafeArea(
         child: detailAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Center(child: Text('$error')),
-          data: (detail) => _SpotScreenBody(
-            spotId: widget.spotId,
-            detail: detail,
-            busy: _busy,
-            onBack: () => context.pop(),
-            onToggleLike: () => _toggleLike(detail.iLiked),
-            onRate: _rate,
-            onRateHazard: _rateHazard,
-            onComingSoon: _showComingSoon,
-          ),
+          data: (detail) {
+            final canEdit =
+                currentRider != null &&
+                (currentRider.id == detail.spot.createdBy ||
+                    currentRider.roleId >= roleAdmin);
+            return _SpotScreenBody(
+              spotId: widget.spotId,
+              detail: detail,
+              busy: _busy,
+              canEdit: canEdit,
+              onBack: () => context.pop(),
+              onEdit: () => context.push('/spot/${widget.spotId}/edit'),
+              onToggleLike: () => _toggleLike(detail.iLiked),
+              onRate: _rate,
+              onRateHazard: _rateHazard,
+              onComingSoon: _showComingSoon,
+            );
+          },
         ),
       ),
     );
@@ -153,7 +163,9 @@ class _SpotScreenBody extends StatelessWidget {
     required this.spotId,
     required this.detail,
     required this.busy,
+    required this.canEdit,
     required this.onBack,
+    required this.onEdit,
     required this.onToggleLike,
     required this.onRate,
     required this.onRateHazard,
@@ -163,7 +175,9 @@ class _SpotScreenBody extends StatelessWidget {
   final int spotId;
   final SpotDetailData detail;
   final bool busy;
+  final bool canEdit;
   final VoidCallback onBack;
+  final VoidCallback onEdit;
   final VoidCallback onToggleLike;
   final void Function(int stars) onRate;
   final void Function(int crutches) onRateHazard;
@@ -180,7 +194,9 @@ class _SpotScreenBody extends StatelessWidget {
       children: [
         _MediaGallery(
           spotId: spotId,
+          canEdit: canEdit,
           onBack: onBack,
+          onEdit: onEdit,
           onComingSoon: onComingSoon,
         ),
         Padding(
@@ -464,12 +480,16 @@ typedef _MediaItem = ({
 class _MediaGallery extends ConsumerStatefulWidget {
   const _MediaGallery({
     required this.spotId,
+    required this.canEdit,
     required this.onBack,
+    required this.onEdit,
     required this.onComingSoon,
   });
 
   final int spotId;
+  final bool canEdit;
   final VoidCallback onBack;
+  final VoidCallback onEdit;
   final VoidCallback onComingSoon;
 
   @override
@@ -861,6 +881,14 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
               right: 10,
               child: Row(
                 children: [
+                  if (widget.canEdit) ...[
+                    AppIconButton(
+                      icon: Symbols.edit,
+                      chrome: true,
+                      onPressed: widget.onEdit,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   AppIconButton(
                     icon: Symbols.bookmark,
                     chrome: true,

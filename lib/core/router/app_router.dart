@@ -16,6 +16,7 @@ import '../../features/rides/presentation/screens/my_rides_screen.dart';
 import '../../features/rides/presentation/screens/ride_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/spots/presentation/screens/create_spot_screen.dart';
+import '../../features/spots/presentation/screens/edit_spot_screen.dart';
 import '../../features/spots/presentation/screens/search_screen.dart';
 import '../../features/spots/presentation/screens/spot_screen.dart';
 import '../../features/spots/presentation/screens/sport_screen.dart';
@@ -88,6 +89,11 @@ GoRouter appRouter(Ref ref) {
         path: '/spot/:id',
         builder: (context, state) =>
             SpotScreen(spotId: int.parse(state.pathParameters['id']!)),
+      ),
+      GoRoute(
+        path: '/spot/:id/edit',
+        builder: (context, state) =>
+            EditSpotScreen(spotId: int.parse(state.pathParameters['id']!)),
       ),
       GoRoute(
         path: '/rides',

@@ -26,6 +26,8 @@ _Spot _$SpotFromJson(Map<String, dynamic> json) => _Spot(
   voteCount: (json['vote_count'] as num).toInt(),
   coverPhotoUrl: json['cover_photo_url'] as String?,
   coverVideoUrl: json['cover_video_url'] as String?,
+  coverVideoThumbnailUrl: json['cover_video_thumbnail_url'] as String?,
+  topMediaType: json['top_media_type'] as String?,
   createdDate: DateTime.parse(json['created_date'] as String),
   updatedDate: json['updated_date'] == null
       ? null
@@ -57,6 +59,8 @@ Map<String, dynamic> _$SpotToJson(_Spot instance) => <String, dynamic>{
   'vote_count': instance.voteCount,
   'cover_photo_url': instance.coverPhotoUrl,
   'cover_video_url': instance.coverVideoUrl,
+  'cover_video_thumbnail_url': instance.coverVideoThumbnailUrl,
+  'top_media_type': instance.topMediaType,
   'created_date': instance.createdDate.toIso8601String(),
   'updated_date': instance.updatedDate?.toIso8601String(),
   'sport_ids': instance.sportIds,

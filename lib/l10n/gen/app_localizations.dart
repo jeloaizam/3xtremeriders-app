@@ -544,6 +544,30 @@ abstract class AppLocalizations {
   /// **'Creado por'**
   String get spotCreatedBy;
 
+  /// No description provided for @spotEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar spot'**
+  String get spotEdit;
+
+  /// No description provided for @spotDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar spot'**
+  String get spotDelete;
+
+  /// No description provided for @spotDeleteConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar este spot?'**
+  String get spotDeleteConfirmTitle;
+
+  /// No description provided for @spotDeleteConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción no se puede deshacer. El spot se eliminará junto con sus fotos, videos y comentarios.'**
+  String get spotDeleteConfirmBody;
+
   /// No description provided for @spotDifficulty.
   ///
   /// In es, this message translates to:
@@ -723,6 +747,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Necesitamos permiso de ubicación para fijar el spot'**
   String get createSpotLocationDenied;
+
+  /// No description provided for @createSpotAdjustPinHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Arrastra el mapa si el pin no quedó justo en el lugar'**
+  String get createSpotAdjustPinHint;
 
   /// No description provided for @createSpotDifficultyLabel.
   ///

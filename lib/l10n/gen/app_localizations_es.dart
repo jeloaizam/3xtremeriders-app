@@ -241,6 +241,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get spotCreatedBy => 'Creado por';
 
   @override
+  String get spotEdit => 'Editar spot';
+
+  @override
+  String get spotDelete => 'Eliminar spot';
+
+  @override
+  String get spotDeleteConfirmTitle => '¿Eliminar este spot?';
+
+  @override
+  String get spotDeleteConfirmBody =>
+      'Esta acción no se puede deshacer. El spot se eliminará junto con sus fotos, videos y comentarios.';
+
+  @override
   String get spotDifficulty => 'Dificultad';
 
   @override
@@ -340,6 +353,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get createSpotLocationDenied =>
       'Necesitamos permiso de ubicación para fijar el spot';
+
+  @override
+  String get createSpotAdjustPinHint =>
+      'Arrastra el mapa si el pin no quedó justo en el lugar';
 
   @override
   String get createSpotDifficultyLabel => 'DIFICULTAD · 1–5';

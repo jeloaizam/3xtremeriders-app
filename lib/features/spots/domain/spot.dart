@@ -26,6 +26,10 @@ abstract class Spot with _$Spot {
     @JsonKey(name: 'vote_count') required int voteCount,
     @JsonKey(name: 'cover_photo_url') String? coverPhotoUrl,
     @JsonKey(name: 'cover_video_url') String? coverVideoUrl,
+    @JsonKey(name: 'cover_video_thumbnail_url') String? coverVideoThumbnailUrl,
+    // 'photo' | 'video' | null — cuál portada tiene más votos, para elegir
+    // qué ícono mostrar en tarjetas compactas sin pedir el conteo aparte.
+    @JsonKey(name: 'top_media_type') String? topMediaType,
     @JsonKey(name: 'created_date') required DateTime createdDate,
     @JsonKey(name: 'updated_date') DateTime? updatedDate,
     // Drives the map pin icon: one sport shows its icon, several show the

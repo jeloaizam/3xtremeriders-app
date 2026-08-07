@@ -93,6 +93,10 @@
   "settingsFollowDevice": "Seguir idioma del dispositivo",
   "settingsLogout": "Cerrar sesión",
   "spotCreatedBy": "Creado por",
+  "spotEdit": "Editar spot",
+  "spotDelete": "Eliminar spot",
+  "spotDeleteConfirmTitle": "¿Eliminar este spot?",
+  "spotDeleteConfirmBody": "Esta acción no se puede deshacer. El spot se eliminará junto con sus fotos, videos y comentarios.",
   "spotDifficulty": "Dificultad",
   "spotRatingsCount": "{count} calificaciones",
   "@spotRatingsCount": {
@@ -153,6 +157,7 @@
   "createSpotUseCurrentLocation": "USAR MI UBICACIÓN ACTUAL",
   "createSpotLocationSet": "Ubicación fijada ✓",
   "createSpotLocationDenied": "Necesitamos permiso de ubicación para fijar el spot",
+  "createSpotAdjustPinHint": "Arrastra el mapa si el pin no quedó justo en el lugar",
   "createSpotDifficultyLabel": "DIFICULTAD · 1–5",
   "createSpotSeasonLabel": "TEMPORADA",
   "createSpotElementsLabel": "ELEMENTOS DEL SPOT",

@@ -139,6 +139,43 @@ class SpotApi {
     return Spot.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  Future<Spot> update({
+    required int spotId,
+    String? name,
+    String? description,
+    int? difficulty,
+    String? bestSeason,
+    required String idToken,
+  }) async {
+    final response = await http.patch(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': ?name,
+        'description': ?description,
+        'difficulty': ?difficulty,
+        'best_season': ?bestSeason,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Spot.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
+  Future<void> delete({required int spotId, required String idToken}) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
+
   Future<SpotElement> addElement({
     required int spotId,
     required String name,
