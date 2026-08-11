@@ -19,15 +19,24 @@ class MapPinRenderer {
   static final Map<String, Uint8List> _cache = {};
 
   /// A single sport's pin — a colored circular badge with that sport's icon.
+  /// [borderColor] is the spot's category color (see
+  /// `spot_category_visuals.dart`) — a separate signal from the sport icon
+  /// itself, defaults to [color] for callers that don't care about category.
   static Future<Uint8List> singleSport({
     required IconData icon,
     required Color color,
     required Color bgColor,
+    Color? borderColor,
     double size = 108,
   }) {
+    final border = borderColor ?? color;
     final key =
-        'single_${icon.codePoint}_${color.toARGB32()}_${bgColor.toARGB32()}_$size';
-    return _cached(key, () => _renderSingle(icon, color, bgColor, size));
+        'single_${icon.codePoint}_${color.toARGB32()}_${bgColor.toARGB32()}_'
+        '${border.toARGB32()}_$size';
+    return _cached(
+      key,
+      () => _renderSingle(icon, color, bgColor, border, size),
+    );
   }
 
   /// A "featured spot" badge for spots with 2+ sports — shows up to 3 mini
@@ -117,6 +126,7 @@ class MapPinRenderer {
     IconData icon,
     Color color,
     Color bgColor,
+    Color borderColor,
     double size,
   ) async {
     final recorder = ui.PictureRecorder();
@@ -129,7 +139,7 @@ class MapPinRenderer {
       center,
       radius,
       Paint()
-        ..color = color
+        ..color = borderColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = size * 0.045,
     );

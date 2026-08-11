@@ -10,9 +10,12 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../auth/domain/role.dart';
 import '../../application/spot_detail.dart';
 import '../../application/spots_providers.dart';
 import '../../data/spot_api.dart';
+import '../../domain/spot_category.dart';
+import '../spot_category_visuals.dart';
 
 const _seasonOptions = [
   'Todo el año',
@@ -47,6 +50,8 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
   final _descriptionController = TextEditingController();
   int? _difficulty;
   String? _bestSeason;
+  // Solo relevante si quien edita es admin — el backend lo ignora si no.
+  int? _categoryId;
   bool _seeded = false;
   bool _saving = false;
   bool _deleting = false;
@@ -64,6 +69,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
     _descriptionController.text = detail.spot.description;
     _difficulty = detail.spot.difficulty;
     _bestSeason = detail.spot.bestSeason;
+    _categoryId = detail.spot.categoryId;
     _seeded = true;
   }
 
@@ -84,6 +90,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
             description: _descriptionController.text.trim(),
             difficulty: _difficulty,
             bestSeason: _bestSeason,
+            categoryId: _categoryId,
             idToken: idToken,
           );
 
@@ -165,6 +172,11 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final detailAsync = ref.watch(spotDetailProvider(widget.spotId));
+    final isAdmin =
+        (ref.watch(currentRiderProvider).value?.roleId ?? 0) >= roleAdmin;
+    final categories = isAdmin
+        ? ref.watch(allSpotCategoriesProvider).value ?? const <SpotCategory>[]
+        : const <SpotCategory>[];
 
     return Scaffold(
       body: SafeArea(
@@ -260,6 +272,25 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
                           ),
                         ],
                       ),
+
+                      if (isAdmin && categories.isNotEmpty) ...[
+                        _SectionLabel(l10n.createSpotCategoryLabel, top: 18),
+                        AppDropdown<int>(
+                          value: _categoryId,
+                          placeholder: '—',
+                          items: [
+                            for (final category in categories)
+                              DropdownMenuItem(
+                                value: category.id,
+                                child: Text(
+                                  spotCategoryLabel(l10n, category.name),
+                                ),
+                              ),
+                          ],
+                          onChanged: (value) =>
+                              setState(() => _categoryId = value),
+                        ),
+                      ],
 
                       const SizedBox(height: 24),
                       GestureDetector(

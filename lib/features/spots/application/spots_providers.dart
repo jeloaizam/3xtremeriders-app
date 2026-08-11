@@ -5,6 +5,7 @@ import '../../auth/application/auth_providers.dart';
 import '../../auth/data/rider_api.dart';
 import '../data/hazzard_api.dart';
 import '../data/spot_api.dart';
+import '../data/spot_category_api.dart';
 import '../data/spot_comment_api.dart';
 import '../data/spot_hazard_rating_api.dart';
 import '../data/spot_photo_api.dart';
@@ -14,6 +15,7 @@ import '../data/sport_api.dart';
 import '../data/vote_api.dart';
 import '../domain/hazzard.dart';
 import '../domain/spot.dart';
+import '../domain/spot_category.dart';
 import '../domain/spot_element.dart';
 import '../domain/spot_photo.dart';
 import '../domain/spot_video.dart';
@@ -52,6 +54,13 @@ Future<List<Spot>> searchSpots(Ref ref, SearchQuery query) {
 @Riverpod(keepAlive: true)
 Future<List<Sport>> allSports(Ref ref) {
   return ref.read(sportApiProvider).list();
+}
+
+/// The fixed 4-row spot category catalog — used by the admin-only category
+/// picker on Create/Edit Spot.
+@Riverpod(keepAlive: true)
+Future<List<SpotCategory>> allSpotCategories(Ref ref) {
+  return ref.read(spotCategoryApiProvider).list();
 }
 
 /// A spot's sports, fetched from `GET /spots/{id}/sports` — cached per

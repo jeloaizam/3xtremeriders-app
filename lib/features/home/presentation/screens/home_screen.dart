@@ -25,6 +25,7 @@ import '../../../spots/application/spots_providers.dart';
 import '../../../spots/domain/spot.dart';
 import '../../../spots/domain/sport.dart';
 import '../../../spots/presentation/screens/search_screen.dart' show SearchTab;
+import '../../../spots/presentation/spot_category_visuals.dart';
 import '../../../spots/presentation/sport_visuals.dart';
 import '../../../spots/presentation/widgets/spot_card.dart';
 import '../map_pin_renderer.dart';
@@ -205,7 +206,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         for (final id in spot.sportIds)
           if (sportById[id] != null) sportById[id]!,
       ];
-      final image = await _pinImageFor(sports, colors);
+      final image = await _pinImageFor(sports, spot.categoryName, colors);
       options.add(
         PointAnnotationOptions(
           geometry: Point(coordinates: Position(spot.longitude, spot.latitude)),
@@ -229,11 +230,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   /// sport's icon, several show a "featured spot" badge (like a well-known
   /// skatepark that hosts multiple disciplines), none falls back to a
   /// plain dot (only possible for spots published before sport selection
-  /// became mandatory).
-  Future<Uint8List> _pinImageFor(List<Sport> sports, AppColors colors) {
+  /// became mandatory). The ring/fill around it is always the spot's
+  /// category color (`SpotCategoryVisual`) — a second, independent signal
+  /// from the sport icon itself.
+  Future<Uint8List> _pinImageFor(
+    List<Sport> sports,
+    String categoryName,
+    AppColors colors,
+  ) {
+    final categoryColor = SpotCategoryVisual.of(categoryName, colors).color;
     if (sports.isEmpty) {
       return MapPinRenderer.genericPin(
-        color: colors.colorBrand,
+        color: categoryColor,
         borderColor: colors.bg850,
       );
     }
@@ -243,13 +251,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         icon: visual.icon,
         color: visual.color,
         bgColor: colors.surface700,
+        borderColor: categoryColor,
       );
     }
     final shown = sports.take(3).toList();
     return MapPinRenderer.multiSportBadge(
       icons: [for (final s in shown) SportVisual.of(s.name, colors).icon],
       iconColors: [for (final s in shown) SportVisual.of(s.name, colors).color],
-      badgeColor: colors.colorAction,
+      badgeColor: categoryColor,
       bgColor: colors.surface700,
       overflowCount: sports.length > 3 ? sports.length - 3 : 0,
     );
@@ -456,7 +465,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         children: [
           Positioned.fill(
             child: MapWidget(
-              styleUri: MapboxStyles.DARK,
+              styleUri: MapboxStyles.SATELLITE,
               onMapCreated: _onMapCreated,
             ),
           ),

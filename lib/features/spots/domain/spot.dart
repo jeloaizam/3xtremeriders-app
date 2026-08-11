@@ -19,6 +19,9 @@ abstract class Spot with _$Spot {
     @JsonKey(name: 'close_hour') String? closeHour,
     @JsonKey(name: 'created_by') required int createdBy,
     @JsonKey(name: 'state_id') int? stateId,
+    @JsonKey(name: 'category_id') required int categoryId,
+    // 'xtremespot' | 'publico' | 'privado' | 'iconico'
+    @JsonKey(name: 'category_name') required String categoryName,
     @JsonKey(name: 'rating_avg') double? ratingAvg,
     @JsonKey(name: 'rating_count') required int ratingCount,
     @JsonKey(name: 'hazard_avg') double? hazardAvg,

@@ -23,12 +23,15 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../auth/domain/role.dart';
 import '../../application/spots_providers.dart';
 import '../../data/hazzard_api.dart';
 import '../../data/spot_api.dart';
 import '../../data/spot_photo_api.dart';
 import '../../data/spot_video_api.dart';
+import '../../domain/spot_category.dart';
 import '../../domain/sport.dart';
+import '../spot_category_visuals.dart';
 import '../sport_visuals.dart';
 
 class _ElementOption {
@@ -92,6 +95,9 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   XFile? _videoFile;
   int? _difficulty;
   String? _bestSeason;
+  // Solo relevante si quien crea es admin — para un rider normal el
+  // backend lo fuerza a 'xtremespot' sin importar lo que se mande.
+  int? _categoryId;
   double? _latitude;
   double? _longitude;
   // The raw GPS fix, used only to key the preview `MapWidget` (see below) —
@@ -387,6 +393,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
             longitude: _longitude!,
             difficulty: _difficulty,
             bestSeason: _bestSeason,
+            categoryId: _categoryId,
             sportIds: _sportIds.toList(),
             idToken: idToken,
           );
@@ -526,6 +533,11 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final allSports = ref.watch(allSportsProvider).value ?? const <Sport>[];
+    final isAdmin =
+        (ref.watch(currentRiderProvider).value?.roleId ?? 0) >= roleAdmin;
+    final categories = isAdmin
+        ? ref.watch(allSpotCategoriesProvider).value ?? const <SpotCategory>[]
+        : const <SpotCategory>[];
 
     // Preselects the rider's active sport once (they're still free to
     // deselect it — this only ever adds it the first time it resolves).
@@ -653,7 +665,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                               key: ValueKey(
                                 '$_anchorLatitude,$_anchorLongitude',
                               ),
-                              styleUri: MapboxStyles.DARK,
+                              styleUri: MapboxStyles.SATELLITE,
                               onMapCreated: (map) {
                                 _onPreviewMapCreated(map);
                                 map.setCamera(
@@ -754,6 +766,22 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                       ),
                     ],
                   ),
+
+                  if (isAdmin && categories.isNotEmpty) ...[
+                    _SectionLabel(l10n.createSpotCategoryLabel, top: 18),
+                    AppDropdown<int>(
+                      value: _categoryId,
+                      placeholder: spotCategoryLabel(l10n, 'xtremespot'),
+                      items: [
+                        for (final category in categories)
+                          DropdownMenuItem(
+                            value: category.id,
+                            child: Text(spotCategoryLabel(l10n, category.name)),
+                          ),
+                      ],
+                      onChanged: (value) => setState(() => _categoryId = value),
+                    ),
+                  ],
 
                   _SectionLabel(l10n.createSpotElementsLabel, top: 18),
                   Wrap(

@@ -114,6 +114,9 @@ class SpotApi {
     required double longitude,
     int? difficulty,
     String? bestSeason,
+    // Ignorado por el backend si quien crea no es admin — ver
+    // app/routers/spot.py.
+    int? categoryId,
     required List<int> sportIds,
     required String idToken,
   }) async {
@@ -130,6 +133,7 @@ class SpotApi {
         'longitude': longitude,
         'difficulty': ?difficulty,
         'best_season': ?bestSeason,
+        'category_id': ?categoryId,
         'sport_ids': sportIds,
       }),
     );
@@ -145,6 +149,9 @@ class SpotApi {
     String? description,
     int? difficulty,
     String? bestSeason,
+    // Ignorado por el backend si quien edita no es admin — ver
+    // app/routers/spot.py.
+    int? categoryId,
     required String idToken,
   }) async {
     final response = await http.patch(
@@ -158,6 +165,7 @@ class SpotApi {
         'description': ?description,
         'difficulty': ?difficulty,
         'best_season': ?bestSeason,
+        'category_id': ?categoryId,
       }),
     );
     if (response.statusCode != 200) {

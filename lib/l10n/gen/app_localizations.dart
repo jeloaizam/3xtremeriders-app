@@ -766,6 +766,36 @@ abstract class AppLocalizations {
   /// **'TEMPORADA'**
   String get createSpotSeasonLabel;
 
+  /// No description provided for @createSpotCategoryLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'CATEGORÍA'**
+  String get createSpotCategoryLabel;
+
+  /// No description provided for @spotCategoryXtremespot.
+  ///
+  /// In es, this message translates to:
+  /// **'Xtremespot'**
+  String get spotCategoryXtremespot;
+
+  /// No description provided for @spotCategoryPublico.
+  ///
+  /// In es, this message translates to:
+  /// **'Público'**
+  String get spotCategoryPublico;
+
+  /// No description provided for @spotCategoryPrivado.
+  ///
+  /// In es, this message translates to:
+  /// **'Privado'**
+  String get spotCategoryPrivado;
+
+  /// No description provided for @spotCategoryIconico.
+  ///
+  /// In es, this message translates to:
+  /// **'Icónico'**
+  String get spotCategoryIconico;
+
   /// No description provided for @createSpotElementsLabel.
   ///
   /// In es, this message translates to:

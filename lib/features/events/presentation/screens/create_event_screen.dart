@@ -415,7 +415,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                             children: [
                               MapWidget(
                                 key: ValueKey('$_latitude,$_longitude'),
-                                styleUri: MapboxStyles.DARK,
+                                styleUri: MapboxStyles.SATELLITE,
                                 onMapCreated: (map) => map.setCamera(
                                   CameraOptions(
                                     center: Point(

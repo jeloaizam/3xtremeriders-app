@@ -29,6 +29,7 @@ import '../../data/vote_api.dart';
 import '../../domain/hazzard.dart';
 import '../../domain/spot_element.dart';
 import '../../domain/sport.dart';
+import '../spot_category_visuals.dart';
 import '../sport_visuals.dart';
 import '../widgets/stat_tile.dart';
 import '../widgets/video_player_screen.dart';
@@ -211,6 +212,8 @@ class _SpotScreenBody extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        _CategoryBadge(categoryName: spot.categoryName),
+                        const SizedBox(height: 8),
                         Text(
                           spot.name.toUpperCase(),
                           style: context.typography.displayMd,
@@ -1189,6 +1192,40 @@ class MediaTile extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CategoryBadge extends StatelessWidget {
+  const _CategoryBadge({required this.categoryName});
+
+  final String categoryName;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final visual = SpotCategoryVisual.of(categoryName, colors);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: visual.color.withValues(alpha: .14),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(visual.icon, size: 14, color: visual.color),
+          const SizedBox(width: 5),
+          Text(
+            spotCategoryLabel(
+              AppLocalizations.of(context),
+              categoryName,
+            ).toUpperCase(),
+            style: context.typography.tag.copyWith(color: visual.color),
+          ),
+        ],
       ),
     );
   }

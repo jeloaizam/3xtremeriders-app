@@ -365,6 +365,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get createSpotSeasonLabel => 'SAISON';
 
   @override
+  String get createSpotCategoryLabel => 'CATÉGORIE';
+
+  @override
+  String get spotCategoryXtremespot => 'Xtremespot';
+
+  @override
+  String get spotCategoryPublico => 'Public';
+
+  @override
+  String get spotCategoryPrivado => 'Privé';
+
+  @override
+  String get spotCategoryIconico => 'Iconique';
+
+  @override
   String get createSpotElementsLabel => 'ÉLÉMENTS DU SPOT';
 
   @override

@@ -365,6 +365,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createSpotSeasonLabel => 'TEMPORADA';
 
   @override
+  String get createSpotCategoryLabel => 'CATEGORÍA';
+
+  @override
+  String get spotCategoryXtremespot => 'Xtremespot';
+
+  @override
+  String get spotCategoryPublico => 'Público';
+
+  @override
+  String get spotCategoryPrivado => 'Privado';
+
+  @override
+  String get spotCategoryIconico => 'Icónico';
+
+  @override
   String get createSpotElementsLabel => 'ELEMENTOS DEL SPOT';
 
   @override
