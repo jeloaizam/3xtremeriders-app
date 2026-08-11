@@ -113,7 +113,23 @@ class _RiderProfileBody extends ConsumerWidget {
                 size: AppAvatarSize.xl,
               ),
               const SizedBox(height: 12),
-              Text(rider.nickname, style: context.typography.displaySm),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(rider.nickname, style: context.typography.displaySm),
+                  if (rider.gender != null) ...[
+                    const SizedBox(width: 6),
+                    Icon(
+                      rider.gender == 'male' ? Symbols.male : Symbols.female,
+                      fill: 1,
+                      size: 22,
+                      color: rider.gender == 'male'
+                          ? colors.blue500
+                          : colors.colorDanger,
+                    ),
+                  ],
+                ],
+              ),
               const SizedBox(height: 4),
               Text(
                 '${rider.name} ${rider.lastName}',
