@@ -288,6 +288,15 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
               idToken: idToken,
             );
       }
+      // spotDetailProvider reads spotSportsProvider via `ref.read` — that
+      // keepAlive sub-provider has its own cache that invalidating
+      // spotDetailProvider alone doesn't touch, so without this the chip
+      // above keeps showing the pre-toggle state (stale "selected") even
+      // though the backend already applied the change, and tapping it
+      // again re-sends the same add/remove against a state that no longer
+      // exists (a 409/404 that looks like a bug but is really just stale
+      // data driving the UI).
+      ref.invalidate(spotSportsProvider(widget.spotId));
       ref.invalidate(spotDetailProvider(widget.spotId));
     } catch (error) {
       if (mounted) {
@@ -328,6 +337,10 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
               idToken: idToken,
             );
       }
+      // See the matching comment in _toggleSport — spotElementsProvider is
+      // its own keepAlive cache, invalidating spotDetailProvider alone
+      // doesn't refresh it.
+      ref.invalidate(spotElementsProvider(widget.spotId));
       ref.invalidate(spotDetailProvider(widget.spotId));
     } catch (error) {
       if (mounted) {
@@ -439,6 +452,8 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
             severity: result.severity,
             idToken: idToken,
           );
+      // Same stale-cache issue as _toggleSport/_toggleElement.
+      ref.invalidate(spotHazzardsProvider(widget.spotId));
       ref.invalidate(spotDetailProvider(widget.spotId));
     } catch (error) {
       if (mounted) {
@@ -475,6 +490,8 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
             severity: result.severity,
             idToken: idToken,
           );
+      // Same stale-cache issue as _toggleSport/_toggleElement.
+      ref.invalidate(spotHazzardsProvider(widget.spotId));
       ref.invalidate(spotDetailProvider(widget.spotId));
     } catch (error) {
       if (mounted) {
@@ -500,6 +517,8 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
       await ref
           .read(hazzardApiProvider)
           .delete(hazzardId: hazard.id, idToken: idToken);
+      // Same stale-cache issue as _toggleSport/_toggleElement.
+      ref.invalidate(spotHazzardsProvider(widget.spotId));
       ref.invalidate(spotDetailProvider(widget.spotId));
     } catch (error) {
       if (mounted) {
