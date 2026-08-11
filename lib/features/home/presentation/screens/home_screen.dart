@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:go_router/go_router.dart';
@@ -10,7 +11,6 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_bottom_nav.dart';
@@ -25,10 +25,8 @@ import '../../../spots/application/spots_providers.dart';
 import '../../../spots/domain/spot.dart';
 import '../../../spots/domain/sport.dart';
 import '../../../spots/presentation/screens/search_screen.dart' show SearchTab;
-import '../../../spots/presentation/spot_category_visuals.dart';
 import '../../../spots/presentation/sport_visuals.dart';
 import '../../../spots/presentation/widgets/spot_card.dart';
-import '../map_pin_renderer.dart';
 import '../widgets/active_sport_picker_sheet.dart';
 import '../widgets/map_sport_filter_sheet.dart';
 
@@ -195,23 +193,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     if (!mounted) return;
     _spotByAnnotationId.clear();
 
-    final colors = context.colors;
-    final allSports = await ref.read(allSportsProvider.future);
-    final sportById = {for (final sport in allSports) sport.id: sport};
-    if (!mounted) return;
-
     final options = <PointAnnotationOptions>[];
     for (final spot in visible) {
-      final sports = [
-        for (final id in spot.sportIds)
-          if (sportById[id] != null) sportById[id]!,
-      ];
-      final image = await _pinImageFor(sports, spot.categoryName, colors);
+      final image = await _pinImageForCategory(spot.categoryName);
       options.add(
         PointAnnotationOptions(
           geometry: Point(coordinates: Position(spot.longitude, spot.latitude)),
           image: image,
-          iconSize: sports.length <= 1 ? 0.5 : 0.55,
+          iconSize: 0.5,
         ),
       );
     }
@@ -226,42 +215,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     await _syncHalos();
   }
 
-  /// Resolves which pin image a spot should use: one sport shows that
-  /// sport's icon, several show a "featured spot" badge (like a well-known
-  /// skatepark that hosts multiple disciplines), none falls back to a
-  /// plain dot (only possible for spots published before sport selection
-  /// became mandatory). The ring/fill around it is always the spot's
-  /// category color (`SpotCategoryVisual`) — a second, independent signal
-  /// from the sport icon itself.
-  Future<Uint8List> _pinImageFor(
-    List<Sport> sports,
-    String categoryName,
-    AppColors colors,
-  ) {
-    final categoryColor = SpotCategoryVisual.of(categoryName, colors).color;
-    if (sports.isEmpty) {
-      return MapPinRenderer.genericPin(
-        color: categoryColor,
-        borderColor: colors.bg850,
-      );
-    }
-    if (sports.length == 1) {
-      final visual = SportVisual.of(sports.first.name, colors);
-      return MapPinRenderer.singleSport(
-        icon: visual.icon,
-        color: visual.color,
-        bgColor: colors.surface700,
-        borderColor: categoryColor,
-      );
-    }
-    final shown = sports.take(3).toList();
-    return MapPinRenderer.multiSportBadge(
-      icons: [for (final s in shown) SportVisual.of(s.name, colors).icon],
-      iconColors: [for (final s in shown) SportVisual.of(s.name, colors).color],
-      badgeColor: categoryColor,
-      bgColor: colors.surface700,
-      overflowCount: sports.length > 3 ? sports.length - 3 : 0,
-    );
+  static final Map<String, Uint8List> _categoryPinCache = {};
+
+  /// The map pin is entirely driven by the spot's category now (one fixed
+  /// image per category, designed as a complete pin already) — sport is
+  /// still shown once you tap into the spot itself, just not on the pin.
+  /// Cached after the first load since the same 4 images repeat across
+  /// every spot on the map.
+  Future<Uint8List> _pinImageForCategory(String categoryName) async {
+    final cached = _categoryPinCache[categoryName];
+    if (cached != null) return cached;
+
+    final assetName = switch (categoryName.toLowerCase()) {
+      'publico' => 'public',
+      'privado' => 'private',
+      'iconico' => 'iconic',
+      _ => 'xtremespot',
+    };
+    final data = await rootBundle.load('assets/map_pins/$assetName.png');
+    final bytes = data.buffer.asUint8List();
+    _categoryPinCache[categoryName] = bytes;
+    return bytes;
   }
 
   /// Rebuilds the pulsing halo circles: a subtle one under each of the 5
