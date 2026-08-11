@@ -4,11 +4,11 @@
   "@appTitle": {
     "description": "Nombre de la app, usado en el título del sistema y splash"
   },
-  "loginTagline": "ENCUENTRA · TIRA EL TRUCO · COMPARTE",
+  "loginTagline": "ESTE ES NUESTRO MUNDO",
   "@loginTagline": {
     "description": "Eyebrow tracked bajo el wordmark en la pantalla de login"
   },
-  "loginSubtitle": "El mapa colaborativo de spots para deportistas extremos.",
+  "loginSubtitle": "Biblioteca y galería de Spots, Riders y eventos de todos los deportes extremos.",
   "@loginSubtitle": {
     "description": "Frase descriptiva bajo el tagline en login"
   },

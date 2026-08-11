@@ -12,11 +12,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => '3xtreme Riders';
 
   @override
-  String get loginTagline => 'FIND · LAND THE TRICK · SHARE';
+  String get loginTagline => 'THIS IS OUR WORLD';
 
   @override
   String get loginSubtitle =>
-      'The collaborative spot map for extreme athletes.';
+      'Library and gallery of Spots, Riders and events for every extreme sport.';
 
   @override
   String get loginEmailPlaceholder => 'you@email.com';

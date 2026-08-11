@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,23 +22,14 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  late final TapGestureRecognizer _signupRecognizer;
 
   bool _obscurePassword = true;
   bool _submitting = false;
 
   @override
-  void initState() {
-    super.initState();
-    _signupRecognizer = TapGestureRecognizer()
-      ..onTap = () => context.push('/signup');
-  }
-
-  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _signupRecognizer.dispose();
     super.dispose();
   }
 
@@ -75,13 +65,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void _showComingSoon() {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).comingSoon)),
-    );
   }
 
   @override
@@ -227,58 +210,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ],
                               ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _SocialButton(
-                                    label: 'Google',
-                                    mark: 'G',
-                                    color: const Color(0xFF4285F4),
-                                    onTap: _submitting ? null : _submitGoogle,
-                                  ),
-                                ),
-                                const SizedBox(width: 11),
-                                Expanded(
-                                  child: _SocialButton(
-                                    label: 'Facebook',
-                                    mark: 'f',
-                                    color: const Color(0xFF1877F2),
-                                    onTap: _showComingSoon,
-                                  ),
-                                ),
-                                const SizedBox(width: 11),
-                                Expanded(
-                                  child: _SocialButton(
-                                    label: 'Hotmail',
-                                    mark: '@',
-                                    color: colors.teal500,
-                                    onTap: _showComingSoon,
-                                  ),
-                                ),
-                              ],
+                            _SocialButton(
+                              label: 'Google',
+                              mark: 'G',
+                              color: const Color(0xFF4285F4),
+                              onTap: _submitting ? null : _submitGoogle,
                             ),
                             const SizedBox(height: 16),
-                            Center(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: context.typography.bodySm.copyWith(
-                                    color: colors.textMuted,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: '${l10n.loginSignupPrompt} ',
-                                    ),
-                                    TextSpan(
-                                      text: l10n.loginSignupCta,
-                                      style: TextStyle(
-                                        color: colors.colorAction,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      recognizer: _signupRecognizer,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            AppButton(
+                              label: l10n.loginSignupCta,
+                              variant: AppButtonVariant.secondary,
+                              onPressed: () => context.push('/signup'),
                             ),
                           ],
                         ),

@@ -109,13 +109,13 @@ abstract class AppLocalizations {
   /// Eyebrow tracked bajo el wordmark en la pantalla de login
   ///
   /// In es, this message translates to:
-  /// **'ENCUENTRA · TIRA EL TRUCO · COMPARTE'**
+  /// **'ESTE ES NUESTRO MUNDO'**
   String get loginTagline;
 
   /// Frase descriptiva bajo el tagline en login
   ///
   /// In es, this message translates to:
-  /// **'El mapa colaborativo de spots para deportistas extremos.'**
+  /// **'Biblioteca y galería de Spots, Riders y eventos de todos los deportes extremos.'**
   String get loginSubtitle;
 
   /// No description provided for @loginEmailPlaceholder.
