@@ -200,7 +200,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         PointAnnotationOptions(
           geometry: Point(coordinates: Position(spot.longitude, spot.latitude)),
           image: image,
-          iconSize: 0.5,
+          // Source PNGs are only 60x60 — 0.5 made them barely visible on
+          // screen, this gets them closer to the old programmatic pins'
+          // on-screen footprint (~78px) without upscaling so much they blur.
+          iconSize: 1.3,
         ),
       );
     }
