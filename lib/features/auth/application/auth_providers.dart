@@ -63,14 +63,19 @@ class PendingSignupProfile extends _$PendingSignupProfile {
 }
 
 /// True once a signed-in rider's profile is missing the bare minimum
-/// (nickname) — in practice this only happens for a brand-new social
-/// sign-in (Google today), since email sign-up always goes through
-/// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+/// (nickname, or gender) — nickname-empty in practice only happens for a
+/// brand-new social sign-in (Google today), since email sign-up always
+/// goes through `SignupScreen` and [PendingSignupProfile] first.
+/// Gender-null hits *every* rider created before that field existed, not
+/// just new signups — it's write-once and required for the men's/women's
+/// video ranking split, so this gate is what forces every existing rider
+/// to pick it the next time they open the app. Drives the router's
 /// mandatory `/complete-profile` redirect.
 @riverpod
 bool needsProfileCompletion(Ref ref) {
   final rider = ref.watch(currentRiderProvider).value;
-  return rider != null && rider.nickname.trim().isEmpty;
+  return rider != null &&
+      (rider.nickname.trim().isEmpty || rider.gender == null);
 }
 
 /// The rider's "current" sport — `Rider.activeSportId` once they've picked
@@ -148,6 +153,10 @@ class CurrentRider extends _$CurrentRider {
     int? cityId,
     String? cityText,
     int? countryId,
+    // Write-once — only ever sent by CompleteProfileScreen the one time
+    // it's actually still unset. No `clearGender`-style flag on purpose:
+    // there's no legitimate way to unset it once fixed.
+    String? gender,
   }) async {
     final rider = state.value;
     final user = ref.read(firebaseAuthProvider).currentUser;
@@ -172,6 +181,7 @@ class CurrentRider extends _$CurrentRider {
           cityText: cityText,
           clearCityText: cityText == null,
           countryId: countryId,
+          gender: gender,
         );
     state = AsyncData(updated);
   }

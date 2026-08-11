@@ -83,6 +83,9 @@ class RiderApi {
     String? cityText,
     bool clearCityText = false,
     int? countryId,
+    // El backend rechaza (403) todo el PATCH si el rider ya tiene un
+    // género fijado y este valor es distinto — ver app/routers/rider.py.
+    String? gender,
     int? roleId,
     int? activeSportId,
     List<int>? mapSportFilter,
@@ -103,6 +106,7 @@ class RiderApi {
         if (clearCityId) 'city_id': null else 'city_id': ?cityId,
         if (clearCityText) 'city_text': null else 'city_text': ?cityText,
         'country_id': ?countryId,
+        'gender': ?gender,
         'role_id': ?roleId,
         'active_sport_id': ?activeSportId,
         if (clearMapSportFilter)

@@ -323,27 +323,39 @@ abstract class _$PendingSignupProfile
 }
 
 /// True once a signed-in rider's profile is missing the bare minimum
-/// (nickname) — in practice this only happens for a brand-new social
-/// sign-in (Google today), since email sign-up always goes through
-/// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+/// (nickname, or gender) — nickname-empty in practice only happens for a
+/// brand-new social sign-in (Google today), since email sign-up always
+/// goes through `SignupScreen` and [PendingSignupProfile] first.
+/// Gender-null hits *every* rider created before that field existed, not
+/// just new signups — it's write-once and required for the men's/women's
+/// video ranking split, so this gate is what forces every existing rider
+/// to pick it the next time they open the app. Drives the router's
 /// mandatory `/complete-profile` redirect.
 
 @ProviderFor(needsProfileCompletion)
 final needsProfileCompletionProvider = NeedsProfileCompletionProvider._();
 
 /// True once a signed-in rider's profile is missing the bare minimum
-/// (nickname) — in practice this only happens for a brand-new social
-/// sign-in (Google today), since email sign-up always goes through
-/// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+/// (nickname, or gender) — nickname-empty in practice only happens for a
+/// brand-new social sign-in (Google today), since email sign-up always
+/// goes through `SignupScreen` and [PendingSignupProfile] first.
+/// Gender-null hits *every* rider created before that field existed, not
+/// just new signups — it's write-once and required for the men's/women's
+/// video ranking split, so this gate is what forces every existing rider
+/// to pick it the next time they open the app. Drives the router's
 /// mandatory `/complete-profile` redirect.
 
 final class NeedsProfileCompletionProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// True once a signed-in rider's profile is missing the bare minimum
-  /// (nickname) — in practice this only happens for a brand-new social
-  /// sign-in (Google today), since email sign-up always goes through
-  /// `SignupScreen` and [PendingSignupProfile] first. Drives the router's
+  /// (nickname, or gender) — nickname-empty in practice only happens for a
+  /// brand-new social sign-in (Google today), since email sign-up always
+  /// goes through `SignupScreen` and [PendingSignupProfile] first.
+  /// Gender-null hits *every* rider created before that field existed, not
+  /// just new signups — it's write-once and required for the men's/women's
+  /// video ranking split, so this gate is what forces every existing rider
+  /// to pick it the next time they open the app. Drives the router's
   /// mandatory `/complete-profile` redirect.
   NeedsProfileCompletionProvider._()
     : super(
@@ -379,7 +391,7 @@ final class NeedsProfileCompletionProvider
 }
 
 String _$needsProfileCompletionHash() =>
-    r'76b136470937c237616e288339a0fd1f1b36873f';
+    r'12443223777079a29d1b269b354435af316d9e5d';
 
 /// The rider's "current" sport — `Rider.activeSportId` once they've picked
 /// one explicitly, falling back to their #1 favorite (lowest `order`) while
@@ -484,7 +496,7 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'44f3d96215815fe2143b57046af9a067be47f5c6';
+String _$currentRiderHash() => r'c21a0156c562b28982835d071cd904baa29cef85';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the

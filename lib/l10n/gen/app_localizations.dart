@@ -220,6 +220,30 @@ abstract class AppLocalizations {
   /// **'Nos falta un poco de información tuya para que puedas usar 3xtreme Riders — solo te toma un momento.'**
   String get completeProfileBody;
 
+  /// No description provided for @completeProfileGenderLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'GÉNERO'**
+  String get completeProfileGenderLabel;
+
+  /// No description provided for @completeProfileGenderWarning.
+  ///
+  /// In es, this message translates to:
+  /// **'Este dato no se podrá cambiar después de guardarlo — lo usamos para el ranking de video de hombres y mujeres.'**
+  String get completeProfileGenderWarning;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In es, this message translates to:
+  /// **'Hombre'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In es, this message translates to:
+  /// **'Mujer'**
+  String get genderFemale;
+
   /// No description provided for @completeProfileSave.
   ///
   /// In es, this message translates to:

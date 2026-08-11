@@ -71,6 +71,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'We just need a bit more info from you before you can use 3xtreme Riders — it only takes a moment.';
 
   @override
+  String get completeProfileGenderLabel => 'GENDER';
+
+  @override
+  String get completeProfileGenderWarning =>
+      'This can\'t be changed after you save it — we use it for the men\'s/women\'s video rankings.';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
   String get completeProfileSave => 'Continue';
 
   @override

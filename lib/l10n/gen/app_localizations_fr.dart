@@ -71,6 +71,19 @@ class AppLocalizationsFr extends AppLocalizations {
       'Il nous manque un peu d\'informations avant que tu puisses utiliser 3xtreme Riders — ça ne prend qu\'un instant.';
 
   @override
+  String get completeProfileGenderLabel => 'GENRE';
+
+  @override
+  String get completeProfileGenderWarning =>
+      'Cette information ne pourra plus être modifiée une fois enregistrée — elle sert au classement vidéo hommes/femmes.';
+
+  @override
+  String get genderMale => 'Homme';
+
+  @override
+  String get genderFemale => 'Femme';
+
+  @override
   String get completeProfileSave => 'Continuer';
 
   @override

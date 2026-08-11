@@ -20,6 +20,10 @@ abstract class Rider with _$Rider {
     @JsonKey(name: 'city_text') String? cityText,
     @JsonKey(name: 'city_name') String? cityName,
     @JsonKey(name: 'country_id') int? countryId,
+    // 'male' | 'female' | null — obligatorio una sola vez (ver
+    // needsProfileCompletionProvider), el backend rechaza cualquier
+    // intento de cambiarlo después de fijado.
+    String? gender,
     @JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,
     @JsonKey(name: 'reputation_pts') required int reputationPts,
     // The rider's "current" sport — prioritizes Home's ordering and

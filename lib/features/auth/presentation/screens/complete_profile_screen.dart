@@ -33,6 +33,12 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   final _cityTextController = TextEditingController();
   int? _countryId;
   int? _cityId;
+  String? _gender;
+  // True if the rider already had a gender saved when this screen loaded
+  // (they only landed here because something *else* was missing, e.g.
+  // nickname) — locks the buttons instead of letting them tap a different
+  // one, since the backend would reject the change anyway.
+  bool _genderLocked = false;
   bool _seeded = false;
   bool _saving = false;
   bool _showErrors = false;
@@ -54,6 +60,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     _countryId = rider.countryId;
     _cityId = rider.cityId;
     _cityTextController.text = rider.cityText ?? '';
+    _gender = rider.gender;
+    _genderLocked = rider.gender != null;
     _seeded = true;
   }
 
@@ -62,7 +70,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       _lastNameController.text.trim().isNotEmpty &&
       _nicknameController.text.trim().isNotEmpty &&
       _countryId != null &&
-      (_cityId != null || _cityTextController.text.trim().isNotEmpty);
+      (_cityId != null || _cityTextController.text.trim().isNotEmpty) &&
+      _gender != null;
 
   Future<void> _save() async {
     setState(() => _showErrors = true);
@@ -90,6 +99,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
             cityText: usingCatalog
                 ? null
                 : (cityText.isEmpty ? null : cityText),
+            gender: _gender,
           );
       // The router bounces away from /complete-profile on its own once
       // needsProfileCompletionProvider flips to false.
@@ -194,6 +204,46 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                     _cityId == null &&
                     _cityTextController.text.trim().isEmpty)
                   _ErrorText(l10n.signupFieldRequired),
+                const SizedBox(height: 20),
+                Text(
+                  l10n.completeProfileGenderLabel,
+                  style: context.typography.eyebrow.copyWith(
+                    color: colors.textMuted,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _GenderButton(
+                        icon: Symbols.male,
+                        label: l10n.genderMale,
+                        selected: _gender == 'male',
+                        locked: _genderLocked,
+                        onTap: () => setState(() => _gender = 'male'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _GenderButton(
+                        icon: Symbols.female,
+                        label: l10n.genderFemale,
+                        selected: _gender == 'female',
+                        locked: _genderLocked,
+                        onTap: () => setState(() => _gender = 'female'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.completeProfileGenderWarning,
+                  style: context.typography.micro.copyWith(
+                    color: colors.textMuted,
+                  ),
+                ),
+                if (_showErrors && _gender == null)
+                  _ErrorText(l10n.signupFieldRequired),
                 const SizedBox(height: 24),
                 AppButton(
                   label: _saving ? '…' : l10n.completeProfileSave,
@@ -202,6 +252,60 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// One of the two gender buttons — big enough to tap easily, since this is
+/// a write-once choice with no dropdown/segmented affordance to correct a
+/// misclick later. Dims and stops responding to taps once [locked] (a
+/// gender was already saved before this screen loaded).
+class _GenderButton extends StatelessWidget {
+  const _GenderButton({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.locked,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final bool locked;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final color = selected ? colors.colorAction : colors.text300;
+
+    return Opacity(
+      opacity: locked && !selected ? .4 : 1,
+      child: GestureDetector(
+        onTap: locked ? null : onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            color: selected ? colors.tintBlue : colors.surfaceCard,
+            border: Border.all(
+              color: selected ? colors.colorAction : colors.hairline,
+              width: selected ? 2 : 1,
+            ),
+            borderRadius: BorderRadius.circular(context.spacing.radiusMd),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, size: 32, color: color),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: context.typography.title.copyWith(color: color),
+              ),
+            ],
+          ),
         ),
       ),
     );

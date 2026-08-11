@@ -425,6 +425,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   label: l10n.settingsReputationLabel,
                   value: '${rider.reputationPts}',
                 ),
+                if (rider.gender != null)
+                  _InfoRow(
+                    label: l10n.completeProfileGenderLabel,
+                    value: rider.gender == 'male'
+                        ? l10n.genderMale
+                        : l10n.genderFemale,
+                  ),
 
                 const SizedBox(height: 32),
                 _SectionTitle(l10n.settingsLanguageSection),
