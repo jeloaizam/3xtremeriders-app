@@ -147,6 +147,8 @@ class SpotApi {
     required int spotId,
     String? name,
     String? description,
+    double? latitude,
+    double? longitude,
     int? difficulty,
     String? bestSeason,
     // Ignorado por el backend si quien edita no es admin — ver
@@ -163,6 +165,8 @@ class SpotApi {
       body: jsonEncode({
         'name': ?name,
         'description': ?description,
+        'latitude': ?latitude,
+        'longitude': ?longitude,
         'difficulty': ?difficulty,
         'best_season': ?bestSeason,
         'category_id': ?categoryId,
@@ -209,6 +213,82 @@ class SpotApi {
     return SpotElement.fromJson(
       jsonDecode(response.body) as Map<String, dynamic>,
     );
+  }
+
+  Future<SpotElement> updateElement({
+    required int spotId,
+    required int elementId,
+    String? name,
+    String? type,
+    int? difficulty,
+    required String idToken,
+  }) async {
+    final response = await http.patch(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/elements/$elementId'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': ?name,
+        'type': ?type,
+        'difficulty': ?difficulty,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotElement.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  Future<void> deleteElement({
+    required int spotId,
+    required int elementId,
+    required String idToken,
+  }) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/elements/$elementId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
+
+  /// Adds a sport to an already-created spot — returns the full `Sport`
+  /// (same shape `getSports` returns) so the caller doesn't need a
+  /// separate lookup just to show its name/icon right away.
+  Future<Sport> addSport({
+    required int spotId,
+    required int sportId,
+    required String idToken,
+  }) async {
+    final response = await http.post(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/sports/$sportId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 201) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Sport.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
+  /// Throws (409) if this is the spot's last remaining sport — a spot
+  /// always needs at least one, same rule enforced at creation.
+  Future<void> removeSport({
+    required int spotId,
+    required int sportId,
+    required String idToken,
+  }) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/sports/$sportId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
   }
 }
 

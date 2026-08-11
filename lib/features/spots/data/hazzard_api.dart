@@ -44,6 +44,38 @@ class HazzardApi {
     }
     return Hazzard.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
+
+  /// Only the spot's owner or a moderator+ can edit/delete a hazard —
+  /// Hazzard doesn't track who reported it (see `app/routers/hazzard.py`).
+  Future<Hazzard> update({
+    required int hazzardId,
+    String? name,
+    int? severity,
+    required String idToken,
+  }) async {
+    final response = await http.patch(
+      Uri.parse('${ApiConfig.baseUrl}/hazzards/$hazzardId'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'name': ?name, 'severity': ?severity}),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Hazzard.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
+  Future<void> delete({required int hazzardId, required String idToken}) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/hazzards/$hazzardId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
 }
 
 @riverpod
