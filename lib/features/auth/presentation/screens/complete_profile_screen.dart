@@ -85,7 +85,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       final cities = countryId == null
           ? null
           : ref.read(citiesProvider(countryId)).value;
-      final usingCatalog = cities != null && cities.isNotEmpty;
+      final usingCatalog =
+          cities != null && cities.isNotEmpty && _cityId != null;
       final cityText = _cityTextController.text.trim();
 
       await ref

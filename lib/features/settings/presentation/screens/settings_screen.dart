@@ -222,12 +222,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       // chosen country (see CitySelector) is authoritative — re-checking
       // the live catalog here instead of trusting both local fields at
       // once avoids sending a stale leftover from a previously-selected
-      // country that used the other mode.
+      // country that used the other mode. `_cityId == null` also covers the
+      // "Otra ciudad" option inside a non-empty catalog (CitySelector clears
+      // it when the rider switches to free text).
       final countryId = _countryId;
       final cities = countryId == null
           ? null
           : ref.read(citiesProvider(countryId)).value;
-      final usingCatalog = cities != null && cities.isNotEmpty;
+      final usingCatalog =
+          cities != null && cities.isNotEmpty && _cityId != null;
       final cityText = _cityTextController.text.trim();
 
       await ref

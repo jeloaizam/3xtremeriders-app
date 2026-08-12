@@ -63,6 +63,8 @@
   "settingsLastNameLabel": "Nom",
   "settingsNicknameLabel": "Surnom",
   "settingsCityLabel": "Ville",
+  "citySelectorOtherOption": "Autre ville (saisir)",
+  "citySelectorBackToList": "Choisir dans la liste",
   "settingsCountryLabel": "Pays",
   "settingsBioLabel": "Bio",
   "settingsSave": "Enregistrer",

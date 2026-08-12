@@ -478,6 +478,18 @@ abstract class AppLocalizations {
   /// **'Ciudad'**
   String get settingsCityLabel;
 
+  /// No description provided for @citySelectorOtherOption.
+  ///
+  /// In es, this message translates to:
+  /// **'Otra ciudad (escribir)'**
+  String get citySelectorOtherOption;
+
+  /// No description provided for @citySelectorBackToList.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir de la lista'**
+  String get citySelectorBackToList;
+
   /// No description provided for @settingsCountryLabel.
   ///
   /// In es, this message translates to:
