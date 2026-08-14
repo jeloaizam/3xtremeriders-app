@@ -225,6 +225,12 @@
       "error": { "type": "String" }
     }
   },
+  "createSpotSavingPhase": "Guardando spot…",
+  "createSpotUploadingPhase": "Subiendo fotos y video…",
+  "createSpotTimeoutError": "No pudimos confirmar si el spot se guardó por un problema de conexión. Espera un momento, revisa si ya aparece, y recién ahí vuelve a intentarlo.",
+  "createSpotSuccessTitle": "¡Spot publicado!",
+  "createSpotSuccessBody": "Tu spot ya quedó guardado y visible para otros riders.",
+  "createSpotViewSpot": "VER SPOT",
   "ridesTitle": "MIS RIDES",
   "ridesEmpty": "Todavía no tienes rides",
   "rideStateActive": "ACTIVO",

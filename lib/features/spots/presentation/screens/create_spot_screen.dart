@@ -108,6 +108,10 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   double? _anchorLongitude;
   bool _fetchingLocation = false;
   bool _submitting = false;
+  // Texto mostrado en el overlay de carga mientras _submitting — distingue
+  // "guardando el spot" de "subiendo fotos/video" para que el rider vea que
+  // la app sigue trabajando en vez de asumir que se colgó.
+  String? _savingPhase;
   bool _showErrors = false;
   bool _seededActiveSport = false;
 
@@ -378,7 +382,12 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
     setState(() => _showErrors = true);
     if (!_isValid || _submitting) return;
 
-    setState(() => _submitting = true);
+    final l10n = AppLocalizations.of(context);
+    setState(() {
+      _submitting = true;
+      _savingPhase = l10n.createSpotSavingPhase;
+    });
+    var hadPartialFailure = false;
     try {
       final user = ref.read(firebaseAuthProvider).currentUser;
       final idToken = await user?.getIdToken();
@@ -397,6 +406,8 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
             sportIds: _sportIds.toList(),
             idToken: idToken,
           );
+
+      if (mounted) setState(() => _savingPhase = l10n.createSpotUploadingPhase);
 
       // From here on the spot itself already exists on the backend — if
       // anything below fails (most likely a media upload), the rider still
@@ -489,6 +500,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
               );
         }
       } catch (error, stackTrace) {
+        hadPartialFailure = true;
         // The spot itself already saved fine at this point — this only
         // covers elements/hazards/media, which the rider might not notice
         // failed if they miss the SnackBar. Recorded as non-fatal so a
@@ -516,7 +528,23 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
       }
 
       ref.invalidate(nearbySpotsProvider);
+      // Partial failure already warned via the SnackBar above — showing the
+      // success dialog too would be a confusing double message, so this
+      // explicit confirmation is reserved for the fully clean path.
+      if (!hadPartialFailure && mounted) await _showSuccessDialog();
       if (mounted) context.pushReplacement('/spot/${spot.id}');
+    } on TimeoutException {
+      // Distinct from the generic catch below: a timeout means we genuinely
+      // don't know if the POST landed on the server before the response was
+      // lost, so this explicitly tells the rider not to assume it failed
+      // and retry blindly — the backend also deduplicates as a safety net
+      // (see crud_spot.create), but avoiding the retry in the first place
+      // is better than relying on it.
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.createSpotTimeoutError)));
+      }
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -524,8 +552,52 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
         ).showSnackBar(SnackBar(content: Text('$error')));
       }
     } finally {
-      if (mounted) setState(() => _submitting = false);
+      if (mounted) {
+        setState(() {
+          _submitting = false;
+          _savingPhase = null;
+        });
+      }
     }
+  }
+
+  /// Blocks until the rider taps through — this is the explicit
+  /// confirmation that the spot really did save, since the auto-navigation
+  /// to the new spot right after could otherwise read as "something
+  /// happened" rather than "it worked".
+  Future<void> _showSuccessDialog() {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: colors.surfaceCard,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Symbols.check_circle, fill: 1, color: colors.colorRating),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                l10n.createSpotSuccessTitle,
+                style: context.typography.title,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          l10n.createSpotSuccessBody,
+          style: context.typography.body,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.createSpotViewSpot),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -551,374 +623,417 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
       }
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 6, 18, 12),
-              child: Row(
-                children: [
-                  AppIconButton(
-                    icon: Symbols.close,
-                    onPressed: () => context.pop(),
-                  ),
-                  const SizedBox(width: 14),
-                  Text(
-                    l10n.createSpotTitle,
-                    style: context.typography.displaySm,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(18, 4, 18, 20),
-                children: [
-                  _SectionLabel(l10n.createSpotNameLabel),
-                  AppTextField(
-                    controller: _nameController,
-                    placeholder: l10n.createSpotNamePlaceholder,
-                  ),
-                  if (_showErrors && _nameController.text.trim().isEmpty)
-                    _ErrorText(l10n.createSpotNameRequired),
-
-                  _SectionLabel(l10n.createSpotSportLabel, top: 18),
-                  Wrap(
-                    spacing: 9,
-                    runSpacing: 9,
+    return Stack(
+      children: [
+        Scaffold(
+          body: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 6, 18, 12),
+                  child: Row(
                     children: [
-                      for (final sport in allSports)
-                        _ToggleChip(
-                          label: sport.name,
-                          icon: SportVisual.of(sport.name, colors).icon,
-                          selected: _sportIds.contains(sport.id),
-                          onTap: () => setState(
-                            () => _sportIds.contains(sport.id)
-                                ? _sportIds.remove(sport.id)
-                                : _sportIds.add(sport.id),
-                          ),
-                        ),
+                      AppIconButton(
+                        icon: Symbols.close,
+                        onPressed: () => context.pop(),
+                      ),
+                      const SizedBox(width: 14),
+                      Text(
+                        l10n.createSpotTitle,
+                        style: context.typography.displaySm,
+                      ),
                     ],
                   ),
-                  if (_showErrors && _sportIds.isEmpty)
-                    _ErrorText(l10n.createSpotSportRequired),
+                ),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(18, 4, 18, 20),
+                    children: [
+                      _SectionLabel(l10n.createSpotNameLabel),
+                      AppTextField(
+                        controller: _nameController,
+                        placeholder: l10n.createSpotNamePlaceholder,
+                      ),
+                      if (_showErrors && _nameController.text.trim().isEmpty)
+                        _ErrorText(l10n.createSpotNameRequired),
 
-                  _SectionLabel(l10n.createSpotLocationLabel, top: 18),
-                  GestureDetector(
-                    onTap: _fetchingLocation ? null : _useCurrentLocation,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colors.surfaceCard,
-                        border: Border.all(color: colors.hairlineStrong),
-                        borderRadius: BorderRadius.circular(
-                          context.spacing.radiusMd,
-                        ),
-                      ),
-                      child: Row(
+                      _SectionLabel(l10n.createSpotSportLabel, top: 18),
+                      Wrap(
+                        spacing: 9,
+                        runSpacing: 9,
                         children: [
-                          Icon(
-                            Symbols.location_on,
-                            color: _latitude != null
-                                ? colors.colorRating
-                                : colors.colorAction,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              _fetchingLocation
-                                  ? '…'
-                                  : _latitude != null
-                                  ? l10n.createSpotLocationSet
-                                  : l10n.createSpotUseCurrentLocation,
-                              style: context.typography.body,
+                          for (final sport in allSports)
+                            _ToggleChip(
+                              label: sport.name,
+                              icon: SportVisual.of(sport.name, colors).icon,
+                              selected: _sportIds.contains(sport.id),
+                              onTap: () => setState(
+                                () => _sportIds.contains(sport.id)
+                                    ? _sportIds.remove(sport.id)
+                                    : _sportIds.add(sport.id),
+                              ),
                             ),
-                          ),
                         ],
                       ),
-                    ),
-                  ),
-                  if (_showErrors && _latitude == null)
-                    _ErrorText(l10n.createSpotLocationDenied),
-                  if (_latitude != null && _longitude != null) ...[
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(14),
-                      child: SizedBox(
-                        height: 300,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            MapWidget(
-                              // Keyed on the *anchor* (the raw GPS fix), not
-                              // on `_latitude`/`_longitude` — those now
-                              // change continuously while the rider drags
-                              // to adjust the pin, and rebuilding the whole
-                              // MapWidget mid-drag would reset the camera
-                              // and interrupt the gesture. A fresh instance
-                              // is only needed when "usar ubicación actual"
-                              // is tapped again for a brand new GPS fix.
-                              key: ValueKey(
-                                '$_anchorLatitude,$_anchorLongitude',
+                      if (_showErrors && _sportIds.isEmpty)
+                        _ErrorText(l10n.createSpotSportRequired),
+
+                      _SectionLabel(l10n.createSpotLocationLabel, top: 18),
+                      GestureDetector(
+                        onTap: _fetchingLocation ? null : _useCurrentLocation,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            color: colors.surfaceCard,
+                            border: Border.all(color: colors.hairlineStrong),
+                            borderRadius: BorderRadius.circular(
+                              context.spacing.radiusMd,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Symbols.location_on,
+                                color: _latitude != null
+                                    ? colors.colorRating
+                                    : colors.colorAction,
                               ),
-                              styleUri: MapboxStyles.SATELLITE,
-                              onMapCreated: (map) {
-                                _onPreviewMapCreated(map);
-                                map.setCamera(
-                                  CameraOptions(
-                                    center: Point(
-                                      coordinates: Position(
-                                        _longitude!,
-                                        _latitude!,
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  _fetchingLocation
+                                      ? '…'
+                                      : _latitude != null
+                                      ? l10n.createSpotLocationSet
+                                      : l10n.createSpotUseCurrentLocation,
+                                  style: context.typography.body,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (_showErrors && _latitude == null)
+                        _ErrorText(l10n.createSpotLocationDenied),
+                      if (_latitude != null && _longitude != null) ...[
+                        const SizedBox(height: 10),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: SizedBox(
+                            height: 300,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                MapWidget(
+                                  // Keyed on the *anchor* (the raw GPS fix), not
+                                  // on `_latitude`/`_longitude` — those now
+                                  // change continuously while the rider drags
+                                  // to adjust the pin, and rebuilding the whole
+                                  // MapWidget mid-drag would reset the camera
+                                  // and interrupt the gesture. A fresh instance
+                                  // is only needed when "usar ubicación actual"
+                                  // is tapped again for a brand new GPS fix.
+                                  key: ValueKey(
+                                    '$_anchorLatitude,$_anchorLongitude',
+                                  ),
+                                  styleUri: MapboxStyles.SATELLITE,
+                                  onMapCreated: (map) {
+                                    _onPreviewMapCreated(map);
+                                    map.setCamera(
+                                      CameraOptions(
+                                        center: Point(
+                                          coordinates: Position(
+                                            _longitude!,
+                                            _latitude!,
+                                          ),
+                                        ),
+                                        zoom: _previewZoom,
                                       ),
+                                    );
+                                  },
+                                  onCameraChangeListener:
+                                      _onPreviewCameraChanged,
+                                  // This preview sits inside the form's
+                                  // scrolling `ListView` — without eagerly
+                                  // claiming the gesture, the ListView's own
+                                  // scroll recognizer wins the arena and the
+                                  // map never sees the drag at all.
+                                  gestureRecognizers: {
+                                    Factory<OneSequenceGestureRecognizer>(
+                                      () => EagerGestureRecognizer(),
                                     ),
-                                    zoom: _previewZoom,
-                                  ),
-                                );
-                              },
-                              onCameraChangeListener: _onPreviewCameraChanged,
-                              // This preview sits inside the form's
-                              // scrolling `ListView` — without eagerly
-                              // claiming the gesture, the ListView's own
-                              // scroll recognizer wins the arena and the
-                              // map never sees the drag at all.
-                              gestureRecognizers: {
-                                Factory<OneSequenceGestureRecognizer>(
-                                  () => EagerGestureRecognizer(),
+                                  },
                                 ),
-                              },
-                            ),
-                            IgnorePointer(
-                              child: Center(
-                                child: Icon(
-                                  Symbols.place,
-                                  fill: 1,
-                                  size: 34,
-                                  color: colors.colorAction,
+                                IgnorePointer(
+                                  child: Center(
+                                    child: Icon(
+                                      Symbols.place,
+                                      fill: 1,
+                                      size: 34,
+                                      color: colors.colorAction,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      l10n.createSpotAdjustPinHint,
-                      style: context.typography.micro.copyWith(
-                        color: colors.textMuted,
-                      ),
-                    ),
-                  ],
-
-                  _SectionLabel(null, top: 18),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _SectionLabel(
-                              l10n.createSpotDifficultyLabel,
-                              top: 0,
-                            ),
-                            AppDropdown<int>(
-                              value: _difficulty,
-                              placeholder: '—',
-                              items: [
-                                for (final entry in _difficultyLabels.entries)
-                                  DropdownMenuItem(
-                                    value: entry.key,
-                                    child: Text(entry.value),
-                                  ),
                               ],
-                              onChanged: (value) =>
-                                  setState(() => _difficulty = value),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _SectionLabel(l10n.createSpotSeasonLabel, top: 0),
-                            AppDropdown<String>(
-                              value: _bestSeason,
-                              placeholder: '—',
-                              items: [
-                                for (final season in _seasonOptions)
-                                  DropdownMenuItem(
-                                    value: season,
-                                    child: Text(season),
-                                  ),
-                              ],
-                              onChanged: (value) =>
-                                  setState(() => _bestSeason = value),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  if (isAdmin && categories.isNotEmpty) ...[
-                    _SectionLabel(l10n.createSpotCategoryLabel, top: 18),
-                    AppDropdown<int>(
-                      value: _categoryId,
-                      placeholder: spotCategoryLabel(l10n, 'xtremespot'),
-                      items: [
-                        for (final category in categories)
-                          DropdownMenuItem(
-                            value: category.id,
-                            child: Text(spotCategoryLabel(l10n, category.name)),
                           ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.createSpotAdjustPinHint,
+                          style: context.typography.micro.copyWith(
+                            color: colors.textMuted,
+                          ),
+                        ),
                       ],
-                      onChanged: (value) => setState(() => _categoryId = value),
-                    ),
-                  ],
 
-                  _SectionLabel(l10n.createSpotElementsLabel, top: 18),
-                  Wrap(
-                    spacing: 9,
-                    runSpacing: 9,
-                    children: [
-                      for (final option in _elementOptions)
-                        _ToggleChip(
-                          label: option.type,
-                          icon: elementIcon(option.type),
-                          selected: _elementTypes.contains(option.type),
-                          onTap: () => setState(
-                            () => _elementTypes.contains(option.type)
-                                ? _elementTypes.remove(option.type)
-                                : _elementTypes.add(option.type),
-                          ),
-                        ),
-                    ],
-                  ),
-
-                  _SectionLabel(l10n.createSpotHazardsLabel, top: 18),
-                  GestureDetector(
-                    onTap: _addHazard,
-                    child: Container(
-                      padding: const EdgeInsets.all(13),
-                      decoration: BoxDecoration(
-                        color: colors.surfaceCard,
-                        border: Border.all(
-                          color: colors.colorDanger.withValues(alpha: .35),
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          context.spacing.radiusMd,
-                        ),
-                      ),
-                      child: Row(
+                      _SectionLabel(null, top: 18),
+                      Row(
                         children: [
-                          Icon(
-                            Symbols.add_alert,
-                            color: colors.colorDanger,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              l10n.createSpotAddHazard,
-                              style: context.typography.bodySm,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _SectionLabel(
+                                  l10n.createSpotDifficultyLabel,
+                                  top: 0,
+                                ),
+                                AppDropdown<int>(
+                                  value: _difficulty,
+                                  placeholder: '—',
+                                  items: [
+                                    for (final entry
+                                        in _difficultyLabels.entries)
+                                      DropdownMenuItem(
+                                        value: entry.key,
+                                        child: Text(entry.value),
+                                      ),
+                                  ],
+                                  onChanged: (value) =>
+                                      setState(() => _difficulty = value),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            '1–5',
-                            style: context.typography.tag.copyWith(
-                              color: colors.colorDanger,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _SectionLabel(
+                                  l10n.createSpotSeasonLabel,
+                                  top: 0,
+                                ),
+                                AppDropdown<String>(
+                                  value: _bestSeason,
+                                  placeholder: '—',
+                                  items: [
+                                    for (final season in _seasonOptions)
+                                      DropdownMenuItem(
+                                        value: season,
+                                        child: Text(season),
+                                      ),
+                                  ],
+                                  onChanged: (value) =>
+                                      setState(() => _bestSeason = value),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  if (_hazards.isNotEmpty) ...[
-                    const SizedBox(height: 9),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final hazard in _hazards)
-                          Chip(
-                            label: Text('${hazard.name} · ${hazard.severity}'),
-                            onDeleted: () =>
-                                setState(() => _hazards.remove(hazard)),
-                          ),
+
+                      if (isAdmin && categories.isNotEmpty) ...[
+                        _SectionLabel(l10n.createSpotCategoryLabel, top: 18),
+                        AppDropdown<int>(
+                          value: _categoryId,
+                          placeholder: spotCategoryLabel(l10n, 'xtremespot'),
+                          items: [
+                            for (final category in categories)
+                              DropdownMenuItem(
+                                value: category.id,
+                                child: Text(
+                                  spotCategoryLabel(l10n, category.name),
+                                ),
+                              ),
+                          ],
+                          onChanged: (value) =>
+                              setState(() => _categoryId = value),
+                        ),
                       ],
-                    ),
-                  ],
 
-                  _SectionLabel(l10n.createSpotDescriptionLabel, top: 18),
-                  AppTextField(
-                    controller: _descriptionController,
-                    placeholder: l10n.createSpotDescriptionPlaceholder,
-                    multiline: true,
-                  ),
-                  if (_showErrors && _descriptionController.text.trim().isEmpty)
-                    _ErrorText(l10n.createSpotDescriptionRequired),
+                      _SectionLabel(l10n.createSpotElementsLabel, top: 18),
+                      Wrap(
+                        spacing: 9,
+                        runSpacing: 9,
+                        children: [
+                          for (final option in _elementOptions)
+                            _ToggleChip(
+                              label: option.type,
+                              icon: elementIcon(option.type),
+                              selected: _elementTypes.contains(option.type),
+                              onTap: () => setState(
+                                () => _elementTypes.contains(option.type)
+                                    ? _elementTypes.remove(option.type)
+                                    : _elementTypes.add(option.type),
+                              ),
+                            ),
+                        ],
+                      ),
 
-                  _SectionLabel(l10n.createSpotMediaLabel, top: 18),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _MediaButton(
-                          icon: Symbols.add_photo_alternate,
-                          color: colors.colorBrand,
-                          label: l10n.createSpotUploadPhoto,
-                          onTap: _pickPhoto,
-                          done: _photoFile != null,
-                          onRemove: () => setState(() => _photoFile = null),
+                      _SectionLabel(l10n.createSpotHazardsLabel, top: 18),
+                      GestureDetector(
+                        onTap: _addHazard,
+                        child: Container(
+                          padding: const EdgeInsets.all(13),
+                          decoration: BoxDecoration(
+                            color: colors.surfaceCard,
+                            border: Border.all(
+                              color: colors.colorDanger.withValues(alpha: .35),
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              context.spacing.radiusMd,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Symbols.add_alert,
+                                color: colors.colorDanger,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  l10n.createSpotAddHazard,
+                                  style: context.typography.bodySm,
+                                ),
+                              ),
+                              Text(
+                                '1–5',
+                                style: context.typography.tag.copyWith(
+                                  color: colors.colorDanger,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _MediaButton(
-                          icon: Symbols.videocam,
-                          color: colors.colorRating,
-                          label: l10n.createSpotUploadVideo,
-                          onTap: _pickVideo,
-                          done: _videoFile != null,
-                          onRemove: () => setState(() => _videoFile = null),
+                      if (_hazards.isNotEmpty) ...[
+                        const SizedBox(height: 9),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            for (final hazard in _hazards)
+                              Chip(
+                                label: Text(
+                                  '${hazard.name} · ${hazard.severity}',
+                                ),
+                                onDeleted: () =>
+                                    setState(() => _hazards.remove(hazard)),
+                              ),
+                          ],
                         ),
+                      ],
+
+                      _SectionLabel(l10n.createSpotDescriptionLabel, top: 18),
+                      AppTextField(
+                        controller: _descriptionController,
+                        placeholder: l10n.createSpotDescriptionPlaceholder,
+                        multiline: true,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _MediaButton(
-                          icon: Symbols.link,
-                          color: colors.blue500,
-                          label: l10n.createSpotLinkVideo,
-                          onTap: _linkVideo,
-                          done: _videoUrl != null,
-                          onRemove: () => setState(() => _videoUrl = null),
-                        ),
+                      if (_showErrors &&
+                          _descriptionController.text.trim().isEmpty)
+                        _ErrorText(l10n.createSpotDescriptionRequired),
+
+                      _SectionLabel(l10n.createSpotMediaLabel, top: 18),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _MediaButton(
+                              icon: Symbols.add_photo_alternate,
+                              color: colors.colorBrand,
+                              label: l10n.createSpotUploadPhoto,
+                              onTap: _pickPhoto,
+                              done: _photoFile != null,
+                              onRemove: () => setState(() => _photoFile = null),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _MediaButton(
+                              icon: Symbols.videocam,
+                              color: colors.colorRating,
+                              label: l10n.createSpotUploadVideo,
+                              onTap: _pickVideo,
+                              done: _videoFile != null,
+                              onRemove: () => setState(() => _videoFile = null),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _MediaButton(
+                              icon: Symbols.link,
+                              color: colors.blue500,
+                              label: l10n.createSpotLinkVideo,
+                              onTap: _linkVideo,
+                              done: _videoUrl != null,
+                              onRemove: () => setState(() => _videoUrl = null),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(18, 12, 18, 16),
+                  decoration: BoxDecoration(
+                    color: colors.surfaceApp,
+                    border: Border(top: BorderSide(color: colors.hairlineSoft)),
+                  ),
+                  child: AppButton(
+                    label: _submitting ? '…' : l10n.createSpotPublish,
+                    onPressed: _submitting ? null : _submit,
+                  ),
+                ),
+              ],
             ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(18, 12, 18, 16),
-              decoration: BoxDecoration(
-                color: colors.surfaceApp,
-                border: Border(top: BorderSide(color: colors.hairlineSoft)),
-              ),
-              child: AppButton(
-                label: _submitting ? '…' : l10n.createSpotPublish,
-                onPressed: _submitting ? null : _submit,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        if (_submitting)
+          Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black.withValues(alpha: .55),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 22,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.surfaceCard,
+                    borderRadius: BorderRadius.circular(
+                      context.spacing.radiusMd,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 14),
+                      Text(_savingPhase ?? '', style: context.typography.body),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

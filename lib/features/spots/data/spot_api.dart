@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -120,23 +121,32 @@ class SpotApi {
     required List<int> sportIds,
     required String idToken,
   }) async {
-    final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}/spots/'),
-      headers: {
-        'Authorization': 'Bearer $idToken',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'name': name,
-        'description': description,
-        'latitude': latitude,
-        'longitude': longitude,
-        'difficulty': ?difficulty,
-        'best_season': ?bestSeason,
-        'category_id': ?categoryId,
-        'sport_ids': sportIds,
-      }),
-    );
+    // Sin timeout explícito, un `http.post` colgado por una red inestable
+    // podía quedar esperando indefinidamente sin que el rider supiera si el
+    // spot ya se había creado o no — ver el bug real de "Plaza Luis Carlos
+    // Galan" duplicado 5 veces por reintentos manuales tras un error de
+    // conexión (2026-08-13). `TimeoutException` la atrapa `create_spot_screen`
+    // para mostrar un mensaje que avisa no reintentar a ciegas; el backend
+    // además deduplica del lado del servidor como red de seguridad.
+    final response = await http
+        .post(
+          Uri.parse('${ApiConfig.baseUrl}/spots/'),
+          headers: {
+            'Authorization': 'Bearer $idToken',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({
+            'name': name,
+            'description': description,
+            'latitude': latitude,
+            'longitude': longitude,
+            'difficulty': ?difficulty,
+            'best_season': ?bestSeason,
+            'category_id': ?categoryId,
+            'sport_ids': sportIds,
+          }),
+        )
+        .timeout(const Duration(seconds: 20));
     if (response.statusCode != 201) {
       throw ApiException(response.statusCode, response.body);
     }

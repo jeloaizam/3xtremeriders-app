@@ -164,6 +164,12 @@
       "error": { "type": "String" }
     }
   },
+  "createSpotSavingPhase": "Enregistrement du spot…",
+  "createSpotUploadingPhase": "Envoi des photos et de la vidéo…",
+  "createSpotTimeoutError": "Impossible de confirmer si le spot a été enregistré à cause d'un problème de connexion. Attends un instant, vérifie s'il apparaît déjà, puis réessaie seulement après.",
+  "createSpotSuccessTitle": "Spot publié !",
+  "createSpotSuccessBody": "Ton spot est maintenant enregistré et visible par les autres riders.",
+  "createSpotViewSpot": "VOIR LE SPOT",
   "ridesTitle": "MES RIDES",
   "ridesEmpty": "Tu n'as pas encore de ride",
   "rideStateActive": "ACTIF",

@@ -516,6 +516,26 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get createSpotSavingPhase => 'Guardando spot…';
+
+  @override
+  String get createSpotUploadingPhase => 'Subiendo fotos y video…';
+
+  @override
+  String get createSpotTimeoutError =>
+      'No pudimos confirmar si el spot se guardó por un problema de conexión. Espera un momento, revisa si ya aparece, y recién ahí vuelve a intentarlo.';
+
+  @override
+  String get createSpotSuccessTitle => '¡Spot publicado!';
+
+  @override
+  String get createSpotSuccessBody =>
+      'Tu spot ya quedó guardado y visible para otros riders.';
+
+  @override
+  String get createSpotViewSpot => 'VER SPOT';
+
+  @override
   String get ridesTitle => 'MIS RIDES';
 
   @override

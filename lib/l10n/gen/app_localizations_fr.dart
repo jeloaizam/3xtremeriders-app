@@ -516,6 +516,26 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get createSpotSavingPhase => 'Enregistrement du spot…';
+
+  @override
+  String get createSpotUploadingPhase => 'Envoi des photos et de la vidéo…';
+
+  @override
+  String get createSpotTimeoutError =>
+      'Impossible de confirmer si le spot a été enregistré à cause d\'un problème de connexion. Attends un instant, vérifie s\'il apparaît déjà, puis réessaie seulement après.';
+
+  @override
+  String get createSpotSuccessTitle => 'Spot publié !';
+
+  @override
+  String get createSpotSuccessBody =>
+      'Ton spot est maintenant enregistré et visible par les autres riders.';
+
+  @override
+  String get createSpotViewSpot => 'VOIR LE SPOT';
+
+  @override
   String get ridesTitle => 'MES RIDES';
 
   @override

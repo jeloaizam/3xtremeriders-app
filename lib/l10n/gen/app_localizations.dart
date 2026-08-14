@@ -1048,6 +1048,42 @@ abstract class AppLocalizations {
   /// **'El spot se creó, pero algo no se pudo subir: {error}. Puedes agregarlo de nuevo desde el spot.'**
   String createSpotPartialFailure(String error);
 
+  /// No description provided for @createSpotSavingPhase.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardando spot…'**
+  String get createSpotSavingPhase;
+
+  /// No description provided for @createSpotUploadingPhase.
+  ///
+  /// In es, this message translates to:
+  /// **'Subiendo fotos y video…'**
+  String get createSpotUploadingPhase;
+
+  /// No description provided for @createSpotTimeoutError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos confirmar si el spot se guardó por un problema de conexión. Espera un momento, revisa si ya aparece, y recién ahí vuelve a intentarlo.'**
+  String get createSpotTimeoutError;
+
+  /// No description provided for @createSpotSuccessTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Spot publicado!'**
+  String get createSpotSuccessTitle;
+
+  /// No description provided for @createSpotSuccessBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu spot ya quedó guardado y visible para otros riders.'**
+  String get createSpotSuccessBody;
+
+  /// No description provided for @createSpotViewSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'VER SPOT'**
+  String get createSpotViewSpot;
+
   /// No description provided for @ridesTitle.
   ///
   /// In es, this message translates to:
