@@ -17,6 +17,8 @@ class AppTextField extends StatelessWidget {
     this.multiline = false,
     this.maxLines,
     this.extraVerticalPadding = 0,
+    this.onChanged,
+    this.enabled = true,
   });
 
   final TextEditingController? controller;
@@ -28,6 +30,8 @@ class AppTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool multiline;
   final int? maxLines;
+  final ValueChanged<String>? onChanged;
+  final bool enabled;
 
   /// Added on top of the field's normal (intrinsic) height, split evenly
   /// top/bottom — e.g. 10 makes the field 10px taller overall.
@@ -65,6 +69,8 @@ class AppTextField extends StatelessWidget {
               keyboardType: multiline ? TextInputType.multiline : keyboardType,
               minLines: multiline ? 3 : 1,
               maxLines: maxLines ?? (multiline ? 6 : 1),
+              onChanged: onChanged,
+              enabled: enabled,
               style: context.typography.body.copyWith(color: colors.text100),
               decoration: InputDecoration(
                 hintText: placeholder,

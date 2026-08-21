@@ -19,6 +19,12 @@ abstract class Spot with _$Spot {
     @JsonKey(name: 'close_hour') String? closeHour,
     @JsonKey(name: 'created_by') required int createdBy,
     @JsonKey(name: 'state_id') int? stateId,
+    // Resueltos por reverse geocoding de Mapbox al crear/editar el spot —
+    // ninguno es obligatorio (spots viejos, o geocoding que falló).
+    @JsonKey(name: 'city_id') int? cityId,
+    @JsonKey(name: 'country_id') int? countryId,
+    @JsonKey(name: 'city_name') String? cityName,
+    @JsonKey(name: 'country_name') String? countryName,
     @JsonKey(name: 'category_id') required int categoryId,
     // 'xtremespot' | 'publico' | 'privado' | 'iconico'
     @JsonKey(name: 'category_name') required String categoryName,

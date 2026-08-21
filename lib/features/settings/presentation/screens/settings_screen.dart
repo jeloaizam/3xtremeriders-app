@@ -21,9 +21,9 @@ import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../auth/data/auth_repository.dart';
 import '../../../auth/domain/rider.dart';
-import '../../data/city_api.dart';
 import '../../data/country_api.dart';
-import '../widgets/city_selector.dart';
+import '../../domain/country.dart';
+import '../widgets/city_search_field.dart';
 import '../widgets/favorite_sports_section.dart';
 
 /// No dedicated design file exists for Settings in the source project —
@@ -42,10 +42,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _lastNameController = TextEditingController();
   final _nicknameController = TextEditingController();
   final _bioController = TextEditingController();
-  final _cityTextController = TextEditingController();
 
   int? _countryId;
-  int? _cityId;
+  String? _cityName;
   String? _iconImage;
   bool _uploadingAvatar = false;
   bool _seeded = false;
@@ -57,7 +56,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _lastNameController.dispose();
     _nicknameController.dispose();
     _bioController.dispose();
-    _cityTextController.dispose();
     super.dispose();
   }
 
@@ -68,10 +66,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _nicknameController.text = rider.nickname;
     _bioController.text = rider.bio ?? '';
     _countryId = rider.countryId;
-    _cityId = rider.cityId;
-    _cityTextController.text = rider.cityText ?? '';
+    _cityName = rider.cityName;
     _iconImage = rider.iconImage;
     _seeded = true;
+  }
+
+  String? _isoCodeFor(List<Country>? countries, int? countryId) {
+    if (countries == null || countryId == null) return null;
+    for (final country in countries) {
+      if (country.id == countryId) return country.isoCode;
+    }
+    return null;
   }
 
   Future<void> _pickAvatar() async {
@@ -218,21 +223,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _save() async {
     setState(() => _saving = true);
     try {
-      // Whichever of city dropdown/free-text was actually shown for the
-      // chosen country (see CitySelector) is authoritative — re-checking
-      // the live catalog here instead of trusting both local fields at
-      // once avoids sending a stale leftover from a previously-selected
-      // country that used the other mode. `_cityId == null` also covers the
-      // "Otra ciudad" option inside a non-empty catalog (CitySelector clears
-      // it when the rider switches to free text).
-      final countryId = _countryId;
-      final cities = countryId == null
-          ? null
-          : ref.read(citiesProvider(countryId)).value;
-      final usingCatalog =
-          cities != null && cities.isNotEmpty && _cityId != null;
-      final cityText = _cityTextController.text.trim();
-
       await ref
           .read(currentRiderProvider.notifier)
           .updateProfile(
@@ -241,10 +231,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             nickname: _nicknameController.text.trim(),
             iconImage: _iconImage,
             bio: _bioController.text.trim(),
-            cityId: usingCatalog ? _cityId : null,
-            cityText: usingCatalog
-                ? null
-                : (cityText.isEmpty ? null : cityText),
+            cityName: _cityName,
             countryId: _countryId,
           );
       if (mounted) {
@@ -388,17 +375,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ],
                     onChanged: (id) => setState(() {
                       _countryId = id;
-                      _cityId = null;
-                      _cityTextController.clear();
+                      _cityName = null;
                     }),
                   ),
                 ),
                 const SizedBox(height: 11),
-                CitySelector(
-                  countryId: _countryId,
-                  cityId: _cityId,
-                  cityTextController: _cityTextController,
-                  onCityIdChanged: (id) => setState(() => _cityId = id),
+                CitySearchField(
+                  countryIsoCode: _isoCodeFor(countriesAsync.value, _countryId),
+                  cityName: _cityName,
+                  onCityNameChanged: (name) => setState(() => _cityName = name),
                 ),
                 const SizedBox(height: 11),
                 AppTextField(

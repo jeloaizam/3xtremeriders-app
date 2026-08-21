@@ -134,13 +134,12 @@ class CurrentRider extends _$CurrentRider {
   /// Updates the signed-in rider's profile fields via `PATCH /riders/{id}`
   /// and refreshes local state with the response.
   ///
-  /// `cityId`/`cityText` are always sent explicitly (as a real value or a
-  /// real `null`), never omitted — unlike `RiderApi.update`'s general
+  /// `cityName` is always sent explicitly (as the picked name or a real
+  /// `null`), never omitted — unlike `RiderApi.update`'s general
   /// partial-update semantics, this method is only ever called from
   /// Settings/CompleteProfile, which always own the whole city field: on
-  /// every save exactly one of `cityId`/`cityText` should end up set and
-  /// the other cleared, matching whichever mode (catalog dropdown vs.
-  /// manual text) the rider was actually shown for their chosen country.
+  /// every save it's either the name just picked in `CitySearchField` or
+  /// `null` (country changed, no city picked yet), never left stale.
   /// `iconImage` follows the same always-explicit convention — Settings
   /// always resends the rider's current avatar URL (or `null` to clear it)
   /// on every save, since it's the sole owner of that field too.
@@ -150,8 +149,7 @@ class CurrentRider extends _$CurrentRider {
     String? nickname,
     String? iconImage,
     String? bio,
-    int? cityId,
-    String? cityText,
+    String? cityName,
     int? countryId,
     // Write-once — only ever sent by CompleteProfileScreen the one time
     // it's actually still unset. No `clearGender`-style flag on purpose:
@@ -176,10 +174,8 @@ class CurrentRider extends _$CurrentRider {
           iconImage: iconImage,
           clearIconImage: iconImage == null,
           bio: bio,
-          cityId: cityId,
-          clearCityId: cityId == null,
-          cityText: cityText,
-          clearCityText: cityText == null,
+          cityName: cityName,
+          clearCityName: cityName == null,
           countryId: countryId,
           gender: gender,
         );

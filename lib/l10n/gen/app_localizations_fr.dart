@@ -209,12 +209,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsCityLabel => 'Ville';
 
   @override
-  String get citySelectorOtherOption => 'Autre ville (saisir)';
-
-  @override
-  String get citySelectorBackToList => 'Choisir dans la liste';
-
-  @override
   String get settingsCountryLabel => 'Pays';
 
   @override

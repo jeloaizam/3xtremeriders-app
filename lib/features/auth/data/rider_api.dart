@@ -55,12 +55,13 @@ class RiderApi {
   /// `roleId` is only accepted by the backend when the caller is an admin
   /// (self-edits of other fields still require being the profile's owner).
   ///
-  /// `cityId`/`cityText` are mutually exclusive (a country either has a
-  /// city catalog or falls back to free text) — `clearCityId`/
-  /// `clearCityText` force an explicit `null` through instead of omitting
-  /// the key, so switching from one mode to the other actually clears the
-  /// stale side instead of leaving it stuck in the response's `city_name`
-  /// resolution (which prefers `city_id` whenever it's set).
+  /// `cityName` is the canonical name picked from the Mapbox-backed search
+  /// in Settings/CompleteProfile (see `CitySearchField`) — the backend
+  /// resolves it (creating the catalog row if it's new) or, if omitted,
+  /// leaves the rider's existing city untouched. `clearCityName` forces an
+  /// explicit `null` through instead of omitting the key, for the one case
+  /// where the rider actually wants to clear it (switched country, hasn't
+  /// picked a new city yet).
   ///
   /// `clearIconImage` mirrors the same explicit-null convention, for
   /// removing a rider's avatar rather than just leaving it unset.
@@ -78,10 +79,8 @@ class RiderApi {
     String? iconImage,
     bool clearIconImage = false,
     String? bio,
-    int? cityId,
-    bool clearCityId = false,
-    String? cityText,
-    bool clearCityText = false,
+    String? cityName,
+    bool clearCityName = false,
     int? countryId,
     // El backend rechaza (403) todo el PATCH si el rider ya tiene un
     // género fijado y este valor es distinto — ver app/routers/rider.py.
@@ -103,8 +102,7 @@ class RiderApi {
         'nickname': ?nickname,
         if (clearIconImage) 'icon_image': null else 'icon_image': ?iconImage,
         'bio': ?bio,
-        if (clearCityId) 'city_id': null else 'city_id': ?cityId,
-        if (clearCityText) 'city_text': null else 'city_text': ?cityText,
+        if (clearCityName) 'city_name': null else 'city_name': ?cityName,
         'country_id': ?countryId,
         'gender': ?gender,
         'role_id': ?roleId,

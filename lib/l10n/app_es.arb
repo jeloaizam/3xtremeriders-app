@@ -82,8 +82,6 @@
   "settingsLastNameLabel": "Apellido",
   "settingsNicknameLabel": "Apodo",
   "settingsCityLabel": "Ciudad",
-  "citySelectorOtherOption": "Otra ciudad (escribir)",
-  "citySelectorBackToList": "Elegir de la lista",
   "settingsCountryLabel": "País",
   "settingsBioLabel": "Bio",
   "settingsSave": "Guardar cambios",

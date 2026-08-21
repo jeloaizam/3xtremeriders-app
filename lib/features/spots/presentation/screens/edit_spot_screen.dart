@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show Factory;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/map/mapbox_geocoding_api.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dropdown.dart';
@@ -77,6 +80,15 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
   double? _anchorLatitude;
   double? _anchorLongitude;
   bool _fetchingLocation = false;
+  // Only set once the rider actually touches location this session (GPS or
+  // pin drag) — see CreateSpotScreen's identical fields. Deliberately NOT
+  // seeded from the existing spot: SpotApi.update omits these keys when
+  // null, so staying null means "location untouched" and the backend
+  // leaves the spot's existing city/country alone instead of wiping them.
+  String? _cityName;
+  String? _countryName;
+  String? _countryIsoCode;
+  Timer? _geocodeDebounce;
   bool _seeded = false;
   bool _saving = false;
   bool _deleting = false;
@@ -89,7 +101,33 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _geocodeDebounce?.cancel();
     super.dispose();
+  }
+
+  /// See CreateSpotScreen's identical pair — resolves _cityName/
+  /// _countryIsoCode from the current _latitude/_longitude, debounced while
+  /// dragging the pin so a fast drag doesn't fire one request per frame.
+  Future<void> _reverseGeocode() async {
+    final lat = _latitude;
+    final lng = _longitude;
+    if (lat == null || lng == null) return;
+    final place = await ref.read(mapboxGeocodingApiProvider).reverse(lat, lng);
+    if (!mounted || place == null) return;
+    if (_latitude != lat || _longitude != lng) return;
+    setState(() {
+      _cityName = place.cityName;
+      _countryName = place.countryName;
+      _countryIsoCode = place.countryIsoCode;
+    });
+  }
+
+  void _scheduleReverseGeocode() {
+    _geocodeDebounce?.cancel();
+    _geocodeDebounce = Timer(
+      const Duration(milliseconds: 800),
+      _reverseGeocode,
+    );
   }
 
   void _seed(SpotDetailData detail) {
@@ -133,6 +171,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
         _anchorLatitude = position.latitude;
         _anchorLongitude = position.longitude;
       });
+      unawaited(_reverseGeocode());
     } finally {
       if (mounted) setState(() => _fetchingLocation = false);
     }
@@ -159,11 +198,18 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
       _latitude = center.lat.toDouble();
       _longitude = center.lng.toDouble();
     });
+    _scheduleReverseGeocode();
   }
 
   Future<void> _save() async {
     setState(() => _saving = true);
     try {
+      // See CreateSpotScreen._submit — resolve any pending debounced
+      // geocode right now instead of risking a stale result if the rider
+      // stopped dragging and hit Save within the debounce window.
+      _geocodeDebounce?.cancel();
+      await _reverseGeocode();
+
       final idToken = await ref
           .read(firebaseAuthProvider)
           .currentUser
@@ -181,6 +227,8 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
             difficulty: _difficulty,
             bestSeason: _bestSeason,
             categoryId: _categoryId,
+            cityName: _cityName,
+            countryIsoCode: _countryIsoCode,
             idToken: idToken,
           );
 
@@ -715,6 +763,29 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
                             color: colors.textMuted,
                           ),
                         ),
+                        if ((_cityName ?? detail.spot.cityName) != null &&
+                            (_countryName ?? detail.spot.countryName) !=
+                                null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Symbols.public,
+                                size: 14,
+                                color: colors.textMuted,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${_cityName ?? detail.spot.cityName}, '
+                                '${_countryName ?? detail.spot.countryName}',
+                                style: context.typography.meta.copyWith(
+                                  color: colors.textMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
 
                       Row(

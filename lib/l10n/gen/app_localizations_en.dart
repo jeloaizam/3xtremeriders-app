@@ -209,12 +209,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsCityLabel => 'City';
 
   @override
-  String get citySelectorOtherOption => 'Other city (type it in)';
-
-  @override
-  String get citySelectorBackToList => 'Choose from the list';
-
-  @override
   String get settingsCountryLabel => 'Country';
 
   @override

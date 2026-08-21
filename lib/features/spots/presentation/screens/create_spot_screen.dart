@@ -13,6 +13,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide ImageSource;
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../core/map/mapbox_geocoding_api.dart';
 import '../../../../core/storage/media_size_guard.dart';
 import '../../../../core/storage/storage_api.dart';
 import '../../../../core/storage/video_thumbnail_helper.dart';
@@ -107,6 +108,14 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   double? _anchorLatitude;
   double? _anchorLongitude;
   bool _fetchingLocation = false;
+  // Resueltos automáticamente por reverse geocoding de Mapbox cada vez que
+  // _latitude/_longitude cambian (GPS o arrastre del pin) — ver
+  // _reverseGeocode. Ninguno es obligatorio para publicar: si Mapbox no
+  // responde (sin señal, rate limit), el spot igual se crea sin ellos.
+  String? _cityName;
+  String? _countryName;
+  String? _countryIsoCode;
+  Timer? _geocodeDebounce;
   bool _submitting = false;
   // Texto mostrado en el overlay de carga mientras _submitting — distingue
   // "guardando el spot" de "subiendo fotos/video" para que el rider vea que
@@ -119,7 +128,36 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _geocodeDebounce?.cancel();
     super.dispose();
+  }
+
+  /// Resolves `_cityName`/`_countryName`/`_countryIsoCode` from whatever
+  /// `_latitude`/`_longitude` currently are — called right away after a
+  /// fresh GPS fix, and debounced (see `_scheduleReverseGeocode`) while the
+  /// rider drags the pin, so a fast drag doesn't fire one request per frame.
+  Future<void> _reverseGeocode() async {
+    final lat = _latitude;
+    final lng = _longitude;
+    if (lat == null || lng == null) return;
+    final place = await ref.read(mapboxGeocodingApiProvider).reverse(lat, lng);
+    if (!mounted || place == null) return;
+    // The pin may have moved again while this request was in flight — only
+    // apply the result if it still matches where the pin currently is.
+    if (_latitude != lat || _longitude != lng) return;
+    setState(() {
+      _cityName = place.cityName;
+      _countryName = place.countryName;
+      _countryIsoCode = place.countryIsoCode;
+    });
+  }
+
+  void _scheduleReverseGeocode() {
+    _geocodeDebounce?.cancel();
+    _geocodeDebounce = Timer(
+      const Duration(milliseconds: 800),
+      _reverseGeocode,
+    );
   }
 
   Future<void> _useCurrentLocation() async {
@@ -149,6 +187,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
         _anchorLatitude = position.latitude;
         _anchorLongitude = position.longitude;
       });
+      unawaited(_reverseGeocode());
     } finally {
       if (mounted) setState(() => _fetchingLocation = false);
     }
@@ -178,6 +217,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
       _latitude = center.lat.toDouble();
       _longitude = center.lng.toDouble();
     });
+    _scheduleReverseGeocode();
   }
 
   Future<void> _addHazard() async {
@@ -389,6 +429,12 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
     });
     var hadPartialFailure = false;
     try {
+      // A drag that stops just before hitting "Publicar" might not have
+      // fired its debounced reverse geocode yet — resolve it right now
+      // instead of risking a stale (or missing) city/country on the spot.
+      _geocodeDebounce?.cancel();
+      await _reverseGeocode();
+
       final user = ref.read(firebaseAuthProvider).currentUser;
       final idToken = await user?.getIdToken();
       if (idToken == null) return;
@@ -404,6 +450,8 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
             bestSeason: _bestSeason,
             categoryId: _categoryId,
             sportIds: _sportIds.toList(),
+            cityName: _cityName,
+            countryIsoCode: _countryIsoCode,
             idToken: idToken,
           );
 
@@ -788,6 +836,26 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                             color: colors.textMuted,
                           ),
                         ),
+                        if (_cityName != null && _countryName != null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Symbols.public,
+                                size: 14,
+                                color: colors.textMuted,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$_cityName, $_countryName',
+                                style: context.typography.meta.copyWith(
+                                  color: colors.textMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
 
                       _SectionLabel(null, top: 18),

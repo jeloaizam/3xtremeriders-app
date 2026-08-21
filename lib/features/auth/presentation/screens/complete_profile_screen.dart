@@ -7,9 +7,9 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dropdown.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
-import '../../../settings/data/city_api.dart';
 import '../../../settings/data/country_api.dart';
-import '../../../settings/presentation/widgets/city_selector.dart';
+import '../../../settings/domain/country.dart';
+import '../../../settings/presentation/widgets/city_search_field.dart';
 import '../../application/auth_providers.dart';
 import '../../domain/rider.dart';
 
@@ -30,9 +30,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _nicknameController = TextEditingController();
-  final _cityTextController = TextEditingController();
   int? _countryId;
-  int? _cityId;
+  String? _cityName;
   String? _gender;
   // True if the rider already had a gender saved when this screen loaded
   // (they only landed here because something *else* was missing, e.g.
@@ -48,7 +47,6 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     _nameController.dispose();
     _lastNameController.dispose();
     _nicknameController.dispose();
-    _cityTextController.dispose();
     super.dispose();
   }
 
@@ -58,11 +56,18 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     _lastNameController.text = rider.lastName;
     _nicknameController.text = rider.nickname;
     _countryId = rider.countryId;
-    _cityId = rider.cityId;
-    _cityTextController.text = rider.cityText ?? '';
+    _cityName = rider.cityName;
     _gender = rider.gender;
     _genderLocked = rider.gender != null;
     _seeded = true;
+  }
+
+  String? _isoCodeFor(List<Country>? countries, int? countryId) {
+    if (countries == null || countryId == null) return null;
+    for (final country in countries) {
+      if (country.id == countryId) return country.isoCode;
+    }
+    return null;
   }
 
   bool get _isValid =>
@@ -70,7 +75,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       _lastNameController.text.trim().isNotEmpty &&
       _nicknameController.text.trim().isNotEmpty &&
       _countryId != null &&
-      (_cityId != null || _cityTextController.text.trim().isNotEmpty) &&
+      _cityName != null &&
       _gender != null;
 
   Future<void> _save() async {
@@ -79,16 +84,6 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
     setState(() => _saving = true);
     try {
-      // See SettingsScreen._save for why this re-checks the live catalog
-      // instead of trusting `_cityId`/`_cityTextController` at face value.
-      final countryId = _countryId;
-      final cities = countryId == null
-          ? null
-          : ref.read(citiesProvider(countryId)).value;
-      final usingCatalog =
-          cities != null && cities.isNotEmpty && _cityId != null;
-      final cityText = _cityTextController.text.trim();
-
       await ref
           .read(currentRiderProvider.notifier)
           .updateProfile(
@@ -96,10 +91,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
             lastName: _lastNameController.text.trim(),
             nickname: _nicknameController.text.trim(),
             countryId: _countryId,
-            cityId: usingCatalog ? _cityId : null,
-            cityText: usingCatalog
-                ? null
-                : (cityText.isEmpty ? null : cityText),
+            cityName: _cityName,
             gender: _gender,
           );
       // The router bounces away from /complete-profile on its own once
@@ -187,23 +179,19 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                     ],
                     onChanged: (id) => setState(() {
                       _countryId = id;
-                      _cityId = null;
-                      _cityTextController.clear();
+                      _cityName = null;
                     }),
                   ),
                 ),
                 if (_showErrors && _countryId == null)
                   _ErrorText(l10n.signupFieldRequired),
                 const SizedBox(height: 11),
-                CitySelector(
-                  countryId: _countryId,
-                  cityId: _cityId,
-                  cityTextController: _cityTextController,
-                  onCityIdChanged: (id) => setState(() => _cityId = id),
+                CitySearchField(
+                  countryIsoCode: _isoCodeFor(countriesAsync.value, _countryId),
+                  cityName: _cityName,
+                  onCityNameChanged: (name) => setState(() => _cityName = name),
                 ),
-                if (_showErrors &&
-                    _cityId == null &&
-                    _cityTextController.text.trim().isEmpty)
+                if (_showErrors && _cityName == null)
                   _ErrorText(l10n.signupFieldRequired),
                 const SizedBox(height: 20),
                 Text(

@@ -63,8 +63,6 @@
   "settingsLastNameLabel": "Last name",
   "settingsNicknameLabel": "Nickname",
   "settingsCityLabel": "City",
-  "citySelectorOtherOption": "Other city (type it in)",
-  "citySelectorBackToList": "Choose from the list",
   "settingsCountryLabel": "Country",
   "settingsBioLabel": "Bio",
   "settingsSave": "Save changes",

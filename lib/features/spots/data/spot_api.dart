@@ -119,6 +119,11 @@ class SpotApi {
     // app/routers/spot.py.
     int? categoryId,
     required List<int> sportIds,
+    // Resultado del reverse geocoding de Mapbox sobre latitude/longitude
+    // (ver create_spot_screen.dart) — el backend los resuelve (o crea) a
+    // city_id/country_id, ver crud_spot.create.
+    String? cityName,
+    String? countryIsoCode,
     required String idToken,
   }) async {
     // Sin timeout explícito, un `http.post` colgado por una red inestable
@@ -144,6 +149,8 @@ class SpotApi {
             'best_season': ?bestSeason,
             'category_id': ?categoryId,
             'sport_ids': sportIds,
+            'city_name': ?cityName,
+            'country_iso_code': ?countryIsoCode,
           }),
         )
         .timeout(const Duration(seconds: 20));
@@ -164,6 +171,10 @@ class SpotApi {
     // Ignorado por el backend si quien edita no es admin — ver
     // app/routers/spot.py.
     int? categoryId,
+    // Ver SpotApi.create — se manda junto con latitude/longitude cuando el
+    // rider mueve el pin en Edit Spot.
+    String? cityName,
+    String? countryIsoCode,
     required String idToken,
   }) async {
     final response = await http.patch(
@@ -180,6 +191,8 @@ class SpotApi {
         'difficulty': ?difficulty,
         'best_season': ?bestSeason,
         'category_id': ?categoryId,
+        'city_name': ?cityName,
+        'country_iso_code': ?countryIsoCode,
       }),
     );
     if (response.statusCode != 200) {
