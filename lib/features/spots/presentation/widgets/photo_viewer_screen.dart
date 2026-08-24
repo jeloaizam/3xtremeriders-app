@@ -133,7 +133,7 @@ class _PhotoViewerScreenState extends ConsumerState<PhotoViewerScreen> {
                     borderRadius: BorderRadius.circular(14),
                     child: SizedBox(
                       height: 340,
-                      child: InteractiveViewer(maxScale: 4, child: image),
+                      child: _ZoomableImage(image: image),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -163,7 +163,62 @@ class _PhotoViewerScreenState extends ConsumerState<PhotoViewerScreen> {
                   ),
                 ],
               )
-            : Center(child: InteractiveViewer(maxScale: 4, child: image)),
+            : Center(child: _ZoomableImage(image: image)),
+      ),
+    );
+  }
+}
+
+/// Pinch AND double-tap to zoom, same as Instagram/WhatsApp's photo viewer
+/// — `InteractiveViewer` alone only handles the pinch gesture, so a tap
+/// gesture to toggle zoom needs to be wired up by hand via its
+/// `TransformationController`.
+class _ZoomableImage extends StatefulWidget {
+  const _ZoomableImage({required this.image});
+
+  final Widget image;
+
+  @override
+  State<_ZoomableImage> createState() => _ZoomableImageState();
+}
+
+class _ZoomableImageState extends State<_ZoomableImage> {
+  final _controller = TransformationController();
+  TapDownDetails? _doubleTapDetails;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleDoubleTap() {
+    if (_controller.value != Matrix4.identity()) {
+      _controller.value = Matrix4.identity();
+      return;
+    }
+    final position = _doubleTapDetails?.localPosition;
+    if (position == null) return;
+    const zoom = 2.5;
+    _controller.value = Matrix4.identity()
+      ..translateByDouble(
+        -position.dx * (zoom - 1),
+        -position.dy * (zoom - 1),
+        0,
+        1,
+      )
+      ..scaleByDouble(zoom, zoom, zoom, 1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onDoubleTapDown: (details) => _doubleTapDetails = details,
+      onDoubleTap: _handleDoubleTap,
+      child: InteractiveViewer(
+        transformationController: _controller,
+        maxScale: 4,
+        child: widget.image,
       ),
     );
   }
