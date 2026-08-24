@@ -222,7 +222,12 @@ void _openPhoto(BuildContext context, SpotPhoto photo) {
   Navigator.of(context).push(
     MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (_) => PhotoViewerScreen(url: photo.url),
+      builder: (_) => PhotoViewerScreen(
+        url: photo.url,
+        photoId: photo.id,
+        spotId: photo.spotId,
+        initialVoteCount: photo.voteCount,
+      ),
     ),
   );
 }
@@ -231,7 +236,12 @@ void _openVideo(BuildContext context, SpotVideo video) {
   Navigator.of(context).push(
     MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (_) => VideoPlayerScreen(url: video.url),
+      builder: (_) => VideoPlayerScreen(
+        url: video.url,
+        videoId: video.id,
+        spotId: video.spotId,
+        initialVoteCount: video.voteCount,
+      ),
     ),
   );
 }

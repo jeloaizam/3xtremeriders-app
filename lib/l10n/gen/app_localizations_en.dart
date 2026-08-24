@@ -84,6 +84,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get genderFemale => 'Female';
 
   @override
+  String get genderAlien => 'Alien';
+
+  @override
   String get completeProfileSave => 'Continue';
 
   @override
@@ -332,6 +335,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get spotMediaMore => 'MORE';
+
+  @override
+  String get spotMediaRankingFemale => 'WOMEN\'S RANKING';
+
+  @override
+  String get spotMediaRankingMale => 'MEN\'S RANKING';
+
+  @override
+  String get spotMediaRankingAlien => 'ALIENS\' RANKING';
+
+  @override
+  String get spotMediaRankingEmpty => 'No content in this ranking yet';
+
+  @override
+  String mediaCommentsTitle(int count) {
+    return 'COMMENTS · $count';
+  }
 
   @override
   String get spotBack => 'Back';

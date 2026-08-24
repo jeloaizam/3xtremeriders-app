@@ -90,13 +90,23 @@ class _SpotMediaLibraryScreenState
     }
   }
 
-  void _openItem(String url) {
+  void _openItem(_MediaItem item) {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (_) => _isVideo
-            ? VideoPlayerScreen(url: url)
-            : PhotoViewerScreen(url: url),
+            ? VideoPlayerScreen(
+                url: item.url,
+                videoId: item.id,
+                spotId: widget.spotId,
+                initialVoteCount: item.voteCount,
+              )
+            : PhotoViewerScreen(
+                url: item.url,
+                photoId: item.id,
+                spotId: widget.spotId,
+                initialVoteCount: item.voteCount,
+              ),
       ),
     );
   }
@@ -209,7 +219,7 @@ class _SpotMediaLibraryScreenState
                           thumbnailUrl: item.thumbnailUrl,
                           badge: '#${index + 1}',
                           big: false,
-                          onTap: () => _openItem(item.url),
+                          onTap: () => _openItem(item),
                           voteCount: item.voteCount,
                           voted: votes[item.id] ?? false,
                           busy: _votingIds.contains(item.id),

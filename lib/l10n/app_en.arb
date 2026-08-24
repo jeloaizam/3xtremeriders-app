@@ -24,6 +24,7 @@
   "completeProfileGenderWarning": "This can't be changed after you save it — we use it for the men's/women's video rankings.",
   "genderMale": "Male",
   "genderFemale": "Female",
+  "genderAlien": "Alien",
   "completeProfileSave": "Continue",
   "comingSoon": "Coming soon",
   "homeActiveSpots": "{count} ACTIVE SPOTS · {city}",
@@ -101,6 +102,17 @@
   "spotMediaVideoTab": "VIDEO",
   "spotMediaPhotoTab": "PHOTOS",
   "spotMediaMore": "MORE",
+  "spotMediaRankingFemale": "WOMEN'S RANKING",
+  "spotMediaRankingMale": "MEN'S RANKING",
+  "spotMediaRankingAlien": "ALIENS' RANKING",
+  "spotMediaRankingEmpty": "No content in this ranking yet",
+  "mediaCommentsTitle": "COMMENTS · {count}",
+  "@mediaCommentsTitle": {
+    "description": "Title of a single photo/video's own comment section, with the count",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "spotBack": "Back",
   "spotMediaLibraryTitle": "FULL GALLERY",
   "spotMediaSportPickerTitle": "Which sport is this for?",

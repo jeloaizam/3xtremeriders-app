@@ -4,8 +4,9 @@ part 'spot_comment.freezed.dart';
 part 'spot_comment.g.dart';
 
 /// Mirrors the backend's `CommentRead` schema (`app/schemas/comment.py`).
-/// Comments are polymorphic server-side (spot/photo/video/profile/event);
-/// this client only deals with `target_type == 'spot'` so far.
+/// Comments are polymorphic server-side (spot/photo/video/profile/event) —
+/// this same shape backs a spot's own comment thread and a photo/video's
+/// (see `SpotCommentApi.listFor`/`.create`, which take `targetType`).
 @freezed
 abstract class SpotComment with _$SpotComment {
   const factory SpotComment({

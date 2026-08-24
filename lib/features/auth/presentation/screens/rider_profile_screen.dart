@@ -120,12 +120,18 @@ class _RiderProfileBody extends ConsumerWidget {
                   if (rider.gender != null) ...[
                     const SizedBox(width: 6),
                     Icon(
-                      rider.gender == 'male' ? Symbols.male : Symbols.female,
+                      switch (rider.gender) {
+                        'male' => Symbols.male,
+                        'alien' => Symbols.rocket_launch,
+                        _ => Symbols.female,
+                      },
                       fill: 1,
                       size: 22,
-                      color: rider.gender == 'male'
-                          ? colors.blue500
-                          : colors.colorDanger,
+                      color: switch (rider.gender) {
+                        'male' => colors.blue500,
+                        'alien' => colors.colorRating,
+                        _ => colors.colorDanger,
+                      },
                     ),
                   ],
                 ],

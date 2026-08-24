@@ -258,6 +258,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     };
   }
 
+  String _genderLabel(AppLocalizations l10n, String gender) {
+    return switch (gender) {
+      'male' => l10n.genderMale,
+      'alien' => l10n.genderAlien,
+      _ => l10n.genderFemale,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -416,9 +424,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 if (rider.gender != null)
                   _InfoRow(
                     label: l10n.completeProfileGenderLabel,
-                    value: rider.gender == 'male'
-                        ? l10n.genderMale
-                        : l10n.genderFemale,
+                    value: _genderLabel(l10n, rider.gender!),
                   ),
 
                 const SizedBox(height: 32),

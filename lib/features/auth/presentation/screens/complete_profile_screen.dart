@@ -212,7 +212,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         onTap: () => setState(() => _gender = 'male'),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: _GenderButton(
                         icon: Symbols.female,
@@ -220,6 +220,16 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         selected: _gender == 'female',
                         locked: _genderLocked,
                         onTap: () => setState(() => _gender = 'female'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _GenderButton(
+                        icon: Symbols.rocket_launch,
+                        label: l10n.genderAlien,
+                        selected: _gender == 'alien',
+                        locked: _genderLocked,
+                        onTap: () => setState(() => _gender = 'alien'),
                       ),
                     ),
                   ],

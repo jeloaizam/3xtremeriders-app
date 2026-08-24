@@ -182,7 +182,10 @@ Future<SpotDetailData> spotDetail(Ref ref, int spotId) async {
   final sportsFuture = ref.read(spotSportsProvider(spotId).future);
   final elementsFuture = ref.read(spotElementsProvider(spotId).future);
   final hazzardsFuture = ref.read(spotHazzardsProvider(spotId).future);
-  final commentsFuture = commentApi.listForSpot(spotId);
+  final commentsFuture = commentApi.listFor(
+    targetType: 'spot',
+    targetId: spotId,
+  );
   final creatorFuture = riderApi.get(spot.createdBy);
   // Personalization signals only — if these fail (e.g. the rider hasn't
   // finished syncing with the backend yet) the rest of the screen should

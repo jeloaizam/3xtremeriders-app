@@ -24,6 +24,7 @@
   "completeProfileGenderWarning": "Cette information ne pourra plus être modifiée une fois enregistrée — elle sert au classement vidéo hommes/femmes.",
   "genderMale": "Homme",
   "genderFemale": "Femme",
+  "genderAlien": "Alien",
   "completeProfileSave": "Continuer",
   "comingSoon": "Bientôt disponible",
   "homeActiveSpots": "{count} SPOTS ACTIFS · {city}",
@@ -101,6 +102,17 @@
   "spotMediaVideoTab": "VIDÉO",
   "spotMediaPhotoTab": "PHOTOS",
   "spotMediaMore": "PLUS",
+  "spotMediaRankingFemale": "CLASSEMENT DES FEMMES",
+  "spotMediaRankingMale": "CLASSEMENT DES HOMMES",
+  "spotMediaRankingAlien": "CLASSEMENT DES ALIENS",
+  "spotMediaRankingEmpty": "Pas encore de contenu dans ce classement",
+  "mediaCommentsTitle": "COMMENTAIRES · {count}",
+  "@mediaCommentsTitle": {
+    "description": "Titre de la section commentaires d'une photo/vidéo individuelle, avec le nombre",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "spotBack": "Retour",
   "spotMediaLibraryTitle": "GALERIE COMPLÈTE",
   "spotMediaSportPickerTitle": "Pour quel sport ?",

@@ -10,12 +10,17 @@ import '../domain/spot_comment.dart';
 part 'spot_comment_api.g.dart';
 
 /// Talks to the backend's polymorphic `/comments` endpoint
-/// (`app/routers/comment.py`), scoped to `target_type=spot`.
+/// (`app/routers/comment.py`) — `targetType` is any of the backend's
+/// `TargetType` values ('spot', 'photo', 'video', ...), so this same
+/// client backs the spot's own comment thread as well as a photo/video's.
 class SpotCommentApi {
-  Future<List<SpotComment>> listForSpot(int spotId) async {
+  Future<List<SpotComment>> listFor({
+    required String targetType,
+    required int targetId,
+  }) async {
     final response = await http.get(
       Uri.parse(
-        '${ApiConfig.baseUrl}/comments/?target_type=spot&target_id=$spotId',
+        '${ApiConfig.baseUrl}/comments/?target_type=$targetType&target_id=$targetId',
       ),
     );
     if (response.statusCode != 200) {
@@ -28,7 +33,8 @@ class SpotCommentApi {
   }
 
   Future<SpotComment> create({
-    required int spotId,
+    required String targetType,
+    required int targetId,
     required String body,
     required String idToken,
   }) async {
@@ -39,8 +45,8 @@ class SpotCommentApi {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'target_type': 'spot',
-        'target_id': spotId,
+        'target_type': targetType,
+        'target_id': targetId,
         'body': body,
       }),
     );

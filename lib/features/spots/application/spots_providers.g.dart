@@ -1010,7 +1010,7 @@ final class SpotDetailProvider
   }
 }
 
-String _$spotDetailHash() => r'77c41e0c880bcc9bde9f7ba7aecaf94a6082179a';
+String _$spotDetailHash() => r'c25ec90d7ae0e94b0967999f9eb5d71870befa35';
 
 /// Everything the Spot detail screen needs for one spot, fetched in
 /// parallel and combined: the spot itself, its sports, hazards, comments

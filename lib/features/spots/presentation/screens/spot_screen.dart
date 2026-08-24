@@ -22,17 +22,20 @@ import '../../application/spot_detail.dart';
 import '../../application/spots_providers.dart';
 import '../../data/spot_comment_api.dart';
 import '../../data/spot_hazard_rating_api.dart';
+import '../../data/spot_media_ranking_api.dart';
 import '../../data/spot_photo_api.dart';
 import '../../data/spot_rating_api.dart';
 import '../../data/spot_video_api.dart';
 import '../../data/vote_api.dart';
 import '../../domain/hazzard.dart';
+import '../../domain/ranked_media_item.dart';
 import '../../domain/spot.dart';
 import '../../domain/spot_element.dart';
 import '../../domain/sport.dart';
 import '../spot_category_visuals.dart';
 import '../sport_visuals.dart';
 import '../widgets/stat_tile.dart';
+import '../widgets/photo_viewer_screen.dart';
 import '../widgets/video_player_screen.dart';
 import 'spot_media_library_screen.dart';
 
@@ -173,7 +176,7 @@ String? _spotLocationLabel(Spot spot) {
   return parts.isEmpty ? null : parts.join(', ');
 }
 
-class _SpotScreenBody extends StatelessWidget {
+class _SpotScreenBody extends ConsumerWidget {
   const _SpotScreenBody({
     required this.spotId,
     required this.detail,
@@ -199,7 +202,7 @@ class _SpotScreenBody extends StatelessWidget {
   final VoidCallback onComingSoon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final spot = detail.spot;
@@ -210,6 +213,7 @@ class _SpotScreenBody extends StatelessWidget {
         _MediaGallery(
           spotId: spotId,
           canEdit: canEdit,
+          hasGeneralLibrary: spot.categoryName != 'xtremespot',
           onBack: onBack,
           onEdit: onEdit,
           onComingSoon: onComingSoon,
@@ -239,14 +243,14 @@ class _SpotScreenBody extends StatelessWidget {
                             children: [
                               Icon(
                                 Symbols.location_on,
-                                size: 14,
+                                size: 16,
                                 color: colors.textMuted,
                               ),
                               const SizedBox(width: 4),
                               Flexible(
                                 child: Text(
                                   _spotLocationLabel(spot)!,
-                                  style: context.typography.meta.copyWith(
+                                  style: context.typography.bodySm.copyWith(
                                     color: colors.textMuted,
                                   ),
                                 ),
@@ -297,6 +301,8 @@ class _SpotScreenBody extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 18),
+              _GenderRankingSection(spotId: spotId),
               const SizedBox(height: 14),
               GestureDetector(
                 onTap: () => context.push('/riders/${detail.creator.id}'),
@@ -489,13 +495,139 @@ class _SpotScreenBody extends StatelessWidget {
   }
 }
 
-void _openVideo(BuildContext context, String url) {
+void _openMedia(
+  BuildContext context, {
+  required int spotId,
+  required _MediaItem item,
+  required bool isVideo,
+}) {
   Navigator.of(context).push(
     MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (_) => VideoPlayerScreen(url: url),
+      builder: (_) => isVideo
+          ? VideoPlayerScreen(
+              url: item.url,
+              videoId: item.id,
+              spotId: spotId,
+              initialVoteCount: item.voteCount,
+            )
+          : PhotoViewerScreen(
+              url: item.url,
+              photoId: item.id,
+              spotId: spotId,
+              initialVoteCount: item.voteCount,
+            ),
     ),
   );
+}
+
+/// The 3 gender-based rankings (mujeres, hombres, aliens) — a spot's
+/// photos/videos grouped by who uploaded them, each sorted by likes. Shown
+/// on every spot regardless of category (`xtremespot` just doesn't also
+/// get the browsable general library above, see `_MediaGallery
+/// .hasGeneralLibrary`). Riders with no gender set don't appear here.
+class _GenderRankingSection extends ConsumerWidget {
+  const _GenderRankingSection({required this.spotId});
+
+  final int spotId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final rankingAsync = ref.watch(spotMediaRankingProvider(spotId));
+
+    return rankingAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Text('$error'),
+      data: (ranking) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _RankingRow(
+            spotId: spotId,
+            title: l10n.spotMediaRankingFemale,
+            items: ranking.female,
+          ),
+          const SizedBox(height: 18),
+          _RankingRow(
+            spotId: spotId,
+            title: l10n.spotMediaRankingMale,
+            items: ranking.male,
+          ),
+          const SizedBox(height: 18),
+          _RankingRow(
+            spotId: spotId,
+            title: l10n.spotMediaRankingAlien,
+            items: ranking.alien,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RankingRow extends StatelessWidget {
+  const _RankingRow({
+    required this.spotId,
+    required this.title,
+    required this.items,
+  });
+
+  final int spotId;
+  final String title;
+  final List<RankedMediaItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: context.typography.tag.copyWith(color: colors.text300),
+        ),
+        const SizedBox(height: 10),
+        if (items.isEmpty)
+          Text(l10n.spotMediaRankingEmpty, style: context.typography.bodySm)
+        else
+          SizedBox(
+            height: 110,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: items.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final isVideo = item.type == 'video';
+                return SizedBox(
+                  width: 110,
+                  child: MediaTile(
+                    url: item.url,
+                    isVideo: isVideo,
+                    thumbnailUrl: item.thumbnailUrl,
+                    badge: '#${index + 1} · ${item.voteCount}',
+                    big: false,
+                    onTap: () => _openMedia(
+                      context,
+                      spotId: spotId,
+                      item: (
+                        id: item.id,
+                        url: item.url,
+                        voteCount: item.voteCount,
+                        thumbnailUrl: item.thumbnailUrl,
+                      ),
+                      isVideo: isVideo,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
 }
 
 enum _MediaTab { video, photo }
@@ -520,6 +652,7 @@ class _MediaGallery extends ConsumerStatefulWidget {
   const _MediaGallery({
     required this.spotId,
     required this.canEdit,
+    required this.hasGeneralLibrary,
     required this.onBack,
     required this.onEdit,
     required this.onComingSoon,
@@ -527,6 +660,12 @@ class _MediaGallery extends ConsumerStatefulWidget {
 
   final int spotId;
   final bool canEdit;
+
+  // 'xtremespot' (the vast majority of rider-created spots) doesn't get the
+  // browsable tabs/MÁS section — only the 3 gender rankings further down
+  // the screen. The upload button stays either way (media still needs a
+  // way in, it just isn't browsable as one mixed list for this category).
+  final bool hasGeneralLibrary;
   final VoidCallback onBack;
   final VoidCallback onEdit;
   final VoidCallback onComingSoon;
@@ -854,9 +993,12 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
                             thumbnailUrl: items[0].thumbnailUrl,
                             badge: '$badgeLabel · #1',
                             big: true,
-                            onTap: isVideo
-                                ? () => _openVideo(context, items[0].url)
-                                : null,
+                            onTap: () => _openMedia(
+                              context,
+                              spotId: widget.spotId,
+                              item: items[0],
+                              isVideo: isVideo,
+                            ),
                             voteCount: items[0].voteCount,
                             voted: votes[items[0].id] ?? false,
                             busy: _votingIds.contains(items[0].id),
@@ -882,12 +1024,12 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
                                       thumbnailUrl: items[i].thumbnailUrl,
                                       badge: '$badgeLabel · #${i + 1}',
                                       big: false,
-                                      onTap: isVideo
-                                          ? () => _openVideo(
-                                              context,
-                                              items[i].url,
-                                            )
-                                          : null,
+                                      onTap: () => _openMedia(
+                                        context,
+                                        spotId: widget.spotId,
+                                        item: items[i],
+                                        isVideo: isVideo,
+                                      ),
                                       voteCount: items[i].voteCount,
                                       voted: votes[items[i].id] ?? false,
                                       busy: _votingIds.contains(items[i].id),
@@ -998,36 +1140,39 @@ class _MediaGalleryState extends ConsumerState<_MediaGallery>
           padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
           child: Row(
             children: [
-              Expanded(
-                child: _MediaFilterButton(
-                  label: l10n.spotMediaVideoTab,
-                  active: _tab == _MediaTab.video,
-                  onTap: () => setState(() => _tab = _MediaTab.video),
+              if (widget.hasGeneralLibrary) ...[
+                Expanded(
+                  child: _MediaFilterButton(
+                    label: l10n.spotMediaVideoTab,
+                    active: _tab == _MediaTab.video,
+                    onTap: () => setState(() => _tab = _MediaTab.video),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _MediaFilterButton(
-                  label: l10n.spotMediaPhotoTab,
-                  active: _tab == _MediaTab.photo,
-                  onTap: () => setState(() => _tab = _MediaTab.photo),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _MediaFilterButton(
+                    label: l10n.spotMediaPhotoTab,
+                    active: _tab == _MediaTab.photo,
+                    onTap: () => setState(() => _tab = _MediaTab.photo),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              _MediaFilterButton(
-                label: l10n.spotMediaMore,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    fullscreenDialog: true,
-                    builder: (_) => SpotMediaLibraryScreen(
-                      spotId: widget.spotId,
-                      initialIsVideo: isVideo,
-                      sportId: _sportFilter,
+                const SizedBox(width: 8),
+                _MediaFilterButton(
+                  label: l10n.spotMediaMore,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (_) => SpotMediaLibraryScreen(
+                        spotId: widget.spotId,
+                        initialIsVideo: isVideo,
+                        sportId: _sportFilter,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
+                const SizedBox(width: 8),
+              ] else
+                const Spacer(),
               AppIconButton(
                 icon: Symbols.add,
                 onPressed: _uploading ? null : () => _addMedia(sports),
@@ -1743,7 +1888,12 @@ class _CommentComposerState extends ConsumerState<_CommentComposer> {
     try {
       await ref
           .read(spotCommentApiProvider)
-          .create(spotId: widget.spotId, body: body, idToken: idToken);
+          .create(
+            targetType: 'spot',
+            targetId: widget.spotId,
+            body: body,
+            idToken: idToken,
+          );
       _controller.clear();
       ref.invalidate(spotDetailProvider(widget.spotId));
     } finally {

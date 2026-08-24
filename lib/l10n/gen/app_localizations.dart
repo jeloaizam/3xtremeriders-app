@@ -244,6 +244,12 @@ abstract class AppLocalizations {
   /// **'Mujer'**
   String get genderFemale;
 
+  /// No description provided for @genderAlien.
+  ///
+  /// In es, this message translates to:
+  /// **'Alien'**
+  String get genderAlien;
+
   /// No description provided for @completeProfileSave.
   ///
   /// In es, this message translates to:
@@ -705,6 +711,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'MÁS'**
   String get spotMediaMore;
+
+  /// No description provided for @spotMediaRankingFemale.
+  ///
+  /// In es, this message translates to:
+  /// **'RANKING DE MUJERES'**
+  String get spotMediaRankingFemale;
+
+  /// No description provided for @spotMediaRankingMale.
+  ///
+  /// In es, this message translates to:
+  /// **'RANKING DE HOMBRES'**
+  String get spotMediaRankingMale;
+
+  /// No description provided for @spotMediaRankingAlien.
+  ///
+  /// In es, this message translates to:
+  /// **'RANKING DE ALIENS'**
+  String get spotMediaRankingAlien;
+
+  /// No description provided for @spotMediaRankingEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay contenido en este ranking'**
+  String get spotMediaRankingEmpty;
+
+  /// Título de la sección de comentarios de una foto/video individual, con la cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'COMENTARIOS · {count}'**
+  String mediaCommentsTitle(int count);
 
   /// No description provided for @spotBack.
   ///
