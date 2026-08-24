@@ -27,6 +27,7 @@ import '../../data/spot_rating_api.dart';
 import '../../data/spot_video_api.dart';
 import '../../data/vote_api.dart';
 import '../../domain/hazzard.dart';
+import '../../domain/spot.dart';
 import '../../domain/spot_element.dart';
 import '../../domain/sport.dart';
 import '../spot_category_visuals.dart';
@@ -159,6 +160,19 @@ class _SpotScreenState extends ConsumerState<SpotScreen> {
   }
 }
 
+/// Barrio/ciudad/país, whichever of the three actually resolved (see
+/// create_spot_screen.dart's reverse geocoding) — joined so a spot missing
+/// one piece (older spots have no city/country; not every city has a
+/// tracked neighborhood) doesn't show a stray ", " gap.
+String? _spotLocationLabel(Spot spot) {
+  final parts = [
+    spot.neighborhood,
+    spot.cityName,
+    spot.countryName,
+  ].where((part) => part != null && part.trim().isNotEmpty);
+  return parts.isEmpty ? null : parts.join(', ');
+}
+
 class _SpotScreenBody extends StatelessWidget {
   const _SpotScreenBody({
     required this.spotId,
@@ -218,6 +232,28 @@ class _SpotScreenBody extends StatelessWidget {
                           spot.name.toUpperCase(),
                           style: context.typography.displayMd,
                         ),
+                        if (_spotLocationLabel(spot) != null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Symbols.location_on,
+                                size: 14,
+                                color: colors.textMuted,
+                              ),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  _spotLocationLabel(spot)!,
+                                  style: context.typography.meta.copyWith(
+                                    color: colors.textMuted,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                         if (detail.sports.isNotEmpty) ...[
                           const SizedBox(height: 10),
                           Wrap(
