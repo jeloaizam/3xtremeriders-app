@@ -131,7 +131,10 @@ class _PhotoViewerScreenState extends ConsumerState<PhotoViewerScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14),
-                    child: image,
+                    child: SizedBox(
+                      height: 340,
+                      child: InteractiveViewer(maxScale: 4, child: image),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   GestureDetector(
@@ -160,7 +163,7 @@ class _PhotoViewerScreenState extends ConsumerState<PhotoViewerScreen> {
                   ),
                 ],
               )
-            : Center(child: InteractiveViewer(child: image)),
+            : Center(child: InteractiveViewer(maxScale: 4, child: image)),
       ),
     );
   }
