@@ -26,7 +26,6 @@ import '../../../spots/domain/spot.dart';
 import '../../../spots/domain/sport.dart';
 import '../../../spots/presentation/screens/search_screen.dart' show SearchTab;
 import '../../../spots/presentation/sport_visuals.dart';
-import '../../../spots/presentation/widgets/spot_card.dart';
 import '../widgets/active_sport_picker_sheet.dart';
 import '../widgets/map_sport_filter_sheet.dart';
 
@@ -432,9 +431,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       }
     }
 
-    // null = no filter (every sport shown) — see MapSportFilterSheet.
-    final mapFilter = rider?.mapSportFilter?.toSet();
-
     return Scaffold(
       key: _scaffoldKey,
       drawer: const _AppDrawer(),
@@ -549,80 +545,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom:
-                context.spacing.navHeight +
-                14 +
-                MediaQuery.of(context).padding.bottom,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  child: Text(
-                    l10n.homeNearYou,
-                    style: context.typography.eyebrow.copyWith(
-                      color: colors.text300,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 96,
-                  child: spotsAsync.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (error, _) => Center(child: Text('$error')),
-                    data: (spots) {
-                      final visible = mapFilter == null
-                          ? spots
-                          : [
-                              for (final spot in spots)
-                                if (spot.sportIds.isEmpty ||
-                                    spot.sportIds.any(mapFilter.contains))
-                                  spot,
-                            ];
-                      // Spots matching the active sport bubble to the
-                      // front — same set, just reordered, so nothing
-                      // disappears just because it's not the active sport.
-                      final matching = activeSportId == null
-                          ? const <Spot>[]
-                          : [
-                              for (final spot in visible)
-                                if (spot.sportIds.contains(activeSportId)) spot,
-                            ];
-                      final rest = activeSportId == null
-                          ? visible
-                          : [
-                              for (final spot in visible)
-                                if (!spot.sportIds.contains(activeSportId))
-                                  spot,
-                            ];
-                      final ordered = [...matching, ...rest];
-
-                      return ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        itemCount: ordered.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 12),
-                        itemBuilder: (context, index) {
-                          final spot = ordered[index];
-                          return SizedBox(
-                            width: 200,
-                            child: SpotCard(
-                              spot: spot,
-                              onTap: () => _selectSpot(spot),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
             ),
           ),
           Positioned(
