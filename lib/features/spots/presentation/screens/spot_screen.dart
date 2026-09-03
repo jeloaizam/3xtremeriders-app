@@ -17,6 +17,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../auth/domain/rider.dart';
 import '../../../auth/domain/role.dart';
 import '../../application/spot_detail.dart';
 import '../../application/spots_providers.dart';
@@ -204,7 +205,6 @@ class _SpotScreenBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final colors = context.colors;
     final spot = detail.spot;
 
     return ListView(
@@ -223,265 +223,53 @@ class _SpotScreenBody extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _CategoryBadge(categoryName: spot.categoryName),
-                        const SizedBox(height: 8),
-                        Text(
-                          spot.name.toUpperCase(),
-                          style: context.typography.displayMd,
-                        ),
-                        if (_spotLocationLabel(spot) != null) ...[
-                          const SizedBox(height: 4),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Symbols.location_on,
-                                size: 16,
-                                color: colors.textMuted,
-                              ),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  _spotLocationLabel(spot)!,
-                                  style: context.typography.bodySm.copyWith(
-                                    color: colors.textMuted,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                        if (detail.sports.isNotEmpty) ...[
-                          const SizedBox(height: 10),
-                          Wrap(
-                            spacing: 7,
-                            runSpacing: 7,
-                            children: [
-                              for (final sport in detail.sports)
-                                _SportChip(id: sport.id, name: sport.name),
-                            ],
-                          ),
-                        ],
-                      ],
-                    ),
+              // Ordered content blocks, driven by the spot's category (see
+              // `_sectionsFor` — plan `squishy-wandering-truffle.md`). All 4
+              // categories share this exact order today; per-category
+              // divergence lands one category at a time on top of this.
+              for (final section in _sectionsFor(spot.categoryName)) ...[
+                switch (section) {
+                  _SpotSection.header => _SpotHeaderBlock(
+                    spot: spot,
+                    sports: detail.sports,
+                    iLiked: detail.iLiked,
+                    busy: busy,
+                    onToggleLike: onToggleLike,
                   ),
-                  GestureDetector(
-                    onTap: busy ? null : onToggleLike,
-                    behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Opacity(
-                        opacity: busy ? .5 : 1,
-                        child: Column(
-                          children: [
-                            Icon(
-                              Symbols.favorite,
-                              fill: detail.iLiked ? 1 : 0,
-                              size: 24,
-                              color: colors.colorAction,
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              '${spot.voteCount}',
-                              style: context.typography.title.copyWith(
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  _SpotSection.genderRanking => _GenderRankingSection(
+                    spotId: spotId,
                   ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              _GenderRankingSection(spotId: spotId),
-              const SizedBox(height: 14),
-              GestureDetector(
-                onTap: () => context.push('/riders/${detail.creator.id}'),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 11,
-                    vertical: 9,
+                  _SpotSection.creatorCard => _CreatorCard(
+                    creator: detail.creator,
                   ),
-                  decoration: BoxDecoration(
-                    color: colors.surfaceCard,
-                    border: Border.all(color: colors.hairline),
-                    borderRadius: BorderRadius.circular(
-                      context.spacing.radiusMd,
-                    ),
+                  _SpotSection.ratingCard => _RatingCard(
+                    spotRatingAvg: spot.ratingAvg,
+                    spotRatingCount: spot.ratingCount,
+                    myStars: detail.myRating?.stars ?? 0,
+                    busy: busy,
+                    onRate: onRate,
                   ),
-                  child: Row(
-                    children: [
-                      AppAvatar(
-                        initial: detail.creator.nickname.isNotEmpty
-                            ? detail.creator.nickname[0].toUpperCase()
-                            : '?',
-                        imageUrl: detail.creator.iconImage,
-                        size: AppAvatarSize.sm,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.spotCreatedBy,
-                              style: context.typography.micro,
-                            ),
-                            Text(
-                              detail.creator.nickname,
-                              style: context.typography.title.copyWith(
-                                height: 1.1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Symbols.chevron_right,
-                        size: 20,
-                        color: colors.text700,
-                      ),
-                    ],
+                  _SpotSection.statTiles => _StatTilesRow(spot: spot),
+                  _SpotSection.scheduleAndDescription =>
+                    _ScheduleDescriptionCard(spot: spot),
+                  _SpotSection.elements => _ElementsSection(
+                    elements: detail.elements,
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              _RatingCard(
-                spotRatingAvg: spot.ratingAvg,
-                spotRatingCount: spot.ratingCount,
-                myStars: detail.myRating?.stars ?? 0,
-                busy: busy,
-                onRate: onRate,
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  StatTile(
-                    icon: Symbols.star,
-                    value: spot.ratingAvg?.toStringAsFixed(1) ?? '—',
-                    label: l10n.spotRatingsCount(spot.ratingCount),
-                    tone: StatTileTone.rating,
+                  _SpotSection.hazards => _HazardsSection(
+                    hazzards: detail.hazzards,
+                    spotHazardAvg: spot.hazardAvg,
+                    spotHazardCount: spot.hazardCount,
+                    myCrutches: detail.myHazardRating?.crutches ?? 0,
+                    busy: busy,
+                    onRate: onRateHazard,
                   ),
-                  const SizedBox(width: 10),
-                  StatTile(
-                    icon: Symbols.signal_cellular_alt,
-                    value: spot.difficulty != null
-                        ? '${spot.difficulty}/5'
-                        : '—',
-                    label: l10n.spotDifficulty,
+                  _SpotSection.comments => _CommentsSection(
+                    spotId: spotId,
+                    comments: detail.comments,
                   ),
-                  const SizedBox(width: 10),
-                  StatTile(
-                    icon: Symbols.wb_sunny,
-                    value: spot.bestSeason ?? '—',
-                    label: l10n.spotSeason,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colors.surfaceCard,
-                  border: Border.all(color: colors.hairline),
-                  borderRadius: BorderRadius.circular(context.spacing.radiusXl),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (spot.openHour != null && spot.closeHour != null) ...[
-                      Row(
-                        children: [
-                          Icon(
-                            Symbols.schedule,
-                            size: 18,
-                            color: colors.colorBrand,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            l10n.spotSchedule,
-                            style: context.typography.eyebrow,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        '${spot.openHour} – ${spot.closeHour}',
-                        style: context.typography.bodySm,
-                      ),
-                      Divider(height: 28, color: colors.hairlineSoft),
-                    ],
-                    Row(
-                      children: [
-                        Icon(
-                          Symbols.description,
-                          size: 18,
-                          color: colors.colorBrand,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          l10n.spotDescription,
-                          style: context.typography.eyebrow,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text(spot.description, style: context.typography.bodySm),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 22),
-              Text(
-                l10n.spotElementsTitle(detail.elements.length),
-                style: context.typography.tag.copyWith(color: colors.text300),
-              ),
-              const SizedBox(height: 12),
-              if (detail.elements.isEmpty)
-                Text(l10n.spotNoElements, style: context.typography.bodySm)
-              else
-                for (final element in detail.elements)
-                  _ElementRow(element: element),
-              const SizedBox(height: 22),
-              Text(
-                l10n.spotHazardsTitle(detail.hazzards.length),
-                style: context.typography.tag.copyWith(color: colors.text300),
-              ),
-              const SizedBox(height: 12),
-              if (detail.hazzards.isEmpty)
-                Text(l10n.spotNoHazards, style: context.typography.bodySm)
-              else
-                for (final hazzard in detail.hazzards)
-                  _HazzardRow(hazzard: hazzard),
-              const SizedBox(height: 14),
-              _HazardRatingCard(
-                spotHazardAvg: spot.hazardAvg,
-                spotHazardCount: spot.hazardCount,
-                myCrutches: detail.myHazardRating?.crutches ?? 0,
-                busy: busy,
-                onRate: onRateHazard,
-              ),
-              const SizedBox(height: 22),
-              Text(
-                l10n.spotCommentsTitle(detail.comments.length),
-                style: context.typography.tag.copyWith(color: colors.text300),
-              ),
-              const SizedBox(height: 12),
-              if (detail.comments.isEmpty)
-                Text(l10n.spotNoComments, style: context.typography.bodySm)
-              else
-                for (final entry in detail.comments) _CommentRow(entry: entry),
-              const SizedBox(height: 12),
-              _CommentComposer(spotId: spotId),
-              const SizedBox(height: 16),
+                },
+                SizedBox(height: _sectionGapAfter(section)),
+              ],
               AppButton(
                 label: l10n.spotBack,
                 variant: AppButtonVariant.ghost,
@@ -490,6 +278,403 @@ class _SpotScreenBody extends ConsumerWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// One content block on the Spot screen, below the hero media carousel —
+/// see `_sectionsFor` for the order each spot category renders them in.
+/// `_MediaGallery` (the hero carousel/library at the very top) and the
+/// "Volver" button at the very bottom aren't part of this list — they're
+/// page chrome, not content that makes sense to reorder or drop per
+/// category.
+enum _SpotSection {
+  header,
+  genderRanking,
+  creatorCard,
+  ratingCard,
+  statTiles,
+  scheduleAndDescription,
+  elements,
+  hazards,
+  comments,
+}
+
+/// Which blocks a spot screen shows, and in what order — the mechanism
+/// behind the per-category redesign (plan `squishy-wandering-truffle.md`).
+/// All 4 categories share the same order today; the per-category rollout
+/// adds real `switch (categoryName)` cases here one category at a time,
+/// reusing the same section widgets rather than duplicating screens.
+List<_SpotSection> _sectionsFor(String categoryName) {
+  const defaultOrder = [
+    _SpotSection.header,
+    _SpotSection.genderRanking,
+    _SpotSection.creatorCard,
+    _SpotSection.ratingCard,
+    _SpotSection.statTiles,
+    _SpotSection.scheduleAndDescription,
+    _SpotSection.elements,
+    _SpotSection.hazards,
+    _SpotSection.comments,
+  ];
+  return defaultOrder;
+}
+
+/// Vertical gap after each section — matches the spacing the old fixed
+/// layout used between these same blocks, kept as a lookup instead of
+/// baked into each widget so it stays easy to retune per category later.
+double _sectionGapAfter(_SpotSection section) => switch (section) {
+  _SpotSection.header => 18,
+  _SpotSection.genderRanking => 14,
+  _SpotSection.creatorCard => 16,
+  _SpotSection.ratingCard => 18,
+  _SpotSection.statTiles => 18,
+  _SpotSection.scheduleAndDescription => 22,
+  _SpotSection.elements => 22,
+  _SpotSection.hazards => 22,
+  _SpotSection.comments => 16,
+};
+
+/// Category badge, name, location, sport chips, and the like button.
+class _SpotHeaderBlock extends StatelessWidget {
+  const _SpotHeaderBlock({
+    required this.spot,
+    required this.sports,
+    required this.iLiked,
+    required this.busy,
+    required this.onToggleLike,
+  });
+
+  final Spot spot;
+  final List<Sport> sports;
+  final bool iLiked;
+  final bool busy;
+  final VoidCallback onToggleLike;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _CategoryBadge(categoryName: spot.categoryName),
+              const SizedBox(height: 8),
+              Text(
+                spot.name.toUpperCase(),
+                style: context.typography.displayMd,
+              ),
+              if (_spotLocationLabel(spot) != null) ...[
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Symbols.location_on,
+                      size: 16,
+                      color: colors.textMuted,
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        _spotLocationLabel(spot)!,
+                        style: context.typography.bodySm.copyWith(
+                          color: colors.textMuted,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (sports.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 7,
+                  runSpacing: 7,
+                  children: [
+                    for (final sport in sports)
+                      _SportChip(id: sport.id, name: sport.name),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: busy ? null : onToggleLike,
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Opacity(
+              opacity: busy ? .5 : 1,
+              child: Column(
+                children: [
+                  Icon(
+                    Symbols.favorite,
+                    fill: iLiked ? 1 : 0,
+                    size: 24,
+                    color: colors.colorAction,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${spot.voteCount}',
+                    style: context.typography.title.copyWith(fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Tappable card linking to the spot's creator's public profile.
+class _CreatorCard extends StatelessWidget {
+  const _CreatorCard({required this.creator});
+
+  final Rider creator;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
+
+    return GestureDetector(
+      onTap: () => context.push('/riders/${creator.id}'),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+        decoration: BoxDecoration(
+          color: colors.surfaceCard,
+          border: Border.all(color: colors.hairline),
+          borderRadius: BorderRadius.circular(context.spacing.radiusMd),
+        ),
+        child: Row(
+          children: [
+            AppAvatar(
+              initial: creator.nickname.isNotEmpty
+                  ? creator.nickname[0].toUpperCase()
+                  : '?',
+              imageUrl: creator.iconImage,
+              size: AppAvatarSize.sm,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.spotCreatedBy, style: context.typography.micro),
+                  Text(
+                    creator.nickname,
+                    style: context.typography.title.copyWith(height: 1.1),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Symbols.chevron_right, size: 20, color: colors.text700),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Rating avg / difficulty / best season, side by side.
+class _StatTilesRow extends StatelessWidget {
+  const _StatTilesRow({required this.spot});
+
+  final Spot spot;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Row(
+      children: [
+        StatTile(
+          icon: Symbols.star,
+          value: spot.ratingAvg?.toStringAsFixed(1) ?? '—',
+          label: l10n.spotRatingsCount(spot.ratingCount),
+          tone: StatTileTone.rating,
+        ),
+        const SizedBox(width: 10),
+        StatTile(
+          icon: Symbols.signal_cellular_alt,
+          value: spot.difficulty != null ? '${spot.difficulty}/5' : '—',
+          label: l10n.spotDifficulty,
+        ),
+        const SizedBox(width: 10),
+        StatTile(
+          icon: Symbols.wb_sunny,
+          value: spot.bestSeason ?? '—',
+          label: l10n.spotSeason,
+        ),
+      ],
+    );
+  }
+}
+
+/// Opening hours (when set) + the free-text description.
+class _ScheduleDescriptionCard extends StatelessWidget {
+  const _ScheduleDescriptionCard({required this.spot});
+
+  final Spot spot;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surfaceCard,
+        border: Border.all(color: colors.hairline),
+        borderRadius: BorderRadius.circular(context.spacing.radiusXl),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (spot.openHour != null && spot.closeHour != null) ...[
+            Row(
+              children: [
+                Icon(Symbols.schedule, size: 18, color: colors.colorBrand),
+                const SizedBox(width: 8),
+                Text(l10n.spotSchedule, style: context.typography.eyebrow),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '${spot.openHour} – ${spot.closeHour}',
+              style: context.typography.bodySm,
+            ),
+            Divider(height: 28, color: colors.hairlineSoft),
+          ],
+          Row(
+            children: [
+              Icon(Symbols.description, size: 18, color: colors.colorBrand),
+              const SizedBox(width: 8),
+              Text(l10n.spotDescription, style: context.typography.eyebrow),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(spot.description, style: context.typography.bodySm),
+        ],
+      ),
+    );
+  }
+}
+
+/// Physical elements (rampas, half-pipes, rieles…) the spot has.
+class _ElementsSection extends StatelessWidget {
+  const _ElementsSection({required this.elements});
+
+  final List<SpotElement> elements;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.spotElementsTitle(elements.length),
+          style: context.typography.tag.copyWith(color: colors.text300),
+        ),
+        const SizedBox(height: 12),
+        if (elements.isEmpty)
+          Text(l10n.spotNoElements, style: context.typography.bodySm)
+        else
+          for (final element in elements) _ElementRow(element: element),
+      ],
+    );
+  }
+}
+
+/// Named hazard reports plus the community "muletas" hazard rating card.
+class _HazardsSection extends StatelessWidget {
+  const _HazardsSection({
+    required this.hazzards,
+    required this.spotHazardAvg,
+    required this.spotHazardCount,
+    required this.myCrutches,
+    required this.busy,
+    required this.onRate,
+  });
+
+  final List<Hazzard> hazzards;
+  final double? spotHazardAvg;
+  final int spotHazardCount;
+  final int myCrutches;
+  final bool busy;
+  final void Function(int crutches) onRate;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.spotHazardsTitle(hazzards.length),
+          style: context.typography.tag.copyWith(color: colors.text300),
+        ),
+        const SizedBox(height: 12),
+        if (hazzards.isEmpty)
+          Text(l10n.spotNoHazards, style: context.typography.bodySm)
+        else
+          for (final hazzard in hazzards) _HazzardRow(hazzard: hazzard),
+        const SizedBox(height: 14),
+        _HazardRatingCard(
+          spotHazardAvg: spotHazardAvg,
+          spotHazardCount: spotHazardCount,
+          myCrutches: myCrutches,
+          busy: busy,
+          onRate: onRate,
+        ),
+      ],
+    );
+  }
+}
+
+/// Comment thread + composer. Kept last in every category's section order
+/// today (`_sectionGapAfter` assumes it's followed by the fixed "Volver"
+/// button, not another section).
+class _CommentsSection extends StatelessWidget {
+  const _CommentsSection({required this.spotId, required this.comments});
+
+  final int spotId;
+  final List<SpotCommentWithAuthor> comments;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.spotCommentsTitle(comments.length),
+          style: context.typography.tag.copyWith(color: colors.text300),
+        ),
+        const SizedBox(height: 12),
+        if (comments.isEmpty)
+          Text(l10n.spotNoComments, style: context.typography.bodySm)
+        else
+          for (final entry in comments) _CommentRow(entry: entry),
+        const SizedBox(height: 12),
+        _CommentComposer(spotId: spotId),
       ],
     );
   }
