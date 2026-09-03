@@ -352,7 +352,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     if (!status.isGranted || mapboxMap == null) return;
 
     await mapboxMap.location.updateSettings(
-      LocationComponentSettings(enabled: true, pulsingEnabled: true),
+      LocationComponentSettings(
+        enabled: true,
+        pulsingEnabled: true,
+        // Rotates the puck toward the compass heading the device is
+        // physically facing (not the direction of travel — `.course`
+        // needs the rider to actually be moving to have a bearing).
+        puckBearingEnabled: true,
+        puckBearing: PuckBearing.HEADING,
+      ),
     );
 
     // Re-fetches the position (the rider may have moved since Home's
