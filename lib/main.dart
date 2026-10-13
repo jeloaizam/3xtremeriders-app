@@ -65,6 +65,15 @@ class XtremeRidersApp extends ConsumerWidget {
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: (context, child) {
+        if (!MediaQuery.of(context).disableAnimations) return child!;
+        return Theme(
+          data: Theme.of(
+            context,
+          ).copyWith(pageTransitionsTheme: AppTheme.reducedMotionPageTransitions),
+          child: child!,
+        );
+      },
     );
   }
 }

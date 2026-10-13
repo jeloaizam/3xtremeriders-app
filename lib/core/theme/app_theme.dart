@@ -46,7 +46,51 @@ class AppTheme {
       ),
       dividerColor: colors.hairline,
       extensions: [colors, spacing, effects, typography],
+      pageTransitionsTheme: pageTransitions,
     );
+  }
+
+  // Flutter's Material 3 default (ZoomPageTransitionsBuilder) reads as
+  // generic scale+fade with no directional cue. FadeForwards is the
+  // platform-recommended replacement (also what enables Android 14+
+  // predictive back) and already composites via transform+opacity at the
+  // engine's default 300ms — which happens to match `AppEffects.durScreen`.
+  // Only android is listed: unlisted platforms fall back to their own
+  // native builder (iOS keeps Cupertino's slide), not a shared default.
+  static const pageTransitions = PageTransitionsTheme(
+    builders: {TargetPlatform.android: FadeForwardsPageTransitionsBuilder()},
+  );
+
+  // `MediaQuery.disableAnimations` (the OS "remove animations"
+  // accessibility setting) isn't checked by Flutter's built-in
+  // PageTransitionsBuilders on its own — without this override, reduced
+  // motion would still get the full slide+fade. Keeps the opacity cue
+  // (comprehension: a new screen arrived) and drops all movement, per
+  // reduced-motion guidance ("fewer and gentler", not zero animation).
+  static const reducedMotionPageTransitions = PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: _FadeOnlyPageTransitionsBuilder(),
+      TargetPlatform.iOS: _FadeOnlyPageTransitionsBuilder(),
+      TargetPlatform.macOS: _FadeOnlyPageTransitionsBuilder(),
+      TargetPlatform.linux: _FadeOnlyPageTransitionsBuilder(),
+      TargetPlatform.windows: _FadeOnlyPageTransitionsBuilder(),
+      TargetPlatform.fuchsia: _FadeOnlyPageTransitionsBuilder(),
+    },
+  );
+}
+
+class _FadeOnlyPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _FadeOnlyPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(opacity: animation, child: child);
   }
 }
 
