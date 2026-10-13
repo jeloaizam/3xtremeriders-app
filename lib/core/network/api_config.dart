@@ -19,7 +19,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class ApiConfig {
   ApiConfig._();
 
-  static const _hostLanIp = '192.168.2.11';
+  static const _hostLanIp = '192.168.2.12';
   static const _override = String.fromEnvironment('API_BASE_URL');
 
   static String get baseUrl {
