@@ -616,6 +616,18 @@ abstract class AppLocalizations {
   /// **'Temporada'**
   String get spotSeason;
 
+  /// No description provided for @spotRatingLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Calificación'**
+  String get spotRatingLabel;
+
+  /// No description provided for @spotHazardLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Peligro'**
+  String get spotHazardLabel;
+
   /// No description provided for @spotSchedule.
   ///
   /// In es, this message translates to:
@@ -730,11 +742,65 @@ abstract class AppLocalizations {
   /// **'RANKING DE ALIENS'**
   String get spotMediaRankingAlien;
 
+  /// No description provided for @spotMediaRankingGeneral.
+  ///
+  /// In es, this message translates to:
+  /// **'RANKING GENERAL DEL SPOT'**
+  String get spotMediaRankingGeneral;
+
   /// No description provided for @spotMediaRankingEmpty.
   ///
   /// In es, this message translates to:
   /// **'Todavía no hay contenido en este ranking'**
   String get spotMediaRankingEmpty;
+
+  /// No description provided for @spotAddVideo.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar video'**
+  String get spotAddVideo;
+
+  /// No description provided for @spotAddPhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar foto'**
+  String get spotAddPhoto;
+
+  /// Etiqueta de accesibilidad del badge de voter en el hero de media
+  ///
+  /// In es, this message translates to:
+  /// **'Ver perfil de {nickname}'**
+  String spotViewProfileOf(String nickname);
+
+  /// No description provided for @spotLikeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Me gusta'**
+  String get spotLikeLabel;
+
+  /// No description provided for @spotTabDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get spotTabDescription;
+
+  /// No description provided for @spotTabElements.
+  ///
+  /// In es, this message translates to:
+  /// **'Elementos'**
+  String get spotTabElements;
+
+  /// No description provided for @spotTabHazards.
+  ///
+  /// In es, this message translates to:
+  /// **'Peligros'**
+  String get spotTabHazards;
+
+  /// No description provided for @spotTabComments.
+  ///
+  /// In es, this message translates to:
+  /// **'Comentarios'**
+  String get spotTabComments;
 
   /// Título de la sección de comentarios de una foto/video individual, con la cantidad
   ///

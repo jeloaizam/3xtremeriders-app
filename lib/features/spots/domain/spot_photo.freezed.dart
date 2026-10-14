@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SpotPhoto {
 
- int get id;@JsonKey(name: 'spot_id') int get spotId;@JsonKey(name: 'sport_id') int? get sportId; String get url; String? get caption;@JsonKey(name: 'vote_count') int get voteCount;
+ int get id;@JsonKey(name: 'spot_id') int get spotId;@JsonKey(name: 'sport_id') int? get sportId;@JsonKey(name: 'uploaded_by') int get uploadedBy;@JsonKey(name: 'uploader_nickname') String get uploaderNickname;@JsonKey(name: 'uploader_icon_image') String? get uploaderIconImage; String get url; String? get caption;@JsonKey(name: 'vote_count') int get voteCount;
 /// Create a copy of SpotPhoto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SpotPhotoCopyWith<SpotPhoto> get copyWith => _$SpotPhotoCopyWithImpl<SpotPhoto>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpotPhoto&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.url, url) || other.url == url)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpotPhoto&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploaderNickname, uploaderNickname) || other.uploaderNickname == uploaderNickname)&&(identical(other.uploaderIconImage, uploaderIconImage) || other.uploaderIconImage == uploaderIconImage)&&(identical(other.url, url) || other.url == url)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,spotId,sportId,url,caption,voteCount);
+int get hashCode => Object.hash(runtimeType,id,spotId,sportId,uploadedBy,uploaderNickname,uploaderIconImage,url,caption,voteCount);
 
 @override
 String toString() {
-  return 'SpotPhoto(id: $id, spotId: $spotId, sportId: $sportId, url: $url, caption: $caption, voteCount: $voteCount)';
+  return 'SpotPhoto(id: $id, spotId: $spotId, sportId: $sportId, uploadedBy: $uploadedBy, uploaderNickname: $uploaderNickname, uploaderIconImage: $uploaderIconImage, url: $url, caption: $caption, voteCount: $voteCount)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SpotPhotoCopyWith<$Res>  {
   factory $SpotPhotoCopyWith(SpotPhoto value, $Res Function(SpotPhoto) _then) = _$SpotPhotoCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'spot_id') int spotId,@JsonKey(name: 'sport_id') int? sportId, String url, String? caption,@JsonKey(name: 'vote_count') int voteCount
+ int id,@JsonKey(name: 'spot_id') int spotId,@JsonKey(name: 'sport_id') int? sportId,@JsonKey(name: 'uploaded_by') int uploadedBy,@JsonKey(name: 'uploader_nickname') String uploaderNickname,@JsonKey(name: 'uploader_icon_image') String? uploaderIconImage, String url, String? caption,@JsonKey(name: 'vote_count') int voteCount
 });
 
 
@@ -65,12 +65,15 @@ class _$SpotPhotoCopyWithImpl<$Res>
 
 /// Create a copy of SpotPhoto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? spotId = null,Object? sportId = freezed,Object? url = null,Object? caption = freezed,Object? voteCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? spotId = null,Object? sportId = freezed,Object? uploadedBy = null,Object? uploaderNickname = null,Object? uploaderIconImage = freezed,Object? url = null,Object? caption = freezed,Object? voteCount = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,spotId: null == spotId ? _self.spotId : spotId // ignore: cast_nullable_to_non_nullable
 as int,sportId: freezed == sportId ? _self.sportId : sportId // ignore: cast_nullable_to_non_nullable
-as int?,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as int?,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
+as int,uploaderNickname: null == uploaderNickname ? _self.uploaderNickname : uploaderNickname // ignore: cast_nullable_to_non_nullable
+as String,uploaderIconImage: freezed == uploaderIconImage ? _self.uploaderIconImage : uploaderIconImage // ignore: cast_nullable_to_non_nullable
+as String?,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
 as String?,voteCount: null == voteCount ? _self.voteCount : voteCount // ignore: cast_nullable_to_non_nullable
 as int,
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId, @JsonKey(name: 'sport_id')  int? sportId,  String url,  String? caption, @JsonKey(name: 'vote_count')  int voteCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId, @JsonKey(name: 'sport_id')  int? sportId, @JsonKey(name: 'uploaded_by')  int uploadedBy, @JsonKey(name: 'uploader_nickname')  String uploaderNickname, @JsonKey(name: 'uploader_icon_image')  String? uploaderIconImage,  String url,  String? caption, @JsonKey(name: 'vote_count')  int voteCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SpotPhoto() when $default != null:
-return $default(_that.id,_that.spotId,_that.sportId,_that.url,_that.caption,_that.voteCount);case _:
+return $default(_that.id,_that.spotId,_that.sportId,_that.uploadedBy,_that.uploaderNickname,_that.uploaderIconImage,_that.url,_that.caption,_that.voteCount);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.id,_that.spotId,_that.sportId,_that.url,_that.caption,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId, @JsonKey(name: 'sport_id')  int? sportId,  String url,  String? caption, @JsonKey(name: 'vote_count')  int voteCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId, @JsonKey(name: 'sport_id')  int? sportId, @JsonKey(name: 'uploaded_by')  int uploadedBy, @JsonKey(name: 'uploader_nickname')  String uploaderNickname, @JsonKey(name: 'uploader_icon_image')  String? uploaderIconImage,  String url,  String? caption, @JsonKey(name: 'vote_count')  int voteCount)  $default,) {final _that = this;
 switch (_that) {
 case _SpotPhoto():
-return $default(_that.id,_that.spotId,_that.sportId,_that.url,_that.caption,_that.voteCount);case _:
+return $default(_that.id,_that.spotId,_that.sportId,_that.uploadedBy,_that.uploaderNickname,_that.uploaderIconImage,_that.url,_that.caption,_that.voteCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.id,_that.spotId,_that.sportId,_that.url,_that.caption,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'spot_id')  int spotId, @JsonKey(name: 'sport_id')  int? sportId,  String url,  String? caption, @JsonKey(name: 'vote_count')  int voteCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'spot_id')  int spotId, @JsonKey(name: 'sport_id')  int? sportId, @JsonKey(name: 'uploaded_by')  int uploadedBy, @JsonKey(name: 'uploader_nickname')  String uploaderNickname, @JsonKey(name: 'uploader_icon_image')  String? uploaderIconImage,  String url,  String? caption, @JsonKey(name: 'vote_count')  int voteCount)?  $default,) {final _that = this;
 switch (_that) {
 case _SpotPhoto() when $default != null:
-return $default(_that.id,_that.spotId,_that.sportId,_that.url,_that.caption,_that.voteCount);case _:
+return $default(_that.id,_that.spotId,_that.sportId,_that.uploadedBy,_that.uploaderNickname,_that.uploaderIconImage,_that.url,_that.caption,_that.voteCount);case _:
   return null;
 
 }
@@ -214,12 +217,15 @@ return $default(_that.id,_that.spotId,_that.sportId,_that.url,_that.caption,_tha
 @JsonSerializable()
 
 class _SpotPhoto implements SpotPhoto {
-  const _SpotPhoto({required this.id, @JsonKey(name: 'spot_id') required this.spotId, @JsonKey(name: 'sport_id') this.sportId, required this.url, this.caption, @JsonKey(name: 'vote_count') required this.voteCount});
+  const _SpotPhoto({required this.id, @JsonKey(name: 'spot_id') required this.spotId, @JsonKey(name: 'sport_id') this.sportId, @JsonKey(name: 'uploaded_by') required this.uploadedBy, @JsonKey(name: 'uploader_nickname') required this.uploaderNickname, @JsonKey(name: 'uploader_icon_image') this.uploaderIconImage, required this.url, this.caption, @JsonKey(name: 'vote_count') required this.voteCount});
   factory _SpotPhoto.fromJson(Map<String, dynamic> json) => _$SpotPhotoFromJson(json);
 
 @override final  int id;
 @override@JsonKey(name: 'spot_id') final  int spotId;
 @override@JsonKey(name: 'sport_id') final  int? sportId;
+@override@JsonKey(name: 'uploaded_by') final  int uploadedBy;
+@override@JsonKey(name: 'uploader_nickname') final  String uploaderNickname;
+@override@JsonKey(name: 'uploader_icon_image') final  String? uploaderIconImage;
 @override final  String url;
 @override final  String? caption;
 @override@JsonKey(name: 'vote_count') final  int voteCount;
@@ -237,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpotPhoto&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.url, url) || other.url == url)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpotPhoto&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.sportId, sportId) || other.sportId == sportId)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploaderNickname, uploaderNickname) || other.uploaderNickname == uploaderNickname)&&(identical(other.uploaderIconImage, uploaderIconImage) || other.uploaderIconImage == uploaderIconImage)&&(identical(other.url, url) || other.url == url)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,spotId,sportId,url,caption,voteCount);
+int get hashCode => Object.hash(runtimeType,id,spotId,sportId,uploadedBy,uploaderNickname,uploaderIconImage,url,caption,voteCount);
 
 @override
 String toString() {
-  return 'SpotPhoto(id: $id, spotId: $spotId, sportId: $sportId, url: $url, caption: $caption, voteCount: $voteCount)';
+  return 'SpotPhoto(id: $id, spotId: $spotId, sportId: $sportId, uploadedBy: $uploadedBy, uploaderNickname: $uploaderNickname, uploaderIconImage: $uploaderIconImage, url: $url, caption: $caption, voteCount: $voteCount)';
 }
 
 
@@ -257,7 +263,7 @@ abstract mixin class _$SpotPhotoCopyWith<$Res> implements $SpotPhotoCopyWith<$Re
   factory _$SpotPhotoCopyWith(_SpotPhoto value, $Res Function(_SpotPhoto) _then) = __$SpotPhotoCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'spot_id') int spotId,@JsonKey(name: 'sport_id') int? sportId, String url, String? caption,@JsonKey(name: 'vote_count') int voteCount
+ int id,@JsonKey(name: 'spot_id') int spotId,@JsonKey(name: 'sport_id') int? sportId,@JsonKey(name: 'uploaded_by') int uploadedBy,@JsonKey(name: 'uploader_nickname') String uploaderNickname,@JsonKey(name: 'uploader_icon_image') String? uploaderIconImage, String url, String? caption,@JsonKey(name: 'vote_count') int voteCount
 });
 
 
@@ -274,12 +280,15 @@ class __$SpotPhotoCopyWithImpl<$Res>
 
 /// Create a copy of SpotPhoto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? spotId = null,Object? sportId = freezed,Object? url = null,Object? caption = freezed,Object? voteCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? spotId = null,Object? sportId = freezed,Object? uploadedBy = null,Object? uploaderNickname = null,Object? uploaderIconImage = freezed,Object? url = null,Object? caption = freezed,Object? voteCount = null,}) {
   return _then(_SpotPhoto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,spotId: null == spotId ? _self.spotId : spotId // ignore: cast_nullable_to_non_nullable
 as int,sportId: freezed == sportId ? _self.sportId : sportId // ignore: cast_nullable_to_non_nullable
-as int?,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as int?,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
+as int,uploaderNickname: null == uploaderNickname ? _self.uploaderNickname : uploaderNickname // ignore: cast_nullable_to_non_nullable
+as String,uploaderIconImage: freezed == uploaderIconImage ? _self.uploaderIconImage : uploaderIconImage // ignore: cast_nullable_to_non_nullable
+as String?,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
 as String?,voteCount: null == voteCount ? _self.voteCount : voteCount // ignore: cast_nullable_to_non_nullable
 as int,

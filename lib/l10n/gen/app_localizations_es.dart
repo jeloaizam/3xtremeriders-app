@@ -281,6 +281,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get spotSeason => 'Temporada';
 
   @override
+  String get spotRatingLabel => 'Calificación';
+
+  @override
+  String get spotHazardLabel => 'Peligro';
+
+  @override
   String get spotSchedule => 'HORARIOS';
 
   @override
@@ -346,8 +352,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String get spotMediaRankingAlien => 'RANKING DE ALIENS';
 
   @override
+  String get spotMediaRankingGeneral => 'RANKING GENERAL DEL SPOT';
+
+  @override
   String get spotMediaRankingEmpty =>
       'Todavía no hay contenido en este ranking';
+
+  @override
+  String get spotAddVideo => 'Agregar video';
+
+  @override
+  String get spotAddPhoto => 'Agregar foto';
+
+  @override
+  String spotViewProfileOf(String nickname) {
+    return 'Ver perfil de $nickname';
+  }
+
+  @override
+  String get spotLikeLabel => 'Me gusta';
+
+  @override
+  String get spotTabDescription => 'Descripción';
+
+  @override
+  String get spotTabElements => 'Elementos';
+
+  @override
+  String get spotTabHazards => 'Peligros';
+
+  @override
+  String get spotTabComments => 'Comentarios';
 
   @override
   String mediaCommentsTitle(int count) {

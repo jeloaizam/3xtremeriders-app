@@ -86,6 +86,8 @@
   "spotDifficulty": "Difficulté",
   "spotRatingsCount": "{count} notes",
   "spotSeason": "Saison",
+  "spotRatingLabel": "Note",
+  "spotHazardLabel": "Danger",
   "spotSchedule": "HORAIRES",
   "spotDescription": "DESCRIPTION",
   "spotElementsTitle": "ÉLÉMENTS · {count}",
@@ -105,7 +107,22 @@
   "spotMediaRankingFemale": "CLASSEMENT DES FEMMES",
   "spotMediaRankingMale": "CLASSEMENT DES HOMMES",
   "spotMediaRankingAlien": "CLASSEMENT DES ALIENS",
+  "spotMediaRankingGeneral": "CLASSEMENT GÉNÉRAL DU SPOT",
   "spotMediaRankingEmpty": "Pas encore de contenu dans ce classement",
+  "spotAddVideo": "Ajouter une vidéo",
+  "spotAddPhoto": "Ajouter une photo",
+  "spotViewProfileOf": "Voir le profil de {nickname}",
+  "@spotViewProfileOf": {
+    "description": "Libellé d'accessibilité du badge de votant sur une tuile média",
+    "placeholders": {
+      "nickname": { "type": "String" }
+    }
+  },
+  "spotLikeLabel": "J'aime",
+  "spotTabDescription": "Description",
+  "spotTabElements": "Éléments",
+  "spotTabHazards": "Dangers",
+  "spotTabComments": "Commentaires",
   "mediaCommentsTitle": "COMMENTAIRES · {count}",
   "@mediaCommentsTitle": {
     "description": "Titre de la section commentaires d'une photo/vidéo individuelle, avec le nombre",

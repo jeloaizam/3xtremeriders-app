@@ -86,6 +86,8 @@
   "spotDifficulty": "Difficulty",
   "spotRatingsCount": "{count} ratings",
   "spotSeason": "Season",
+  "spotRatingLabel": "Rating",
+  "spotHazardLabel": "Hazard",
   "spotSchedule": "SCHEDULE",
   "spotDescription": "DESCRIPTION",
   "spotElementsTitle": "ELEMENTS · {count}",
@@ -105,7 +107,22 @@
   "spotMediaRankingFemale": "WOMEN'S RANKING",
   "spotMediaRankingMale": "MEN'S RANKING",
   "spotMediaRankingAlien": "ALIENS' RANKING",
+  "spotMediaRankingGeneral": "SPOT'S OVERALL RANKING",
   "spotMediaRankingEmpty": "No content in this ranking yet",
+  "spotAddVideo": "Add video",
+  "spotAddPhoto": "Add photo",
+  "spotViewProfileOf": "View {nickname}'s profile",
+  "@spotViewProfileOf": {
+    "description": "Accessibility label for the voter badge on a media hero tile",
+    "placeholders": {
+      "nickname": { "type": "String" }
+    }
+  },
+  "spotLikeLabel": "Like",
+  "spotTabDescription": "Description",
+  "spotTabElements": "Elements",
+  "spotTabHazards": "Hazards",
+  "spotTabComments": "Comments",
   "mediaCommentsTitle": "COMMENTS · {count}",
   "@mediaCommentsTitle": {
     "description": "Title of a single photo/video's own comment section, with the count",

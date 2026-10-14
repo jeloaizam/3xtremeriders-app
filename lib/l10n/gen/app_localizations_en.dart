@@ -281,6 +281,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spotSeason => 'Season';
 
   @override
+  String get spotRatingLabel => 'Rating';
+
+  @override
+  String get spotHazardLabel => 'Hazard';
+
+  @override
   String get spotSchedule => 'SCHEDULE';
 
   @override
@@ -346,7 +352,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spotMediaRankingAlien => 'ALIENS\' RANKING';
 
   @override
+  String get spotMediaRankingGeneral => 'SPOT\'S OVERALL RANKING';
+
+  @override
   String get spotMediaRankingEmpty => 'No content in this ranking yet';
+
+  @override
+  String get spotAddVideo => 'Add video';
+
+  @override
+  String get spotAddPhoto => 'Add photo';
+
+  @override
+  String spotViewProfileOf(String nickname) {
+    return 'View $nickname\'s profile';
+  }
+
+  @override
+  String get spotLikeLabel => 'Like';
+
+  @override
+  String get spotTabDescription => 'Description';
+
+  @override
+  String get spotTabElements => 'Elements';
+
+  @override
+  String get spotTabHazards => 'Hazards';
+
+  @override
+  String get spotTabComments => 'Comments';
 
   @override
   String mediaCommentsTitle(int count) {

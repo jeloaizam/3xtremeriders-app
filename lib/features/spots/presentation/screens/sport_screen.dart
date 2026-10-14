@@ -17,7 +17,7 @@ import '../sport_visuals.dart';
 import '../widgets/photo_viewer_screen.dart';
 import '../widgets/spot_card.dart';
 import '../widgets/video_player_screen.dart';
-import 'spot_screen.dart' show MediaTile;
+import '../widgets/spot_detail/media_tile.dart';
 
 /// New (not part of the original 13-screen prototype — no `isSport` state
 /// exists in `Deportes Extremos App v2.dc.html`): a dedicated view per

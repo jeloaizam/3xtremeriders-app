@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RankedMediaItem {
 
- int get id; String get type; String get url;@JsonKey(name: 'thumbnail_url') String? get thumbnailUrl;@JsonKey(name: 'vote_count') int get voteCount;@JsonKey(name: 'uploaded_by') int get uploadedBy; String? get caption;@JsonKey(name: 'created_date') DateTime get createdDate;
+ int get id; String get type; String get url;@JsonKey(name: 'thumbnail_url') String? get thumbnailUrl;@JsonKey(name: 'vote_count') int get voteCount;@JsonKey(name: 'uploaded_by') int get uploadedBy;@JsonKey(name: 'uploader_nickname') String get uploaderNickname;@JsonKey(name: 'uploader_icon_image') String? get uploaderIconImage; String? get caption;@JsonKey(name: 'created_date') DateTime get createdDate;
 /// Create a copy of RankedMediaItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RankedMediaItemCopyWith<RankedMediaItem> get copyWith => _$RankedMediaItemCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RankedMediaItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RankedMediaItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploaderNickname, uploaderNickname) || other.uploaderNickname == uploaderNickname)&&(identical(other.uploaderIconImage, uploaderIconImage) || other.uploaderIconImage == uploaderIconImage)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,url,thumbnailUrl,voteCount,uploadedBy,caption,createdDate);
+int get hashCode => Object.hash(runtimeType,id,type,url,thumbnailUrl,voteCount,uploadedBy,uploaderNickname,uploaderIconImage,caption,createdDate);
 
 @override
 String toString() {
-  return 'RankedMediaItem(id: $id, type: $type, url: $url, thumbnailUrl: $thumbnailUrl, voteCount: $voteCount, uploadedBy: $uploadedBy, caption: $caption, createdDate: $createdDate)';
+  return 'RankedMediaItem(id: $id, type: $type, url: $url, thumbnailUrl: $thumbnailUrl, voteCount: $voteCount, uploadedBy: $uploadedBy, uploaderNickname: $uploaderNickname, uploaderIconImage: $uploaderIconImage, caption: $caption, createdDate: $createdDate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RankedMediaItemCopyWith<$Res>  {
   factory $RankedMediaItemCopyWith(RankedMediaItem value, $Res Function(RankedMediaItem) _then) = _$RankedMediaItemCopyWithImpl;
 @useResult
 $Res call({
- int id, String type, String url,@JsonKey(name: 'thumbnail_url') String? thumbnailUrl,@JsonKey(name: 'vote_count') int voteCount,@JsonKey(name: 'uploaded_by') int uploadedBy, String? caption,@JsonKey(name: 'created_date') DateTime createdDate
+ int id, String type, String url,@JsonKey(name: 'thumbnail_url') String? thumbnailUrl,@JsonKey(name: 'vote_count') int voteCount,@JsonKey(name: 'uploaded_by') int uploadedBy,@JsonKey(name: 'uploader_nickname') String uploaderNickname,@JsonKey(name: 'uploader_icon_image') String? uploaderIconImage, String? caption,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -65,7 +65,7 @@ class _$RankedMediaItemCopyWithImpl<$Res>
 
 /// Create a copy of RankedMediaItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? url = null,Object? thumbnailUrl = freezed,Object? voteCount = null,Object? uploadedBy = null,Object? caption = freezed,Object? createdDate = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? url = null,Object? thumbnailUrl = freezed,Object? voteCount = null,Object? uploadedBy = null,Object? uploaderNickname = null,Object? uploaderIconImage = freezed,Object? caption = freezed,Object? createdDate = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,9 @@ as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nul
 as String,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String?,voteCount: null == voteCount ? _self.voteCount : voteCount // ignore: cast_nullable_to_non_nullable
 as int,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
-as int,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
+as int,uploaderNickname: null == uploaderNickname ? _self.uploaderNickname : uploaderNickname // ignore: cast_nullable_to_non_nullable
+as String,uploaderIconImage: freezed == uploaderIconImage ? _self.uploaderIconImage : uploaderIconImage // ignore: cast_nullable_to_non_nullable
+as String?,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
 as String?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -160,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String type,  String url, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'uploaded_by')  int uploadedBy,  String? caption, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String type,  String url, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'uploaded_by')  int uploadedBy, @JsonKey(name: 'uploader_nickname')  String uploaderNickname, @JsonKey(name: 'uploader_icon_image')  String? uploaderIconImage,  String? caption, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RankedMediaItem() when $default != null:
-return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount,_that.uploadedBy,_that.caption,_that.createdDate);case _:
+return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount,_that.uploadedBy,_that.uploaderNickname,_that.uploaderIconImage,_that.caption,_that.createdDate);case _:
   return orElse();
 
 }
@@ -181,10 +183,10 @@ return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String type,  String url, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'uploaded_by')  int uploadedBy,  String? caption, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String type,  String url, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'uploaded_by')  int uploadedBy, @JsonKey(name: 'uploader_nickname')  String uploaderNickname, @JsonKey(name: 'uploader_icon_image')  String? uploaderIconImage,  String? caption, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
 switch (_that) {
 case _RankedMediaItem():
-return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount,_that.uploadedBy,_that.caption,_that.createdDate);case _:
+return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount,_that.uploadedBy,_that.uploaderNickname,_that.uploaderIconImage,_that.caption,_that.createdDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +203,10 @@ return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String type,  String url, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'uploaded_by')  int uploadedBy,  String? caption, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String type,  String url, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'uploaded_by')  int uploadedBy, @JsonKey(name: 'uploader_nickname')  String uploaderNickname, @JsonKey(name: 'uploader_icon_image')  String? uploaderIconImage,  String? caption, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
 switch (_that) {
 case _RankedMediaItem() when $default != null:
-return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount,_that.uploadedBy,_that.caption,_that.createdDate);case _:
+return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount,_that.uploadedBy,_that.uploaderNickname,_that.uploaderIconImage,_that.caption,_that.createdDate);case _:
   return null;
 
 }
@@ -216,7 +218,7 @@ return $default(_that.id,_that.type,_that.url,_that.thumbnailUrl,_that.voteCount
 @JsonSerializable()
 
 class _RankedMediaItem implements RankedMediaItem {
-  const _RankedMediaItem({required this.id, required this.type, required this.url, @JsonKey(name: 'thumbnail_url') this.thumbnailUrl, @JsonKey(name: 'vote_count') required this.voteCount, @JsonKey(name: 'uploaded_by') required this.uploadedBy, this.caption, @JsonKey(name: 'created_date') required this.createdDate});
+  const _RankedMediaItem({required this.id, required this.type, required this.url, @JsonKey(name: 'thumbnail_url') this.thumbnailUrl, @JsonKey(name: 'vote_count') required this.voteCount, @JsonKey(name: 'uploaded_by') required this.uploadedBy, @JsonKey(name: 'uploader_nickname') required this.uploaderNickname, @JsonKey(name: 'uploader_icon_image') this.uploaderIconImage, this.caption, @JsonKey(name: 'created_date') required this.createdDate});
   factory _RankedMediaItem.fromJson(Map<String, dynamic> json) => _$RankedMediaItemFromJson(json);
 
 @override final  int id;
@@ -225,6 +227,8 @@ class _RankedMediaItem implements RankedMediaItem {
 @override@JsonKey(name: 'thumbnail_url') final  String? thumbnailUrl;
 @override@JsonKey(name: 'vote_count') final  int voteCount;
 @override@JsonKey(name: 'uploaded_by') final  int uploadedBy;
+@override@JsonKey(name: 'uploader_nickname') final  String uploaderNickname;
+@override@JsonKey(name: 'uploader_icon_image') final  String? uploaderIconImage;
 @override final  String? caption;
 @override@JsonKey(name: 'created_date') final  DateTime createdDate;
 
@@ -241,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RankedMediaItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RankedMediaItem&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploaderNickname, uploaderNickname) || other.uploaderNickname == uploaderNickname)&&(identical(other.uploaderIconImage, uploaderIconImage) || other.uploaderIconImage == uploaderIconImage)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,url,thumbnailUrl,voteCount,uploadedBy,caption,createdDate);
+int get hashCode => Object.hash(runtimeType,id,type,url,thumbnailUrl,voteCount,uploadedBy,uploaderNickname,uploaderIconImage,caption,createdDate);
 
 @override
 String toString() {
-  return 'RankedMediaItem(id: $id, type: $type, url: $url, thumbnailUrl: $thumbnailUrl, voteCount: $voteCount, uploadedBy: $uploadedBy, caption: $caption, createdDate: $createdDate)';
+  return 'RankedMediaItem(id: $id, type: $type, url: $url, thumbnailUrl: $thumbnailUrl, voteCount: $voteCount, uploadedBy: $uploadedBy, uploaderNickname: $uploaderNickname, uploaderIconImage: $uploaderIconImage, caption: $caption, createdDate: $createdDate)';
 }
 
 
@@ -261,7 +265,7 @@ abstract mixin class _$RankedMediaItemCopyWith<$Res> implements $RankedMediaItem
   factory _$RankedMediaItemCopyWith(_RankedMediaItem value, $Res Function(_RankedMediaItem) _then) = __$RankedMediaItemCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String type, String url,@JsonKey(name: 'thumbnail_url') String? thumbnailUrl,@JsonKey(name: 'vote_count') int voteCount,@JsonKey(name: 'uploaded_by') int uploadedBy, String? caption,@JsonKey(name: 'created_date') DateTime createdDate
+ int id, String type, String url,@JsonKey(name: 'thumbnail_url') String? thumbnailUrl,@JsonKey(name: 'vote_count') int voteCount,@JsonKey(name: 'uploaded_by') int uploadedBy,@JsonKey(name: 'uploader_nickname') String uploaderNickname,@JsonKey(name: 'uploader_icon_image') String? uploaderIconImage, String? caption,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -278,7 +282,7 @@ class __$RankedMediaItemCopyWithImpl<$Res>
 
 /// Create a copy of RankedMediaItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? url = null,Object? thumbnailUrl = freezed,Object? voteCount = null,Object? uploadedBy = null,Object? caption = freezed,Object? createdDate = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? url = null,Object? thumbnailUrl = freezed,Object? voteCount = null,Object? uploadedBy = null,Object? uploaderNickname = null,Object? uploaderIconImage = freezed,Object? caption = freezed,Object? createdDate = null,}) {
   return _then(_RankedMediaItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -286,7 +290,9 @@ as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nul
 as String,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String?,voteCount: null == voteCount ? _self.voteCount : voteCount // ignore: cast_nullable_to_non_nullable
 as int,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
-as int,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
+as int,uploaderNickname: null == uploaderNickname ? _self.uploaderNickname : uploaderNickname // ignore: cast_nullable_to_non_nullable
+as String,uploaderIconImage: freezed == uploaderIconImage ? _self.uploaderIconImage : uploaderIconImage // ignore: cast_nullable_to_non_nullable
+as String?,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
 as String?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

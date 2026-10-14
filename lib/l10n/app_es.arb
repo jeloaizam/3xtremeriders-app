@@ -111,6 +111,8 @@
     }
   },
   "spotSeason": "Temporada",
+  "spotRatingLabel": "Calificación",
+  "spotHazardLabel": "Peligro",
   "spotSchedule": "HORARIOS",
   "spotDescription": "DESCRIPCIÓN",
   "spotElementsTitle": "ELEMENTOS · {count}",
@@ -154,7 +156,22 @@
   "spotMediaRankingFemale": "RANKING DE MUJERES",
   "spotMediaRankingMale": "RANKING DE HOMBRES",
   "spotMediaRankingAlien": "RANKING DE ALIENS",
+  "spotMediaRankingGeneral": "RANKING GENERAL DEL SPOT",
   "spotMediaRankingEmpty": "Todavía no hay contenido en este ranking",
+  "spotAddVideo": "Agregar video",
+  "spotAddPhoto": "Agregar foto",
+  "spotViewProfileOf": "Ver perfil de {nickname}",
+  "@spotViewProfileOf": {
+    "description": "Etiqueta de accesibilidad del badge de voter en el hero de media",
+    "placeholders": {
+      "nickname": { "type": "String" }
+    }
+  },
+  "spotLikeLabel": "Me gusta",
+  "spotTabDescription": "Descripción",
+  "spotTabElements": "Elementos",
+  "spotTabHazards": "Peligros",
+  "spotTabComments": "Comentarios",
   "mediaCommentsTitle": "COMENTARIOS · {count}",
   "@mediaCommentsTitle": {
     "description": "Título de la sección de comentarios de una foto/video individual, con la cantidad",

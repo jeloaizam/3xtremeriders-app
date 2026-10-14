@@ -14,6 +14,8 @@ _RankedMediaItem _$RankedMediaItemFromJson(Map<String, dynamic> json) =>
       thumbnailUrl: json['thumbnail_url'] as String?,
       voteCount: (json['vote_count'] as num).toInt(),
       uploadedBy: (json['uploaded_by'] as num).toInt(),
+      uploaderNickname: json['uploader_nickname'] as String,
+      uploaderIconImage: json['uploader_icon_image'] as String?,
       caption: json['caption'] as String?,
       createdDate: DateTime.parse(json['created_date'] as String),
     );
@@ -26,6 +28,8 @@ Map<String, dynamic> _$RankedMediaItemToJson(_RankedMediaItem instance) =>
       'thumbnail_url': instance.thumbnailUrl,
       'vote_count': instance.voteCount,
       'uploaded_by': instance.uploadedBy,
+      'uploader_nickname': instance.uploaderNickname,
+      'uploader_icon_image': instance.uploaderIconImage,
       'caption': instance.caption,
       'created_date': instance.createdDate.toIso8601String(),
     };

@@ -17,6 +17,8 @@ abstract class RankedMediaItem with _$RankedMediaItem {
     @JsonKey(name: 'thumbnail_url') String? thumbnailUrl,
     @JsonKey(name: 'vote_count') required int voteCount,
     @JsonKey(name: 'uploaded_by') required int uploadedBy,
+    @JsonKey(name: 'uploader_nickname') required String uploaderNickname,
+    @JsonKey(name: 'uploader_icon_image') String? uploaderIconImage,
     String? caption,
     @JsonKey(name: 'created_date') required DateTime createdDate,
   }) = _RankedMediaItem;
