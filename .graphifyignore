@@ -1,0 +1,12 @@
+# Generated app-icon/launcher assets: same logo duplicated across many
+# resolutions per platform, zero unique semantic content for the graph.
+android/app/src/main/res/mipmap-*/ic_launcher*.png
+android/app/src/main/res/drawable-*/ic_launcher*.png
+ios/Runner/Assets.xcassets/AppIcon.appiconset/*.png
+ios/Runner/Assets.xcassets/LaunchImage.imageset/*.png
+web/favicon.png
+web/icons/*.png
+
+# .claude/skills/* are symlinks to .agents/skills/* (same animation-skills
+# install) — extracting both duplicates every file's content in the graph.
+.claude/skills/**
