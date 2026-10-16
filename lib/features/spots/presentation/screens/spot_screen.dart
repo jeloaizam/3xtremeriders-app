@@ -7,7 +7,7 @@ import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../auth/domain/role.dart';
 import '../../application/spot_detail.dart';
-import '../../application/spots_providers.dart';
+import '../../application/spot_detail_providers.dart';
 import '../../data/spot_hazard_rating_api.dart';
 import '../../data/spot_rating_api.dart';
 import '../../data/vote_api.dart';

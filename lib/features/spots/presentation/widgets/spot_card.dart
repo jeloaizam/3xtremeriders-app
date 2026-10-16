@@ -4,7 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../application/spots_providers.dart';
+import '../../application/spot_providers.dart';
 import '../../domain/spot.dart';
 import '../sport_visuals.dart';
 

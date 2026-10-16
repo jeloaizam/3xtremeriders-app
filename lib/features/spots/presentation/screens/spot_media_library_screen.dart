@@ -6,7 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
-import '../../application/spots_providers.dart';
+import '../../application/spot_media_providers.dart';
 import '../../data/spot_media_ranking_api.dart';
 import '../../data/vote_api.dart';
 import '../widgets/spot_detail/media_tile.dart';

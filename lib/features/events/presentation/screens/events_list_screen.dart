@@ -10,7 +10,7 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../auth/domain/role.dart';
-import '../../../spots/application/spots_providers.dart';
+import '../../../spots/application/spot_providers.dart';
 import '../../../spots/domain/spot.dart';
 import '../../application/events_providers.dart';
 import '../../domain/event.dart';

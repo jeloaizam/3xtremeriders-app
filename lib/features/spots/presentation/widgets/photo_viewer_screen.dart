@@ -4,7 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/application/auth_providers.dart';
-import '../../application/spots_providers.dart';
+import '../../application/spot_detail_providers.dart';
 import '../../data/spot_media_ranking_api.dart';
 import '../../data/vote_api.dart';
 import 'comment_section.dart';

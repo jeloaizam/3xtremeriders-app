@@ -8,7 +8,7 @@ import '../../../../../../core/widgets/app_avatar.dart';
 import '../../../../../../l10n/gen/app_localizations.dart';
 import '../../../../../auth/application/auth_providers.dart';
 import '../../../../application/spot_detail.dart';
-import '../../../../application/spots_providers.dart';
+import '../../../../application/spot_detail_providers.dart';
 import '../../../../data/spot_comment_api.dart';
 
 /// `MoreInfoBox`'s "Comentarios" tab: the comment thread + composer.

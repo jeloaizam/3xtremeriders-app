@@ -8,7 +8,7 @@ import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../auth/application/rider_sports_providers.dart';
 import '../../../auth/data/rider_sport_api.dart';
-import '../../../spots/application/spots_providers.dart';
+import '../../../spots/application/spot_catalog_providers.dart';
 import '../../../spots/domain/sport.dart';
 
 /// Full-height "insert coin" sport picker — a grid of every extreme sport

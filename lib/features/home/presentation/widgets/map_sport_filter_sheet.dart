@@ -5,7 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/arcade_sport_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
-import '../../../spots/application/spots_providers.dart';
+import '../../../spots/application/spot_catalog_providers.dart';
 import '../../../spots/domain/sport.dart';
 
 /// Multi-select picker ("Personalizar mapa") for which sports show on

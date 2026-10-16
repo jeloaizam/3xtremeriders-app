@@ -7,7 +7,7 @@ import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../auth/application/rider_sports_providers.dart';
 import '../../../auth/domain/rider_sport.dart';
-import '../../../spots/application/spots_providers.dart';
+import '../../../spots/application/spot_catalog_providers.dart';
 import '../../../spots/domain/sport.dart';
 
 /// Single-select picker among the rider's own favorite sports — sets
