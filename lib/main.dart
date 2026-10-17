@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
@@ -58,22 +59,43 @@ class XtremeRidersApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final locale = ref.watch(appLocaleProvider);
 
-    return MaterialApp.router(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      theme: AppTheme.dark,
-      routerConfig: router,
-      locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      builder: (context, child) {
-        if (!MediaQuery.of(context).disableAnimations) return child!;
-        return Theme(
-          data: Theme.of(
-            context,
-          ).copyWith(pageTransitionsTheme: AppTheme.reducedMotionPageTransitions),
-          child: child!,
-        );
+    // PopScope(canPop: false) + a manual pop below the system's default
+    // `WidgetsBinding.handlePopRoute()` is needed because that default
+    // handler races GoRouter's async redirect/pop resolution: on a slow or
+    // mid-flight redirect (e.g. `refreshListenable` firing from a provider
+    // refresh at the same moment), Flutter can see "not handled yet" and
+    // fall through to `SystemNavigator.pop()` — closing the Activity — even
+    // though GoRouter's own pop completes correctly a moment later (bug:
+    // system back from Settings closed the app instead of returning to
+    // Home). Driving `router.pop()` directly here is synchronous and never
+    // loses that race.
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (router.canPop()) {
+          router.pop();
+        } else {
+          SystemNavigator.pop();
+        }
       },
+      child: MaterialApp.router(
+        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+        theme: AppTheme.dark,
+        routerConfig: router,
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        builder: (context, child) {
+          if (!MediaQuery.of(context).disableAnimations) return child!;
+          return Theme(
+            data: Theme.of(context).copyWith(
+              pageTransitionsTheme: AppTheme.reducedMotionPageTransitions,
+            ),
+            child: child!,
+          );
+        },
+      ),
     );
   }
 }
