@@ -161,6 +161,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeLocationGateRetry => 'REINTENTAR';
 
   @override
+  String get homeServerErrorTitle => 'SIN CONEXIÓN AL SERVIDOR';
+
+  @override
+  String get homeServerErrorBody =>
+      'No pudimos conectar con el servidor de 3xtreme Riders. Revisá tu conexión e intentá de nuevo.';
+
+  @override
+  String get homeServerErrorRetry => 'REINTENTAR';
+
+  @override
   String get navHome => 'Inicio';
 
   @override

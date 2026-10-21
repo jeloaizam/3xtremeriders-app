@@ -427,6 +427,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final colors = context.colors;
     final spotsAsync = ref.watch(nearbySpotsProvider);
 
+    // Validate the backend is actually reachable before showing the map —
+    // without this, a down/unreachable server silently rendered an empty
+    // map with "0 spots" indistinguishable from a real zero-spots area
+    // (hit twice in testing: dev server not running, stale LAN IP).
+    if (spotsAsync.hasError) {
+      return _ServerErrorScreen(
+        onRetry: () => ref.invalidate(nearbySpotsProvider),
+      );
+    }
+
     final rider = ref.watch(currentRiderProvider).value;
     final allSports = ref.watch(allSportsProvider).value ?? const <Sport>[];
     final activeSportId = ref.watch(effectiveActiveSportIdProvider).value;
@@ -732,6 +742,53 @@ class _LocationGateScreen extends StatelessWidget {
                 onPressed: onRetry,
                 child: Text(l10n.homeLocationGateRetry),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shown instead of the map when `nearbySpotsProvider` fails — most often
+/// the dev/prod backend being unreachable. Mirrors [_LocationGateScreen]'s
+/// layout so the two "can't show the map yet" states feel like the same
+/// family of screen.
+class _ServerErrorScreen extends StatelessWidget {
+  const _ServerErrorScreen({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
+
+    return Scaffold(
+      backgroundColor: colors.surfaceApp,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Symbols.cloud_off, size: 56, color: colors.colorDanger),
+              const SizedBox(height: 18),
+              Text(
+                l10n.homeServerErrorTitle,
+                style: context.typography.displaySm,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                l10n.homeServerErrorBody,
+                style: context.typography.bodySm.copyWith(
+                  color: colors.textMuted,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              AppButton(label: l10n.homeServerErrorRetry, onPressed: onRetry),
             ],
           ),
         ),

@@ -382,6 +382,24 @@ abstract class AppLocalizations {
   /// **'REINTENTAR'**
   String get homeLocationGateRetry;
 
+  /// No description provided for @homeServerErrorTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'SIN CONEXIÓN AL SERVIDOR'**
+  String get homeServerErrorTitle;
+
+  /// No description provided for @homeServerErrorBody.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos conectar con el servidor de 3xtreme Riders. Revisá tu conexión e intentá de nuevo.'**
+  String get homeServerErrorBody;
+
+  /// No description provided for @homeServerErrorRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'REINTENTAR'**
+  String get homeServerErrorRetry;
+
   /// No description provided for @navHome.
   ///
   /// In es, this message translates to:
