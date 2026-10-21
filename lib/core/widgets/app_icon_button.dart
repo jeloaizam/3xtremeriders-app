@@ -7,14 +7,21 @@ import '../theme/app_theme.dart';
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
     super.key,
-    required this.icon,
+    this.icon,
+    this.iconWidget,
     this.onPressed,
     this.chrome = false,
     this.active = false,
     this.color,
-  });
+  }) : assert(
+         icon != null || iconWidget != null,
+         'AppIconButton needs either icon or iconWidget',
+       );
 
-  final IconData icon;
+  final IconData? icon;
+  // Overrides [icon] when set — for glyphs with no Material Symbol (e.g.
+  // the custom AlienIcon) that still need to sit in this button's slot.
+  final Widget? iconWidget;
   final VoidCallback? onPressed;
   final bool chrome;
   final bool active;
@@ -45,7 +52,7 @@ class AppIconButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
-          child: Icon(icon, size: 21, color: iconColor),
+          child: iconWidget ?? Icon(icon, size: 21, color: iconColor),
         ),
       ),
     );

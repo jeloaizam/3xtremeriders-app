@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/alien_icon.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_dropdown.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -225,7 +226,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: _GenderButton(
-                        icon: Symbols.rocket_launch,
+                        iconWidget: AlienIcon.new,
                         label: l10n.genderAlien,
                         selected: _gender == 'alien',
                         locked: _genderLocked,
@@ -263,14 +264,20 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 /// gender was already saved before this screen loaded).
 class _GenderButton extends StatelessWidget {
   const _GenderButton({
-    required this.icon,
+    this.icon,
+    this.iconWidget,
     required this.label,
     required this.selected,
     required this.locked,
     required this.onTap,
-  });
+  }) : assert(icon != null || iconWidget != null);
 
-  final IconData icon;
+  final IconData? icon;
+  // Builds a glyph with no Material Symbol (just AlienIcon today), given
+  // this button's selection-tinted color — not GenderVisual's fixed
+  // per-gender color, since this icon is recolored by selection state.
+  final Widget Function({required double size, required Color color})?
+  iconWidget;
   final String label;
   final bool selected;
   final bool locked;
@@ -280,6 +287,7 @@ class _GenderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final color = selected ? colors.colorAction : colors.text300;
+    final builder = iconWidget;
 
     return Opacity(
       opacity: locked && !selected ? .4 : 1,
@@ -297,7 +305,9 @@ class _GenderButton extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(icon, size: 32, color: color),
+              builder == null
+                  ? Icon(icon, size: 32, color: color)
+                  : builder(size: 32, color: color),
               const SizedBox(height: 8),
               Text(
                 label,

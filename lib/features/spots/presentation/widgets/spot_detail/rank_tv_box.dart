@@ -70,12 +70,22 @@ class RankTvBox extends ConsumerStatefulWidget {
 
 class _RankTvBoxState extends ConsumerState<RankTvBox>
     with AutomaticKeepAliveClientMixin<RankTvBox> {
-  RankCategory _category = RankCategory.general;
+  late RankCategory _category;
   bool _isVideo = true;
   bool _uploading = false;
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    // 'xtremespot' spots have no General category to land on (see
+    // RankTvButtonBox's showGeneral) — default to Hombres instead.
+    _category = widget.hasGeneralLibrary
+        ? RankCategory.general
+        : RankCategory.men;
+  }
 
   Future<ImageSource?> _pickImageSource() {
     final l10n = AppLocalizations.of(context);
@@ -498,6 +508,7 @@ class _RankTvBoxState extends ConsumerState<RankTvBox>
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: RankTvButtonBox(
             active: _category,
+            showGeneral: widget.hasGeneralLibrary,
             onPick: (category) => setState(() => _category = category),
           ),
         ),

@@ -11,6 +11,7 @@ import '../../../rides/application/rides_providers.dart';
 import '../../../rides/domain/ride.dart';
 import '../../../settings/data/country_api.dart';
 import '../../../settings/domain/country.dart';
+import '../../../spots/presentation/widgets/spot_detail/gender_visuals.dart';
 import '../../application/auth_providers.dart';
 import '../../application/rider_profile_providers.dart';
 import '../../data/rider_api.dart';
@@ -119,20 +120,10 @@ class _RiderProfileBody extends ConsumerWidget {
                   Text(rider.nickname, style: context.typography.displaySm),
                   if (rider.gender != null) ...[
                     const SizedBox(width: 6),
-                    Icon(
-                      switch (rider.gender) {
-                        'male' => Symbols.male,
-                        'alien' => Symbols.rocket_launch,
-                        _ => Symbols.female,
-                      },
-                      fill: 1,
-                      size: 22,
-                      color: switch (rider.gender) {
-                        'male' => colors.blue500,
-                        'alien' => colors.colorRating,
-                        _ => colors.colorDanger,
-                      },
-                    ),
+                    GenderVisual.of(
+                      rider.gender!,
+                      colors,
+                    ).build(size: 22, fill: true),
                   ],
                 ],
               ),
