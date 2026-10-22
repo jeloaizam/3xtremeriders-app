@@ -38,6 +38,12 @@
   "genderFemale": "Mujer",
   "genderAlien": "Alien",
   "completeProfileSave": "Continuar",
+  "consentBirthDatePlaceholder": "Fecha de nacimiento",
+  "consentAgeError": "Debés tener al menos 13 años para usar 3xtreme Riders",
+  "consentTermsPrefix": "Acepto los ",
+  "consentTermsLink": "Términos y Condiciones",
+  "consentPrivacyPrefix": "Acepto la ",
+  "consentPrivacyLink": "Política de Privacidad",
   "comingSoon": "Próximamente",
   "homeActiveSpots": "{count} SPOTS ACTIVOS · {city}",
   "@homeActiveSpots": {

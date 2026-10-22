@@ -85,6 +85,9 @@ class RiderApi {
     // El backend rechaza (403) todo el PATCH si el rider ya tiene un
     // género fijado y este valor es distinto — ver app/routers/rider.py.
     String? gender,
+    // Mismo patrón write-once que gender — el backend rechaza el PATCH si
+    // ya tiene una fecha de nacimiento fijada y esta es distinta.
+    DateTime? birthDate,
     int? roleId,
     int? activeSportId,
     List<int>? mapSportFilter,
@@ -105,6 +108,7 @@ class RiderApi {
         if (clearCityName) 'city_name': null else 'city_name': ?cityName,
         'country_id': ?countryId,
         'gender': ?gender,
+        if (birthDate != null) 'birth_date': _dateOnly(birthDate),
         'role_id': ?roleId,
         'active_sport_id': ?activeSportId,
         if (clearMapSportFilter)
@@ -117,6 +121,13 @@ class RiderApi {
       throw ApiException(response.statusCode, response.body);
     }
     return Rider.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
+  static String _dateOnly(DateTime date) {
+    final y = date.year.toString().padLeft(4, '0');
+    final m = date.month.toString().padLeft(2, '0');
+    final d = date.day.toString().padLeft(2, '0');
+    return '$y-$m-$d';
   }
 }
 

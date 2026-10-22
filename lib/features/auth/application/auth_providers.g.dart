@@ -235,7 +235,15 @@ final class PendingSignupProfileProvider
     extends
         $NotifierProvider<
           PendingSignupProfile,
-          ({String lastName, String name, String nickname})?
+          ({
+            DateTime birthDate,
+            String deviceInfo,
+            String lastName,
+            String name,
+            String nickname,
+            String privacyVersion,
+            String termsVersion,
+          })?
         > {
   /// Real profile data collected by `SignupScreen` right before creating the
   /// Firebase account, consumed once by [CurrentRider.build] the first time
@@ -268,20 +276,37 @@ final class PendingSignupProfileProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(
-    ({String lastName, String name, String nickname})? value,
+    ({
+      DateTime birthDate,
+      String deviceInfo,
+      String lastName,
+      String name,
+      String nickname,
+      String privacyVersion,
+      String termsVersion,
+    })?
+    value,
   ) {
     return $ProviderOverride(
       origin: this,
       providerOverride:
           $SyncValueProvider<
-            ({String lastName, String name, String nickname})?
+            ({
+              DateTime birthDate,
+              String deviceInfo,
+              String lastName,
+              String name,
+              String nickname,
+              String privacyVersion,
+              String termsVersion,
+            })?
           >(value),
     );
   }
 }
 
 String _$pendingSignupProfileHash() =>
-    r'18b0c5301ad50f1ee227f0904d0854492cc8b2a0';
+    r'f158960e71525e1f263cb59e9469f0b8200a132c';
 
 /// Real profile data collected by `SignupScreen` right before creating the
 /// Firebase account, consumed once by [CurrentRider.build] the first time
@@ -296,25 +321,85 @@ String _$pendingSignupProfileHash() =>
 /// call, it reads the pending values that are already sitting here.
 
 abstract class _$PendingSignupProfile
-    extends $Notifier<({String lastName, String name, String nickname})?> {
-  ({String lastName, String name, String nickname})? build();
+    extends
+        $Notifier<
+          ({
+            DateTime birthDate,
+            String deviceInfo,
+            String lastName,
+            String name,
+            String nickname,
+            String privacyVersion,
+            String termsVersion,
+          })?
+        > {
+  ({
+    DateTime birthDate,
+    String deviceInfo,
+    String lastName,
+    String name,
+    String nickname,
+    String privacyVersion,
+    String termsVersion,
+  })?
+  build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
-              ({String lastName, String name, String nickname})?,
-              ({String lastName, String name, String nickname})?
+              ({
+                DateTime birthDate,
+                String deviceInfo,
+                String lastName,
+                String name,
+                String nickname,
+                String privacyVersion,
+                String termsVersion,
+              })?,
+              ({
+                DateTime birthDate,
+                String deviceInfo,
+                String lastName,
+                String name,
+                String nickname,
+                String privacyVersion,
+                String termsVersion,
+              })?
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                ({String lastName, String name, String nickname})?,
-                ({String lastName, String name, String nickname})?
+                ({
+                  DateTime birthDate,
+                  String deviceInfo,
+                  String lastName,
+                  String name,
+                  String nickname,
+                  String privacyVersion,
+                  String termsVersion,
+                })?,
+                ({
+                  DateTime birthDate,
+                  String deviceInfo,
+                  String lastName,
+                  String name,
+                  String nickname,
+                  String privacyVersion,
+                  String termsVersion,
+                })?
               >,
-              ({String lastName, String name, String nickname})?,
+              ({
+                DateTime birthDate,
+                String deviceInfo,
+                String lastName,
+                String name,
+                String nickname,
+                String privacyVersion,
+                String termsVersion,
+              })?,
               Object?,
               Object?
             >;
@@ -323,40 +408,37 @@ abstract class _$PendingSignupProfile
 }
 
 /// True once a signed-in rider's profile is missing the bare minimum
-/// (nickname, or gender) — nickname-empty in practice only happens for a
-/// brand-new social sign-in (Google today), since email sign-up always
-/// goes through `SignupScreen` and [PendingSignupProfile] first.
-/// Gender-null hits *every* rider created before that field existed, not
-/// just new signups — it's write-once and required for the men's/women's
-/// video ranking split, so this gate is what forces every existing rider
-/// to pick it the next time they open the app. Drives the router's
-/// mandatory `/complete-profile` redirect.
+/// (nickname, gender, or birth date) — nickname-empty in practice only
+/// happens for a brand-new social sign-in (Google today), since email
+/// sign-up always goes through `SignupScreen` and [PendingSignupProfile]
+/// first. Gender-null/birthDate-null hit *every* rider created before those
+/// fields existed, not just new signups — both are write-once, so this gate
+/// is what forces every existing rider to backfill them the next time they
+/// open the app. Drives the router's mandatory `/complete-profile` redirect.
 
 @ProviderFor(needsProfileCompletion)
 final needsProfileCompletionProvider = NeedsProfileCompletionProvider._();
 
 /// True once a signed-in rider's profile is missing the bare minimum
-/// (nickname, or gender) — nickname-empty in practice only happens for a
-/// brand-new social sign-in (Google today), since email sign-up always
-/// goes through `SignupScreen` and [PendingSignupProfile] first.
-/// Gender-null hits *every* rider created before that field existed, not
-/// just new signups — it's write-once and required for the men's/women's
-/// video ranking split, so this gate is what forces every existing rider
-/// to pick it the next time they open the app. Drives the router's
-/// mandatory `/complete-profile` redirect.
+/// (nickname, gender, or birth date) — nickname-empty in practice only
+/// happens for a brand-new social sign-in (Google today), since email
+/// sign-up always goes through `SignupScreen` and [PendingSignupProfile]
+/// first. Gender-null/birthDate-null hit *every* rider created before those
+/// fields existed, not just new signups — both are write-once, so this gate
+/// is what forces every existing rider to backfill them the next time they
+/// open the app. Drives the router's mandatory `/complete-profile` redirect.
 
 final class NeedsProfileCompletionProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// True once a signed-in rider's profile is missing the bare minimum
-  /// (nickname, or gender) — nickname-empty in practice only happens for a
-  /// brand-new social sign-in (Google today), since email sign-up always
-  /// goes through `SignupScreen` and [PendingSignupProfile] first.
-  /// Gender-null hits *every* rider created before that field existed, not
-  /// just new signups — it's write-once and required for the men's/women's
-  /// video ranking split, so this gate is what forces every existing rider
-  /// to pick it the next time they open the app. Drives the router's
-  /// mandatory `/complete-profile` redirect.
+  /// (nickname, gender, or birth date) — nickname-empty in practice only
+  /// happens for a brand-new social sign-in (Google today), since email
+  /// sign-up always goes through `SignupScreen` and [PendingSignupProfile]
+  /// first. Gender-null/birthDate-null hit *every* rider created before those
+  /// fields existed, not just new signups — both are write-once, so this gate
+  /// is what forces every existing rider to backfill them the next time they
+  /// open the app. Drives the router's mandatory `/complete-profile` redirect.
   NeedsProfileCompletionProvider._()
     : super(
         from: null,
@@ -391,7 +473,7 @@ final class NeedsProfileCompletionProvider
 }
 
 String _$needsProfileCompletionHash() =>
-    r'12443223777079a29d1b269b354435af316d9e5d';
+    r'0e7fb44233f23b1ad50cbaab7b2139bd4f143abd';
 
 /// The rider's "current" sport — `Rider.activeSportId` once they've picked
 /// one explicitly, falling back to their #1 favorite (lowest `order`) while
@@ -496,7 +578,7 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'6b0fd37074f0cb4ae3a82840be4ca7c2bb6ff3e8';
+String _$currentRiderHash() => r'27e86ae055976c5ceb9d0f0be5648fb685446995';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the

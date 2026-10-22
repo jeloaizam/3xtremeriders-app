@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/legal/legal_links.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_icon_button.dart';
@@ -13,6 +16,7 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../application/auth_providers.dart';
 import '../../data/auth_repository.dart';
+import '../widgets/consent_fields.dart';
 
 /// Real email/password registration form — the previous "Crear cuenta" link
 /// on [LoginScreen] just showed a "coming soon" snackbar. Same visual shell
@@ -39,6 +43,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool _submitting = false;
   bool _showErrors = false;
 
+  DateTime? _birthDate;
+  bool _termsAccepted = false;
+  bool _privacyAccepted = false;
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +69,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       _lastNameController.text.trim().isNotEmpty &&
       _nicknameController.text.trim().isNotEmpty &&
       _emailController.text.trim().isNotEmpty &&
-      _passwordController.text.isNotEmpty;
+      _passwordController.text.isNotEmpty &&
+      _birthDate != null &&
+      ConsentFields.meetsMinimumAge(_birthDate!) &&
+      _termsAccepted &&
+      _privacyAccepted;
+
+  String get _deviceInfo => '${Platform.operatingSystem} ${Platform.operatingSystemVersion}';
 
   Future<void> _submit() async {
     setState(() => _showErrors = true);
@@ -75,6 +89,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             _nameController.text.trim(),
             _lastNameController.text.trim(),
             _nicknameController.text.trim(),
+            _birthDate!,
+            LegalLinks.currentTermsVersion,
+            LegalLinks.currentPrivacyVersion,
+            _deviceInfo,
           );
       await ref
           .read(authRepositoryProvider)
@@ -200,6 +218,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ),
                   if (_showErrors && _passwordController.text.isEmpty)
                     _ErrorText(l10n.signupFieldRequired),
+                  const SizedBox(height: 11),
+                  ConsentFields(
+                    birthDate: _birthDate,
+                    onBirthDateChanged: (date) =>
+                        setState(() => _birthDate = date),
+                    termsAccepted: _termsAccepted,
+                    onTermsAcceptedChanged: (value) =>
+                        setState(() => _termsAccepted = value),
+                    privacyAccepted: _privacyAccepted,
+                    onPrivacyAcceptedChanged: (value) =>
+                        setState(() => _privacyAccepted = value),
+                    showErrors: _showErrors,
+                  ),
                   const SizedBox(height: 20),
                   AppButton(
                     label: _submitting ? '…' : l10n.signupButton,

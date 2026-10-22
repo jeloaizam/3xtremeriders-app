@@ -24,6 +24,9 @@ abstract class Rider with _$Rider {
     // needsProfileCompletionProvider), el backend rechaza cualquier
     // intento de cambiarlo después de fijado.
     String? gender,
+    // Null for every rider created before this field existed — the same
+    // write-once/backfill gate as `gender` (needsProfileCompletionProvider).
+    @JsonKey(name: 'birth_date') DateTime? birthDate,
     @JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,
     @JsonKey(name: 'reputation_pts') required int reputationPts,
     // The rider's "current" sport — prioritizes Home's ordering and

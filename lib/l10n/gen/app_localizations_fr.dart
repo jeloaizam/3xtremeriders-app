@@ -90,6 +90,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get completeProfileSave => 'Continuer';
 
   @override
+  String get consentBirthDatePlaceholder => 'Date de naissance';
+
+  @override
+  String get consentAgeError =>
+      'Tu dois avoir au moins 13 ans pour utiliser 3xtreme Riders';
+
+  @override
+  String get consentTermsPrefix => 'J\'accepte les ';
+
+  @override
+  String get consentTermsLink => 'Conditions Générales';
+
+  @override
+  String get consentPrivacyPrefix => 'J\'accepte la ';
+
+  @override
+  String get consentPrivacyLink => 'Politique de Confidentialité';
+
+  @override
   String get comingSoon => 'Bientôt disponible';
 
   @override

@@ -21,6 +21,9 @@ _Rider _$RiderFromJson(Map<String, dynamic> json) => _Rider(
   cityName: json['city_name'] as String?,
   countryId: (json['country_id'] as num?)?.toInt(),
   gender: json['gender'] as String?,
+  birthDate: json['birth_date'] == null
+      ? null
+      : DateTime.parse(json['birth_date'] as String),
   socialLinks: json['social_links'] as Map<String, dynamic>?,
   reputationPts: (json['reputation_pts'] as num).toInt(),
   activeSportId: (json['active_sport_id'] as num?)?.toInt(),
@@ -48,6 +51,7 @@ Map<String, dynamic> _$RiderToJson(_Rider instance) => <String, dynamic>{
   'city_name': instance.cityName,
   'country_id': instance.countryId,
   'gender': instance.gender,
+  'birth_date': instance.birthDate?.toIso8601String(),
   'social_links': instance.socialLinks,
   'reputation_pts': instance.reputationPts,
   'active_sport_id': instance.activeSportId,

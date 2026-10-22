@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/legal/legal_links.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/alien_icon.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -13,6 +16,7 @@ import '../../../settings/domain/country.dart';
 import '../../../settings/presentation/widgets/city_search_field.dart';
 import '../../application/auth_providers.dart';
 import '../../domain/rider.dart';
+import '../widgets/consent_fields.dart';
 
 /// Mandatory gate the router forces a rider into whenever their profile is
 /// missing a nickname — in practice, a brand-new Google sign-in, since
@@ -43,6 +47,15 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
   bool _saving = false;
   bool _showErrors = false;
 
+  // True when this rider never backfilled birth_date/consent — the only
+  // case where this screen shows ConsentFields and logs acceptance.
+  // Riders who already have a birth_date (e.g. only missing nickname) skip
+  // this section entirely, since they accepted it already.
+  bool _needsConsent = false;
+  DateTime? _birthDate;
+  bool _termsAccepted = false;
+  bool _privacyAccepted = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -60,6 +73,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     _cityName = rider.cityName;
     _gender = rider.gender;
     _genderLocked = rider.gender != null;
+    _needsConsent = rider.birthDate == null;
     _seeded = true;
   }
 
@@ -77,7 +91,12 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
       _nicknameController.text.trim().isNotEmpty &&
       _countryId != null &&
       _cityName != null &&
-      _gender != null;
+      _gender != null &&
+      (!_needsConsent ||
+          (_birthDate != null &&
+              ConsentFields.meetsMinimumAge(_birthDate!) &&
+              _termsAccepted &&
+              _privacyAccepted));
 
   Future<void> _save() async {
     setState(() => _showErrors = true);
@@ -94,7 +113,18 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
             countryId: _countryId,
             cityName: _cityName,
             gender: _gender,
+            birthDate: _needsConsent ? _birthDate : null,
           );
+      if (_needsConsent) {
+        await ref
+            .read(currentRiderProvider.notifier)
+            .acceptConsent(
+              termsVersion: LegalLinks.currentTermsVersion,
+              privacyVersion: LegalLinks.currentPrivacyVersion,
+              deviceInfo:
+                  '${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
+            );
+      }
       // The router bounces away from /complete-profile on its own once
       // needsProfileCompletionProvider flips to false.
     } catch (error) {
@@ -244,6 +274,21 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 ),
                 if (_showErrors && _gender == null)
                   _ErrorText(l10n.signupFieldRequired),
+                if (_needsConsent) ...[
+                  const SizedBox(height: 20),
+                  ConsentFields(
+                    birthDate: _birthDate,
+                    onBirthDateChanged: (date) =>
+                        setState(() => _birthDate = date),
+                    termsAccepted: _termsAccepted,
+                    onTermsAcceptedChanged: (value) =>
+                        setState(() => _termsAccepted = value),
+                    privacyAccepted: _privacyAccepted,
+                    onPrivacyAcceptedChanged: (value) =>
+                        setState(() => _privacyAccepted = value),
+                    showErrors: _showErrors,
+                  ),
+                ],
                 const SizedBox(height: 24),
                 AppButton(
                   label: _saving ? '…' : l10n.completeProfileSave,

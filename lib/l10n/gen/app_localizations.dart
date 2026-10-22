@@ -256,6 +256,42 @@ abstract class AppLocalizations {
   /// **'Continuar'**
   String get completeProfileSave;
 
+  /// No description provided for @consentBirthDatePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de nacimiento'**
+  String get consentBirthDatePlaceholder;
+
+  /// No description provided for @consentAgeError.
+  ///
+  /// In es, this message translates to:
+  /// **'Debés tener al menos 13 años para usar 3xtreme Riders'**
+  String get consentAgeError;
+
+  /// No description provided for @consentTermsPrefix.
+  ///
+  /// In es, this message translates to:
+  /// **'Acepto los '**
+  String get consentTermsPrefix;
+
+  /// No description provided for @consentTermsLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Términos y Condiciones'**
+  String get consentTermsLink;
+
+  /// No description provided for @consentPrivacyPrefix.
+  ///
+  /// In es, this message translates to:
+  /// **'Acepto la '**
+  String get consentPrivacyPrefix;
+
+  /// No description provided for @consentPrivacyLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Política de Privacidad'**
+  String get consentPrivacyLink;
+
   /// No description provided for @comingSoon.
   ///
   /// In es, this message translates to:

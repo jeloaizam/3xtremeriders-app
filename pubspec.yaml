@@ -62,6 +62,7 @@ dependencies:
   image_cropper: ^12.2.1
   firebase_crashlytics: ^5.2.7
   turf: ^0.0.12
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
