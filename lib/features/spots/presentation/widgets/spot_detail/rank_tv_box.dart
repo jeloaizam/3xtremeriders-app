@@ -37,6 +37,8 @@ class RankTvBox extends ConsumerStatefulWidget {
     required this.spotId,
     required this.sports,
     required this.hasGeneralLibrary,
+    required this.hasGenderRankings,
+    required this.canUploadMedia,
     required this.canEdit,
     required this.spotVoteCount,
     required this.iLiked,
@@ -55,6 +57,16 @@ class RankTvBox extends ConsumerStatefulWidget {
   // old `_MediaGallery`'s "MÁS" button. Gender categories were always
   // fully browsable, so they're unaffected by this flag.
   final bool hasGeneralLibrary;
+
+  // 'iconico' spots are curated reference spots: only a General gallery,
+  // no Hombres/Mujeres/Alien ranking — RankTvButtonBox isn't shown at all
+  // when this is false, since there'd be nothing to pick between.
+  final bool hasGenderRankings;
+
+  // 'iconico' spots only accept uploads from admin/moderator (backend
+  // enforces this too, see crud_spot.can_upload_media — this just hides
+  // the "+" button for riders who'd get a 403 anyway).
+  final bool canUploadMedia;
   final bool canEdit;
   final int spotVoteCount;
   final bool iLiked;
@@ -80,9 +92,10 @@ class _RankTvBoxState extends ConsumerState<RankTvBox>
   @override
   void initState() {
     super.initState();
+    // 'iconico' spots only have General — nothing else to land on.
     // 'xtremespot' spots have no General category to land on (see
     // RankTvButtonBox's showGeneral) — default to Hombres instead.
-    _category = widget.hasGeneralLibrary
+    _category = !widget.hasGenderRankings || widget.hasGeneralLibrary
         ? RankCategory.general
         : RankCategory.men;
   }
@@ -498,20 +511,23 @@ class _RankTvBoxState extends ConsumerState<RankTvBox>
           child: _MediaToggle(
             isVideo: _isVideo,
             uploading: _uploading,
+            canAdd: widget.canUploadMedia,
             onPickVideo: () => setState(() => _isVideo = true),
             onPickFoto: () => setState(() => _isVideo = false),
             onAdd: _addMedia,
           ),
         ),
-        const SizedBox(height: 14),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: RankTvButtonBox(
-            active: _category,
-            showGeneral: widget.hasGeneralLibrary,
-            onPick: (category) => setState(() => _category = category),
+        if (widget.hasGenderRankings) ...[
+          const SizedBox(height: 14),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: RankTvButtonBox(
+              active: _category,
+              showGeneral: widget.hasGeneralLibrary,
+              onPick: (category) => setState(() => _category = category),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -591,6 +607,7 @@ class _MediaToggle extends StatelessWidget {
   const _MediaToggle({
     required this.isVideo,
     required this.uploading,
+    required this.canAdd,
     required this.onPickVideo,
     required this.onPickFoto,
     required this.onAdd,
@@ -598,6 +615,7 @@ class _MediaToggle extends StatelessWidget {
 
   final bool isVideo;
   final bool uploading;
+  final bool canAdd;
   final VoidCallback onPickVideo;
   final VoidCallback onPickFoto;
   final VoidCallback onAdd;
@@ -631,7 +649,7 @@ class _MediaToggle extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (isVideo) ...[
+                if (isVideo && canAdd) ...[
                   _addButton(context, label: l10n.spotAddVideo),
                   _seam(colors.surfaceApp),
                 ],
@@ -648,7 +666,7 @@ class _MediaToggle extends StatelessWidget {
                   active: !isVideo,
                   onTap: onPickFoto,
                 ),
-                if (!isVideo) ...[
+                if (!isVideo && canAdd) ...[
                   _seam(colors.surfaceApp),
                   _addButton(context, label: l10n.spotAddPhoto),
                 ],

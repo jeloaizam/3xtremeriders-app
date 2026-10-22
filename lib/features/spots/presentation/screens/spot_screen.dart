@@ -127,11 +127,17 @@ class _SpotScreenState extends ConsumerState<SpotScreen> {
                 currentRider != null &&
                 (currentRider.id == detail.spot.createdBy ||
                     currentRider.roleId >= roleAdmin);
+            // 'iconico' spots only accept media uploads from admin/moderator
+            // (see crud_spot.can_upload_media, backend is the real gate).
+            final canUploadMedia =
+                detail.spot.categoryName != 'iconico' ||
+                (currentRider != null && currentRider.roleId >= roleModerator);
             return _SpotScreenBody(
               spotId: widget.spotId,
               detail: detail,
               busy: _busy,
               canEdit: canEdit,
+              canUploadMedia: canUploadMedia,
               onBack: () => context.pop(),
               onEdit: () => context.push('/spot/${widget.spotId}/edit'),
               onToggleLike: () => _toggleLike(detail.iLiked),
@@ -152,6 +158,7 @@ class _SpotScreenBody extends ConsumerWidget {
     required this.detail,
     required this.busy,
     required this.canEdit,
+    required this.canUploadMedia,
     required this.onBack,
     required this.onEdit,
     required this.onToggleLike,
@@ -164,6 +171,7 @@ class _SpotScreenBody extends ConsumerWidget {
   final SpotDetailData detail;
   final bool busy;
   final bool canEdit;
+  final bool canUploadMedia;
   final VoidCallback onBack;
   final VoidCallback onEdit;
   final VoidCallback onToggleLike;
@@ -183,6 +191,8 @@ class _SpotScreenBody extends ConsumerWidget {
           spotId: spotId,
           sports: detail.sports,
           hasGeneralLibrary: spot.categoryName != 'xtremespot',
+          hasGenderRankings: spot.categoryName != 'iconico',
+          canUploadMedia: canUploadMedia,
           canEdit: canEdit,
           spotVoteCount: spot.voteCount,
           iLiked: detail.iLiked,
