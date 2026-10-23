@@ -1672,6 +1672,24 @@ abstract class AppLocalizations {
   /// **'Reportar spot'**
   String get reportDialogTitle;
 
+  /// No description provided for @reportDialogTitleComment.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar comentario'**
+  String get reportDialogTitleComment;
+
+  /// No description provided for @reportDialogTitlePhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar foto'**
+  String get reportDialogTitlePhoto;
+
+  /// No description provided for @reportDialogTitleVideo.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar video'**
+  String get reportDialogTitleVideo;
+
   /// No description provided for @reportReasonPlaceholder.
   ///
   /// In es, this message translates to:

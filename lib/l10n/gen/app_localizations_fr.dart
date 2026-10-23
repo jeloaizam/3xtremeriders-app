@@ -850,6 +850,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reportDialogTitle => 'Signaler le spot';
 
   @override
+  String get reportDialogTitleComment => 'Signaler le commentaire';
+
+  @override
+  String get reportDialogTitlePhoto => 'Signaler la photo';
+
+  @override
+  String get reportDialogTitleVideo => 'Signaler la vidéo';
+
+  @override
   String get reportReasonPlaceholder => 'Choisir un motif';
 
   @override

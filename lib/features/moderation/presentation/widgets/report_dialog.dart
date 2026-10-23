@@ -55,6 +55,13 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
     super.dispose();
   }
 
+  String _title(AppLocalizations l10n) => switch (widget.targetType) {
+    'comment' => l10n.reportDialogTitleComment,
+    'photo' => l10n.reportDialogTitlePhoto,
+    'video' => l10n.reportDialogTitleVideo,
+    _ => l10n.reportDialogTitle,
+  };
+
   List<String> _reasons(AppLocalizations l10n) => [
     l10n.reportReasonSpam,
     l10n.reportReasonDangerous,
@@ -111,7 +118,7 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.reportDialogTitle, style: context.typography.title),
+            Text(_title(l10n), style: context.typography.title),
             const SizedBox(height: 16),
             AppDropdown<String>(
               value: _reason,

@@ -847,6 +847,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportDialogTitle => 'Report spot';
 
   @override
+  String get reportDialogTitleComment => 'Report comment';
+
+  @override
+  String get reportDialogTitlePhoto => 'Report photo';
+
+  @override
+  String get reportDialogTitleVideo => 'Report video';
+
+  @override
   String get reportReasonPlaceholder => 'Choose a reason';
 
   @override
