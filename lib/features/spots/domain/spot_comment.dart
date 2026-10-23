@@ -3,6 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'spot_comment.freezed.dart';
 part 'spot_comment.g.dart';
 
+/// Mirrors the backend's `DELETED` constant (`app/schemas/comment.py`).
+const commentStateDeleted = 3;
+
 /// Mirrors the backend's `CommentRead` schema (`app/schemas/comment.py`).
 /// Comments are polymorphic server-side (spot/photo/video/profile/event) —
 /// this same shape backs a spot's own comment thread and a photo/video's
@@ -15,6 +18,7 @@ abstract class SpotComment with _$SpotComment {
     @JsonKey(name: 'parent_id') int? parentId,
     required String body,
     @JsonKey(name: 'vote_count') required int voteCount,
+    int? state,
     @JsonKey(name: 'created_date') required DateTime createdDate,
   }) = _SpotComment;
 

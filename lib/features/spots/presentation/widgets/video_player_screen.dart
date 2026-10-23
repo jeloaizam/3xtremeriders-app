@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../moderation/presentation/widgets/report_dialog.dart';
 import '../../application/spot_detail_providers.dart';
 import '../../data/spot_media_ranking_api.dart';
 import '../../data/vote_api.dart';
@@ -149,6 +150,17 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          if (widget.videoId != null)
+            IconButton(
+              icon: const Icon(Symbols.flag),
+              onPressed: () => ReportDialog.show(
+                context,
+                targetType: 'video',
+                targetId: widget.videoId!,
+              ),
+            ),
+        ],
       ),
       body: SafeArea(
         child: _hasEngagement

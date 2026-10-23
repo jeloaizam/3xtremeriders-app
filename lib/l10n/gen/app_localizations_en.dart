@@ -904,6 +904,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moderationReactivateSpot => 'Reactivate spot';
 
   @override
+  String get moderationTypeSpot => 'Spot';
+
+  @override
+  String get moderationTypeComment => 'Comment';
+
+  @override
+  String get moderationTypePhoto => 'Photo';
+
+  @override
+  String get moderationTypeVideo => 'Video';
+
+  @override
+  String get moderationDeleteComment => 'Delete comment';
+
+  @override
+  String get moderationDeletePhoto => 'Delete photo';
+
+  @override
+  String get moderationDeleteVideo => 'Delete video';
+
+  @override
+  String get moderationCommentDeleted => 'Comment deleted';
+
+  @override
+  String get moderationContentDeleted => 'Content deleted';
+
+  @override
+  String get moderationContentUnavailable => 'Couldn\'t load the content';
+
+  @override
+  String get moderationConfirmDeleteTitle => 'Delete this content?';
+
+  @override
+  String get moderationConfirmDeleteBody => 'This action can\'t be undone.';
+
+  @override
+  String get moderationCancel => 'Cancel';
+
+  @override
+  String get moderationConfirmDelete => 'Delete';
+
+  @override
   String get drawerLogout => 'LOG OUT';
 
   @override

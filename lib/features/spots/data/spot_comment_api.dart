@@ -57,6 +57,34 @@ class SpotCommentApi {
       jsonDecode(response.body) as Map<String, dynamic>,
     );
   }
+
+  Future<SpotComment> get(int commentId) async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/comments/$commentId'),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotComment.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Dueño o moderador+ (ver `app/routers/comment.py`) — soft-delete, el
+  /// comentario sigue siendo resolvible por `get()` pero con `state ==
+  /// commentStateDeleted`.
+  Future<void> delete({
+    required int commentId,
+    required String idToken,
+  }) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/comments/$commentId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
 }
 
 @riverpod

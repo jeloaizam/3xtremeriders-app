@@ -50,6 +50,29 @@ class SpotPhotoApi {
       jsonDecode(response.body) as Map<String, dynamic>,
     );
   }
+
+  Future<SpotPhoto> get(int photoId) async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/photos/$photoId'),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotPhoto.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Dueño o moderador+ (ver `app/routers/photo.py`).
+  Future<void> delete({required int photoId, required String idToken}) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/photos/$photoId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
 }
 
 @riverpod

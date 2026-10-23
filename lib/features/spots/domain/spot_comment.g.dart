@@ -12,6 +12,7 @@ _SpotComment _$SpotCommentFromJson(Map<String, dynamic> json) => _SpotComment(
   parentId: (json['parent_id'] as num?)?.toInt(),
   body: json['body'] as String,
   voteCount: (json['vote_count'] as num).toInt(),
+  state: (json['state'] as num?)?.toInt(),
   createdDate: DateTime.parse(json['created_date'] as String),
 );
 
@@ -22,5 +23,6 @@ Map<String, dynamic> _$SpotCommentToJson(_SpotComment instance) =>
       'parent_id': instance.parentId,
       'body': instance.body,
       'vote_count': instance.voteCount,
+      'state': instance.state,
       'created_date': instance.createdDate.toIso8601String(),
     };

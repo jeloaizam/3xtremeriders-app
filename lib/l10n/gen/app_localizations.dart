@@ -1786,6 +1786,90 @@ abstract class AppLocalizations {
   /// **'Reactivar spot'**
   String get moderationReactivateSpot;
 
+  /// No description provided for @moderationTypeSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'Spot'**
+  String get moderationTypeSpot;
+
+  /// No description provided for @moderationTypeComment.
+  ///
+  /// In es, this message translates to:
+  /// **'Comentario'**
+  String get moderationTypeComment;
+
+  /// No description provided for @moderationTypePhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'Foto'**
+  String get moderationTypePhoto;
+
+  /// No description provided for @moderationTypeVideo.
+  ///
+  /// In es, this message translates to:
+  /// **'Video'**
+  String get moderationTypeVideo;
+
+  /// No description provided for @moderationDeleteComment.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar comentario'**
+  String get moderationDeleteComment;
+
+  /// No description provided for @moderationDeletePhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar foto'**
+  String get moderationDeletePhoto;
+
+  /// No description provided for @moderationDeleteVideo.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar video'**
+  String get moderationDeleteVideo;
+
+  /// No description provided for @moderationCommentDeleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Comentario eliminado'**
+  String get moderationCommentDeleted;
+
+  /// No description provided for @moderationContentDeleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Contenido eliminado'**
+  String get moderationContentDeleted;
+
+  /// No description provided for @moderationContentUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo cargar el contenido'**
+  String get moderationContentUnavailable;
+
+  /// No description provided for @moderationConfirmDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar este contenido?'**
+  String get moderationConfirmDeleteTitle;
+
+  /// No description provided for @moderationConfirmDeleteBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción no se puede deshacer.'**
+  String get moderationConfirmDeleteBody;
+
+  /// No description provided for @moderationCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get moderationCancel;
+
+  /// No description provided for @moderationConfirmDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get moderationConfirmDelete;
+
   /// No description provided for @drawerLogout.
   ///
   /// In es, this message translates to:

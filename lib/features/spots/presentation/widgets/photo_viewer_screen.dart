@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../moderation/presentation/widgets/report_dialog.dart';
 import '../../application/spot_detail_providers.dart';
 import '../../data/spot_media_ranking_api.dart';
 import '../../data/vote_api.dart';
@@ -123,6 +124,17 @@ class _PhotoViewerScreenState extends ConsumerState<PhotoViewerScreen> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          if (widget.photoId != null)
+            IconButton(
+              icon: const Icon(Symbols.flag),
+              onPressed: () => ReportDialog.show(
+                context,
+                targetType: 'photo',
+                targetId: widget.photoId!,
+              ),
+            ),
+        ],
       ),
       body: SafeArea(
         child: _hasEngagement

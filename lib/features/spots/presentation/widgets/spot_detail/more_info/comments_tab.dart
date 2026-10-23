@@ -6,6 +6,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../../../../../core/theme/app_theme.dart';
 import '../../../../../../core/widgets/app_avatar.dart';
 import '../../../../../../l10n/gen/app_localizations.dart';
+import '../../../../../moderation/presentation/widgets/report_dialog.dart';
 import '../../../../../auth/application/auth_providers.dart';
 import '../../../../application/spot_detail.dart';
 import '../../../../application/spot_detail_providers.dart';
@@ -97,6 +98,19 @@ class _CommentRow extends StatelessWidget {
                     Text(
                       '${comment.voteCount}',
                       style: context.typography.meta,
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () => ReportDialog.show(
+                        context,
+                        targetType: 'comment',
+                        targetId: comment.id,
+                      ),
+                      child: Icon(
+                        Symbols.flag,
+                        size: 15,
+                        color: colors.textMuted,
+                      ),
                     ),
                   ],
                 ),

@@ -56,6 +56,29 @@ class SpotVideoApi {
       jsonDecode(response.body) as Map<String, dynamic>,
     );
   }
+
+  Future<SpotVideo> get(int videoId) async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/videos/$videoId'),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotVideo.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Dueño o moderador+ (ver `app/routers/video.py`).
+  Future<void> delete({required int videoId, required String idToken}) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/videos/$videoId'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
 }
 
 @riverpod

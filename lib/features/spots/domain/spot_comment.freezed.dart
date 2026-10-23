@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SpotComment {
 
- int get id;@JsonKey(name: 'rider_id') int get riderId;@JsonKey(name: 'parent_id') int? get parentId; String get body;@JsonKey(name: 'vote_count') int get voteCount;@JsonKey(name: 'created_date') DateTime get createdDate;
+ int get id;@JsonKey(name: 'rider_id') int get riderId;@JsonKey(name: 'parent_id') int? get parentId; String get body;@JsonKey(name: 'vote_count') int get voteCount; int? get state;@JsonKey(name: 'created_date') DateTime get createdDate;
 /// Create a copy of SpotComment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SpotCommentCopyWith<SpotComment> get copyWith => _$SpotCommentCopyWithImpl<Spot
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpotComment&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.body, body) || other.body == body)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpotComment&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.body, body) || other.body == body)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.state, state) || other.state == state)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,riderId,parentId,body,voteCount,createdDate);
+int get hashCode => Object.hash(runtimeType,id,riderId,parentId,body,voteCount,state,createdDate);
 
 @override
 String toString() {
-  return 'SpotComment(id: $id, riderId: $riderId, parentId: $parentId, body: $body, voteCount: $voteCount, createdDate: $createdDate)';
+  return 'SpotComment(id: $id, riderId: $riderId, parentId: $parentId, body: $body, voteCount: $voteCount, state: $state, createdDate: $createdDate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SpotCommentCopyWith<$Res>  {
   factory $SpotCommentCopyWith(SpotComment value, $Res Function(SpotComment) _then) = _$SpotCommentCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'parent_id') int? parentId, String body,@JsonKey(name: 'vote_count') int voteCount,@JsonKey(name: 'created_date') DateTime createdDate
+ int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'parent_id') int? parentId, String body,@JsonKey(name: 'vote_count') int voteCount, int? state,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -65,14 +65,15 @@ class _$SpotCommentCopyWithImpl<$Res>
 
 /// Create a copy of SpotComment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? riderId = null,Object? parentId = freezed,Object? body = null,Object? voteCount = null,Object? createdDate = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? riderId = null,Object? parentId = freezed,Object? body = null,Object? voteCount = null,Object? state = freezed,Object? createdDate = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,riderId: null == riderId ? _self.riderId : riderId // ignore: cast_nullable_to_non_nullable
 as int,parentId: freezed == parentId ? _self.parentId : parentId // ignore: cast_nullable_to_non_nullable
 as int?,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,voteCount: null == voteCount ? _self.voteCount : voteCount // ignore: cast_nullable_to_non_nullable
-as int,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as int,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
+as int?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'parent_id')  int? parentId,  String body, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'parent_id')  int? parentId,  String body, @JsonKey(name: 'vote_count')  int voteCount,  int? state, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SpotComment() when $default != null:
-return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount,_that.createdDate);case _:
+return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount,_that.state,_that.createdDate);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'parent_id')  int? parentId,  String body, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'parent_id')  int? parentId,  String body, @JsonKey(name: 'vote_count')  int voteCount,  int? state, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
 switch (_that) {
 case _SpotComment():
-return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount,_that.createdDate);case _:
+return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount,_that.state,_that.createdDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'parent_id')  int? parentId,  String body, @JsonKey(name: 'vote_count')  int voteCount, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'rider_id')  int riderId, @JsonKey(name: 'parent_id')  int? parentId,  String body, @JsonKey(name: 'vote_count')  int voteCount,  int? state, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
 switch (_that) {
 case _SpotComment() when $default != null:
-return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount,_that.createdDate);case _:
+return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount,_that.state,_that.createdDate);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.id,_that.riderId,_that.parentId,_that.body,_that.voteCount
 @JsonSerializable()
 
 class _SpotComment implements SpotComment {
-  const _SpotComment({required this.id, @JsonKey(name: 'rider_id') required this.riderId, @JsonKey(name: 'parent_id') this.parentId, required this.body, @JsonKey(name: 'vote_count') required this.voteCount, @JsonKey(name: 'created_date') required this.createdDate});
+  const _SpotComment({required this.id, @JsonKey(name: 'rider_id') required this.riderId, @JsonKey(name: 'parent_id') this.parentId, required this.body, @JsonKey(name: 'vote_count') required this.voteCount, this.state, @JsonKey(name: 'created_date') required this.createdDate});
   factory _SpotComment.fromJson(Map<String, dynamic> json) => _$SpotCommentFromJson(json);
 
 @override final  int id;
@@ -222,6 +223,7 @@ class _SpotComment implements SpotComment {
 @override@JsonKey(name: 'parent_id') final  int? parentId;
 @override final  String body;
 @override@JsonKey(name: 'vote_count') final  int voteCount;
+@override final  int? state;
 @override@JsonKey(name: 'created_date') final  DateTime createdDate;
 
 /// Create a copy of SpotComment
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpotComment&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.body, body) || other.body == body)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpotComment&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.parentId, parentId) || other.parentId == parentId)&&(identical(other.body, body) || other.body == body)&&(identical(other.voteCount, voteCount) || other.voteCount == voteCount)&&(identical(other.state, state) || other.state == state)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,riderId,parentId,body,voteCount,createdDate);
+int get hashCode => Object.hash(runtimeType,id,riderId,parentId,body,voteCount,state,createdDate);
 
 @override
 String toString() {
-  return 'SpotComment(id: $id, riderId: $riderId, parentId: $parentId, body: $body, voteCount: $voteCount, createdDate: $createdDate)';
+  return 'SpotComment(id: $id, riderId: $riderId, parentId: $parentId, body: $body, voteCount: $voteCount, state: $state, createdDate: $createdDate)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$SpotCommentCopyWith<$Res> implements $SpotCommentCopyWith
   factory _$SpotCommentCopyWith(_SpotComment value, $Res Function(_SpotComment) _then) = __$SpotCommentCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'parent_id') int? parentId, String body,@JsonKey(name: 'vote_count') int voteCount,@JsonKey(name: 'created_date') DateTime createdDate
+ int id,@JsonKey(name: 'rider_id') int riderId,@JsonKey(name: 'parent_id') int? parentId, String body,@JsonKey(name: 'vote_count') int voteCount, int? state,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -274,14 +276,15 @@ class __$SpotCommentCopyWithImpl<$Res>
 
 /// Create a copy of SpotComment
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? riderId = null,Object? parentId = freezed,Object? body = null,Object? voteCount = null,Object? createdDate = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? riderId = null,Object? parentId = freezed,Object? body = null,Object? voteCount = null,Object? state = freezed,Object? createdDate = null,}) {
   return _then(_SpotComment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,riderId: null == riderId ? _self.riderId : riderId // ignore: cast_nullable_to_non_nullable
 as int,parentId: freezed == parentId ? _self.parentId : parentId // ignore: cast_nullable_to_non_nullable
 as int?,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,voteCount: null == voteCount ? _self.voteCount : voteCount // ignore: cast_nullable_to_non_nullable
-as int,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as int,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
+as int?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

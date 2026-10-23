@@ -907,6 +907,48 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moderationReactivateSpot => 'Réactiver le spot';
 
   @override
+  String get moderationTypeSpot => 'Spot';
+
+  @override
+  String get moderationTypeComment => 'Commentaire';
+
+  @override
+  String get moderationTypePhoto => 'Photo';
+
+  @override
+  String get moderationTypeVideo => 'Vidéo';
+
+  @override
+  String get moderationDeleteComment => 'Supprimer le commentaire';
+
+  @override
+  String get moderationDeletePhoto => 'Supprimer la photo';
+
+  @override
+  String get moderationDeleteVideo => 'Supprimer la vidéo';
+
+  @override
+  String get moderationCommentDeleted => 'Commentaire supprimé';
+
+  @override
+  String get moderationContentDeleted => 'Contenu supprimé';
+
+  @override
+  String get moderationContentUnavailable => 'Impossible de charger le contenu';
+
+  @override
+  String get moderationConfirmDeleteTitle => 'Supprimer ce contenu ?';
+
+  @override
+  String get moderationConfirmDeleteBody => 'Cette action est irréversible.';
+
+  @override
+  String get moderationCancel => 'Annuler';
+
+  @override
+  String get moderationConfirmDelete => 'Supprimer';
+
+  @override
   String get drawerLogout => 'DÉCONNEXION';
 
   @override
