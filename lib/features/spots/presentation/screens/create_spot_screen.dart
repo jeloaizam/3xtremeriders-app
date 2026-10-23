@@ -242,6 +242,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
               AppTextField(
                 controller: nameController,
                 placeholder: l10n.createSpotHazardNamePlaceholder,
+                maxLength: 100,
               ),
               const SizedBox(height: 14),
               Text(
@@ -308,6 +309,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
           controller: urlController,
           placeholder: l10n.createSpotVideoUrlPlaceholder,
           keyboardType: TextInputType.url,
+          maxLength: 300,
         ),
         actions: [
           TextButton(
@@ -702,6 +704,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                       AppTextField(
                         controller: _nameController,
                         placeholder: l10n.createSpotNamePlaceholder,
+                        maxLength: 150,
                       ),
                       if (_showErrors && _nameController.text.trim().isEmpty)
                         _ErrorText(l10n.createSpotNameRequired),
@@ -1014,6 +1017,7 @@ class _CreateSpotScreenState extends ConsumerState<CreateSpotScreen> {
                         controller: _descriptionController,
                         placeholder: l10n.createSpotDescriptionPlaceholder,
                         multiline: true,
+                        maxLength: 2000,
                       ),
                       if (_showErrors &&
                           _descriptionController.text.trim().isEmpty)

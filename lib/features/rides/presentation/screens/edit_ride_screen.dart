@@ -183,11 +183,13 @@ class _EditRideScreenState extends ConsumerState<EditRideScreen> {
             AppTextField(
               controller: nameController,
               placeholder: l10n.createRideElementNamePlaceholder,
+              maxLength: 100,
             ),
             const SizedBox(height: 10),
             AppTextField(
               controller: typeController,
               placeholder: l10n.createRideElementTypePlaceholder,
+              maxLength: 50,
             ),
           ],
         ),
@@ -346,6 +348,7 @@ class _EditRideScreenState extends ConsumerState<EditRideScreen> {
                       AppTextField(
                         controller: _nameController,
                         placeholder: l10n.createRideNamePlaceholder,
+                        maxLength: 75,
                       ),
 
                       _SectionLabel(l10n.createRideStateLabel, top: 18),

@@ -72,11 +72,13 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
             AppTextField(
               controller: nameController,
               placeholder: l10n.createRideElementNamePlaceholder,
+              maxLength: 100,
             ),
             const SizedBox(height: 10),
             AppTextField(
               controller: typeController,
               placeholder: l10n.createRideElementTypePlaceholder,
+              maxLength: 50,
             ),
           ],
         ),
@@ -314,6 +316,7 @@ class _CreateRideScreenState extends ConsumerState<CreateRideScreen> {
                   AppTextField(
                     controller: _nameController,
                     placeholder: l10n.createRideNamePlaceholder,
+                    maxLength: 75,
                   ),
                   if (_showErrors && _nameController.text.trim().isEmpty)
                     _ErrorText(l10n.createRideNameRequired),

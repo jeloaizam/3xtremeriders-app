@@ -257,6 +257,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                   AppTextField(
                     controller: _nameController,
                     placeholder: l10n.createEventNamePlaceholder,
+                    maxLength: 150,
                   ),
                   if (_showErrors && _nameController.text.trim().isEmpty)
                     _ErrorText(l10n.createEventNameRequired),
@@ -475,6 +476,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                     controller: _descriptionController,
                     placeholder: l10n.createEventDescriptionPlaceholder,
                     multiline: true,
+                    maxLength: 2000,
                   ),
                   if (_showErrors && _descriptionController.text.trim().isEmpty)
                     _ErrorText(l10n.createSpotDescriptionRequired),

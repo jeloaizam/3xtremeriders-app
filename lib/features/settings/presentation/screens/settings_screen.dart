@@ -352,18 +352,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   controller: _nameController,
                   placeholder: l10n.settingsNameLabel,
                   icon: Symbols.badge,
+                  maxLength: 50,
                 ),
                 const SizedBox(height: 11),
                 AppTextField(
                   controller: _lastNameController,
                   placeholder: l10n.settingsLastNameLabel,
                   icon: Symbols.badge,
+                  maxLength: 50,
                 ),
                 const SizedBox(height: 11),
                 AppTextField(
                   controller: _nicknameController,
                   placeholder: l10n.settingsNicknameLabel,
                   icon: Symbols.alternate_email,
+                  maxLength: 50,
                 ),
                 const SizedBox(height: 11),
                 countriesAsync.when(
@@ -399,6 +402,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   placeholder: l10n.settingsBioLabel,
                   icon: Symbols.edit_note,
                   multiline: true,
+                  maxLength: 280,
                 ),
                 const SizedBox(height: 16),
                 AppButton(

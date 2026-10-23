@@ -173,6 +173,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                   controller: _nameController,
                   placeholder: l10n.settingsNameLabel,
                   icon: Symbols.badge,
+                  maxLength: 50,
                 ),
                 if (_showErrors && _nameController.text.trim().isEmpty)
                   _ErrorText(l10n.signupFieldRequired),
@@ -181,6 +182,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                   controller: _lastNameController,
                   placeholder: l10n.settingsLastNameLabel,
                   icon: Symbols.badge,
+                  maxLength: 50,
                 ),
                 if (_showErrors && _lastNameController.text.trim().isEmpty)
                   _ErrorText(l10n.signupFieldRequired),
@@ -189,6 +191,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                   controller: _nicknameController,
                   placeholder: l10n.settingsNicknameLabel,
                   icon: Symbols.alternate_email,
+                  maxLength: 50,
                 ),
                 if (_showErrors && _nicknameController.text.trim().isEmpty)
                   _ErrorText(l10n.signupFieldRequired),

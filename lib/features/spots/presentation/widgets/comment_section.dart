@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
+import '../../../../core/widgets/sanitized_text_formatter.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../moderation/presentation/widgets/report_dialog.dart';
 import '../../../auth/application/auth_providers.dart';
@@ -202,9 +203,12 @@ class _CommentComposerState extends ConsumerState<_CommentComposer> {
             child: TextField(
               controller: _controller,
               style: context.typography.bodySm,
+              maxLength: 1000,
+              inputFormatters: [SanitizedTextInputFormatter()],
               decoration: InputDecoration(
                 hintText: l10n.spotCommentPlaceholder,
                 border: InputBorder.none,
+                counterText: '',
               ),
             ),
           ),

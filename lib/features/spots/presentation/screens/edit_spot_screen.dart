@@ -428,6 +428,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
               AppTextField(
                 controller: nameController,
                 placeholder: l10n.createSpotHazardNamePlaceholder,
+                maxLength: 100,
               ),
               const SizedBox(height: 14),
               Text(
@@ -630,6 +631,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
                       AppTextField(
                         controller: _nameController,
                         placeholder: l10n.createSpotNamePlaceholder,
+                        maxLength: 150,
                       ),
 
                       _SectionLabel(l10n.createSpotDescriptionLabel, top: 18),
@@ -637,6 +639,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
                         controller: _descriptionController,
                         placeholder: l10n.createSpotDescriptionPlaceholder,
                         multiline: true,
+                        maxLength: 2000,
                       ),
 
                       _SectionLabel(l10n.createSpotSportLabel, top: 18),

@@ -176,6 +176,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     controller: _nameController,
                     placeholder: l10n.signupNamePlaceholder,
                     icon: Symbols.badge,
+                    maxLength: 50,
                   ),
                   if (_showErrors && _nameController.text.trim().isEmpty)
                     _ErrorText(l10n.signupFieldRequired),
@@ -184,6 +185,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     controller: _lastNameController,
                     placeholder: l10n.signupLastNamePlaceholder,
                     icon: Symbols.badge,
+                    maxLength: 50,
                   ),
                   if (_showErrors && _lastNameController.text.trim().isEmpty)
                     _ErrorText(l10n.signupFieldRequired),
@@ -192,6 +194,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     controller: _nicknameController,
                     placeholder: l10n.signupNicknamePlaceholder,
                     icon: Symbols.alternate_email,
+                    maxLength: 50,
                   ),
                   if (_showErrors && _nicknameController.text.trim().isEmpty)
                     _ErrorText(l10n.signupFieldRequired),

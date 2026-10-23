@@ -134,6 +134,7 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
               controller: _detailsController,
               placeholder: l10n.reportDetailsPlaceholder,
               multiline: true,
+              maxLength: 1000,
             ),
             const SizedBox(height: 16),
             AppButton(
