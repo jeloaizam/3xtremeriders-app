@@ -840,6 +840,73 @@ class AppLocalizationsFr extends AppLocalizations {
   String get drawerCreateEvent => 'CRÉER UN ÉVÉNEMENT';
 
   @override
+  String get drawerModeration => 'MODÉRATION';
+
+  @override
+  String get reportSent =>
+      'Signalement envoyé. Merci de nous aider à garder la communauté sûre.';
+
+  @override
+  String get reportDialogTitle => 'Signaler le spot';
+
+  @override
+  String get reportReasonPlaceholder => 'Choisir un motif';
+
+  @override
+  String get reportReasonSpam => 'Spam';
+
+  @override
+  String get reportReasonDangerous => 'Contenu dangereux ou inapproprié';
+
+  @override
+  String get reportReasonInaccurate => 'Information inexacte';
+
+  @override
+  String get reportReasonOther => 'Autre';
+
+  @override
+  String get reportDetailsPlaceholder => 'Détails (optionnel)';
+
+  @override
+  String get reportSubmit => 'Envoyer le signalement';
+
+  @override
+  String get reportSending => 'Envoi...';
+
+  @override
+  String get moderationQueueTitle => 'Modération';
+
+  @override
+  String get moderationQueueEmpty => 'Aucun signalement dans cette catégorie.';
+
+  @override
+  String get moderationTabPending => 'En attente';
+
+  @override
+  String get moderationTabReviewed => 'Examiné';
+
+  @override
+  String get moderationTabDismissed => 'Rejeté';
+
+  @override
+  String get moderationTabActioned => 'Traité';
+
+  @override
+  String get moderationViewSpot => 'Voir le spot';
+
+  @override
+  String get moderationMarkReviewed => 'Examiné';
+
+  @override
+  String get moderationMarkDismissed => 'Rejeter';
+
+  @override
+  String get moderationMarkActioned => 'Masquer le spot';
+
+  @override
+  String get moderationReactivateSpot => 'Réactiver le spot';
+
+  @override
   String get drawerLogout => 'DÉCONNEXION';
 
   @override

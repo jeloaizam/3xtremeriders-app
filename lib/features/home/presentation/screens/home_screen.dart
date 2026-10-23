@@ -1125,6 +1125,20 @@ class _AppDrawer extends ConsumerWidget {
                         context.push('/events/new');
                       },
                     ),
+                  // Cola de reportes de spots — moderador+ únicamente
+                  // (enforced server-side también, ver require_moderator en
+                  // GET/PATCH /reports), mismo criterio de ocultar el entry
+                  // point en vez de mostrarlo deshabilitado.
+                  if ((rider?.roleId ?? 0) >= roleModerator)
+                    _DrawerItem(
+                      icon: Symbols.shield,
+                      iconColor: colors.colorAction,
+                      label: l10n.drawerModeration,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.push('/moderation');
+                      },
+                    ),
                   _DrawerItem(
                     icon: Symbols.settings,
                     label: l10n.navSettings.toUpperCase(),

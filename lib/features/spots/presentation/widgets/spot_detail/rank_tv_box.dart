@@ -13,6 +13,7 @@ import '../../../../../core/theme/app_theme.dart';
 import '../../../../../core/widgets/app_icon_button.dart';
 import '../../../../../l10n/gen/app_localizations.dart';
 import '../../../../auth/application/auth_providers.dart';
+import '../../../../moderation/presentation/widgets/report_dialog.dart';
 import '../../../application/spot_media_providers.dart';
 import '../../../data/spot_media_ranking_api.dart';
 import '../../../data/spot_photo_api.dart';
@@ -499,6 +500,16 @@ class _RankTvBoxState extends ConsumerState<RankTvBox>
                       icon: Symbols.ios_share,
                       chrome: true,
                       onPressed: widget.onComingSoon,
+                    ),
+                    const SizedBox(width: 8),
+                    AppIconButton(
+                      icon: Symbols.flag,
+                      chrome: true,
+                      onPressed: () => ReportDialog.show(
+                        context,
+                        targetType: 'spot',
+                        targetId: widget.spotId,
+                      ),
                     ),
                   ],
                 ),

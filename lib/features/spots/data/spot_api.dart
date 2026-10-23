@@ -201,6 +201,28 @@ class SpotApi {
     return Spot.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  /// Oculta/reactiva un spot — moderador+ únicamente (ver
+  /// `PATCH /spots/{id}/state`, endpoint separado del `update()` general
+  /// porque no exige autoría, a diferencia de ese otro).
+  Future<Spot> setState({
+    required int spotId,
+    required String state,
+    required String idToken,
+  }) async {
+    final response = await http.patch(
+      Uri.parse('${ApiConfig.baseUrl}/spots/$spotId/state'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'state': state}),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return Spot.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
   Future<void> delete({required int spotId, required String idToken}) async {
     final response = await http.delete(
       Uri.parse('${ApiConfig.baseUrl}/spots/$spotId'),

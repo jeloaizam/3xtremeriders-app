@@ -839,6 +839,73 @@ class AppLocalizationsEs extends AppLocalizations {
   String get drawerCreateEvent => 'CREAR EVENTO';
 
   @override
+  String get drawerModeration => 'MODERACIÓN';
+
+  @override
+  String get reportSent =>
+      'Reporte enviado. Gracias por ayudarnos a mantener la comunidad segura.';
+
+  @override
+  String get reportDialogTitle => 'Reportar spot';
+
+  @override
+  String get reportReasonPlaceholder => 'Elegí un motivo';
+
+  @override
+  String get reportReasonSpam => 'Spam';
+
+  @override
+  String get reportReasonDangerous => 'Contenido peligroso o inapropiado';
+
+  @override
+  String get reportReasonInaccurate => 'Información incorrecta';
+
+  @override
+  String get reportReasonOther => 'Otro';
+
+  @override
+  String get reportDetailsPlaceholder => 'Detalles (opcional)';
+
+  @override
+  String get reportSubmit => 'Enviar reporte';
+
+  @override
+  String get reportSending => 'Enviando...';
+
+  @override
+  String get moderationQueueTitle => 'Moderación';
+
+  @override
+  String get moderationQueueEmpty => 'No hay reportes en esta categoría.';
+
+  @override
+  String get moderationTabPending => 'Pendiente';
+
+  @override
+  String get moderationTabReviewed => 'Revisado';
+
+  @override
+  String get moderationTabDismissed => 'Descartado';
+
+  @override
+  String get moderationTabActioned => 'Accionado';
+
+  @override
+  String get moderationViewSpot => 'Ver spot';
+
+  @override
+  String get moderationMarkReviewed => 'Revisado';
+
+  @override
+  String get moderationMarkDismissed => 'Descartar';
+
+  @override
+  String get moderationMarkActioned => 'Ocultar spot';
+
+  @override
+  String get moderationReactivateSpot => 'Reactivar spot';
+
+  @override
   String get drawerLogout => 'CERRAR SESIÓN';
 
   @override

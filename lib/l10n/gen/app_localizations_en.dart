@@ -837,6 +837,73 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawerCreateEvent => 'CREATE EVENT';
 
   @override
+  String get drawerModeration => 'MODERATION';
+
+  @override
+  String get reportSent =>
+      'Report sent. Thanks for helping keep the community safe.';
+
+  @override
+  String get reportDialogTitle => 'Report spot';
+
+  @override
+  String get reportReasonPlaceholder => 'Choose a reason';
+
+  @override
+  String get reportReasonSpam => 'Spam';
+
+  @override
+  String get reportReasonDangerous => 'Dangerous or inappropriate content';
+
+  @override
+  String get reportReasonInaccurate => 'Inaccurate information';
+
+  @override
+  String get reportReasonOther => 'Other';
+
+  @override
+  String get reportDetailsPlaceholder => 'Details (optional)';
+
+  @override
+  String get reportSubmit => 'Send report';
+
+  @override
+  String get reportSending => 'Sending...';
+
+  @override
+  String get moderationQueueTitle => 'Moderation';
+
+  @override
+  String get moderationQueueEmpty => 'No reports in this category.';
+
+  @override
+  String get moderationTabPending => 'Pending';
+
+  @override
+  String get moderationTabReviewed => 'Reviewed';
+
+  @override
+  String get moderationTabDismissed => 'Dismissed';
+
+  @override
+  String get moderationTabActioned => 'Actioned';
+
+  @override
+  String get moderationViewSpot => 'View spot';
+
+  @override
+  String get moderationMarkReviewed => 'Reviewed';
+
+  @override
+  String get moderationMarkDismissed => 'Dismiss';
+
+  @override
+  String get moderationMarkActioned => 'Hide spot';
+
+  @override
+  String get moderationReactivateSpot => 'Reactivate spot';
+
+  @override
   String get drawerLogout => 'LOG OUT';
 
   @override

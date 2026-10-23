@@ -1654,6 +1654,138 @@ abstract class AppLocalizations {
   /// **'CREAR EVENTO'**
   String get drawerCreateEvent;
 
+  /// No description provided for @drawerModeration.
+  ///
+  /// In es, this message translates to:
+  /// **'MODERACIÓN'**
+  String get drawerModeration;
+
+  /// No description provided for @reportSent.
+  ///
+  /// In es, this message translates to:
+  /// **'Reporte enviado. Gracias por ayudarnos a mantener la comunidad segura.'**
+  String get reportSent;
+
+  /// No description provided for @reportDialogTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar spot'**
+  String get reportDialogTitle;
+
+  /// No description provided for @reportReasonPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegí un motivo'**
+  String get reportReasonPlaceholder;
+
+  /// No description provided for @reportReasonSpam.
+  ///
+  /// In es, this message translates to:
+  /// **'Spam'**
+  String get reportReasonSpam;
+
+  /// No description provided for @reportReasonDangerous.
+  ///
+  /// In es, this message translates to:
+  /// **'Contenido peligroso o inapropiado'**
+  String get reportReasonDangerous;
+
+  /// No description provided for @reportReasonInaccurate.
+  ///
+  /// In es, this message translates to:
+  /// **'Información incorrecta'**
+  String get reportReasonInaccurate;
+
+  /// No description provided for @reportReasonOther.
+  ///
+  /// In es, this message translates to:
+  /// **'Otro'**
+  String get reportReasonOther;
+
+  /// No description provided for @reportDetailsPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Detalles (opcional)'**
+  String get reportDetailsPlaceholder;
+
+  /// No description provided for @reportSubmit.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar reporte'**
+  String get reportSubmit;
+
+  /// No description provided for @reportSending.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando...'**
+  String get reportSending;
+
+  /// No description provided for @moderationQueueTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Moderación'**
+  String get moderationQueueTitle;
+
+  /// No description provided for @moderationQueueEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay reportes en esta categoría.'**
+  String get moderationQueueEmpty;
+
+  /// No description provided for @moderationTabPending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get moderationTabPending;
+
+  /// No description provided for @moderationTabReviewed.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisado'**
+  String get moderationTabReviewed;
+
+  /// No description provided for @moderationTabDismissed.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartado'**
+  String get moderationTabDismissed;
+
+  /// No description provided for @moderationTabActioned.
+  ///
+  /// In es, this message translates to:
+  /// **'Accionado'**
+  String get moderationTabActioned;
+
+  /// No description provided for @moderationViewSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver spot'**
+  String get moderationViewSpot;
+
+  /// No description provided for @moderationMarkReviewed.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisado'**
+  String get moderationMarkReviewed;
+
+  /// No description provided for @moderationMarkDismissed.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar'**
+  String get moderationMarkDismissed;
+
+  /// No description provided for @moderationMarkActioned.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocultar spot'**
+  String get moderationMarkActioned;
+
+  /// No description provided for @moderationReactivateSpot.
+  ///
+  /// In es, this message translates to:
+  /// **'Reactivar spot'**
+  String get moderationReactivateSpot;
+
   /// No description provided for @drawerLogout.
   ///
   /// In es, this message translates to:

@@ -10,6 +10,7 @@ import '../../features/events/presentation/screens/create_event_screen.dart';
 import '../../features/events/presentation/screens/event_screen.dart';
 import '../../features/events/presentation/screens/events_list_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/moderation/presentation/screens/moderation_queue_screen.dart';
 import '../../features/rides/presentation/screens/create_ride_screen.dart';
 import '../../features/rides/presentation/screens/edit_ride_screen.dart';
 import '../../features/rides/presentation/screens/my_rides_screen.dart';
@@ -72,6 +73,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/moderation',
+        builder: (context, state) => const ModerationQueueScreen(),
       ),
       GoRoute(
         path: '/search',
