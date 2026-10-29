@@ -4,8 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
+import 'core/ads/ad_consent.dart';
 import 'core/locale/locale_provider.dart';
 import 'core/map/mapbox_config.dart';
 import 'core/router/app_router.dart';
@@ -27,6 +29,9 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
+
+  await MobileAds.instance.initialize();
+  await requestAdConsent();
 
   MapboxOptions.setAccessToken(mapboxAccessToken);
   final persistedLocale = await loadPersistedLocale();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/ads/spot_exit_interstitial.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
@@ -40,6 +41,22 @@ class _SpotScreenState extends ConsumerState<SpotScreen> {
   // action and the backend rejects it (e.g. 409 "Already voted"), which
   // otherwise silently does nothing from the rider's point of view.
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Precarga el interstitial de salida (ver spot_exit_interstitial.dart)
+    // apenas se entra al spot, para que esté listo cuando el rider se vaya.
+    spotExitInterstitial.preload();
+  }
+
+  // Comparte el mismo camino tanto el botón "←" en pantalla como el back
+  // físico/gesto del sistema (interceptado por el PopScope de abajo) — así
+  // el interstitial (si le toca el turno) se dispara sin importar cómo sale
+  // el rider del spot.
+  void _exitSpot(BuildContext context) {
+    spotExitInterstitial.showIfReady(onComplete: () => context.pop());
+  }
 
   Future<void> _toggleLike(bool currentlyLiked) async {
     if (_busy) return;
@@ -117,35 +134,43 @@ class _SpotScreenState extends ConsumerState<SpotScreen> {
     final detailAsync = ref.watch(spotDetailProvider(widget.spotId));
     final currentRider = ref.watch(currentRiderProvider).value;
 
-    return Scaffold(
-      body: SafeArea(
-        child: detailAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Center(child: Text('$error')),
-          data: (detail) {
-            final canEdit =
-                currentRider != null &&
-                (currentRider.id == detail.spot.createdBy ||
-                    currentRider.roleId >= roleAdmin);
-            // 'iconico' spots only accept media uploads from admin/moderator
-            // (see crud_spot.can_upload_media, backend is the real gate).
-            final canUploadMedia =
-                detail.spot.categoryName != 'iconico' ||
-                (currentRider != null && currentRider.roleId >= roleModerator);
-            return _SpotScreenBody(
-              spotId: widget.spotId,
-              detail: detail,
-              busy: _busy,
-              canEdit: canEdit,
-              canUploadMedia: canUploadMedia,
-              onBack: () => context.pop(),
-              onEdit: () => context.push('/spot/${widget.spotId}/edit'),
-              onToggleLike: () => _toggleLike(detail.iLiked),
-              onRate: _rate,
-              onRateHazard: _rateHazard,
-              onComingSoon: _showComingSoon,
-            );
-          },
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _exitSpot(context);
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: detailAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, _) => Center(child: Text('$error')),
+            data: (detail) {
+              final canEdit =
+                  currentRider != null &&
+                  (currentRider.id == detail.spot.createdBy ||
+                      currentRider.roleId >= roleAdmin);
+              // 'iconico' spots only accept media uploads from admin/moderator
+              // (see crud_spot.can_upload_media, backend is the real gate).
+              final canUploadMedia =
+                  detail.spot.categoryName != 'iconico' ||
+                  (currentRider != null &&
+                      currentRider.roleId >= roleModerator);
+              return _SpotScreenBody(
+                spotId: widget.spotId,
+                detail: detail,
+                busy: _busy,
+                canEdit: canEdit,
+                canUploadMedia: canUploadMedia,
+                onBack: () => _exitSpot(context),
+                onEdit: () => context.push('/spot/${widget.spotId}/edit'),
+                onToggleLike: () => _toggleLike(detail.iLiked),
+                onRate: _rate,
+                onRateHazard: _rateHazard,
+                onComingSoon: _showComingSoon,
+              );
+            },
+          ),
         ),
       ),
     );
