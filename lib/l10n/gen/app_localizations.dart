@@ -436,6 +436,24 @@ abstract class AppLocalizations {
   /// **'REINTENTAR'**
   String get homeServerErrorRetry;
 
+  /// No description provided for @startupUpdateRequiredTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'ACTUALIZACIÓN REQUERIDA'**
+  String get startupUpdateRequiredTitle;
+
+  /// No description provided for @startupUpdateRequiredBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay una nueva versión de 3xtreme Riders disponible. Actualízala para seguir usando la app.'**
+  String get startupUpdateRequiredBody;
+
+  /// No description provided for @startupUpdateRequiredButton.
+  ///
+  /// In es, this message translates to:
+  /// **'ACTUALIZAR EN PLAY STORE'**
+  String get startupUpdateRequiredButton;
+
   /// No description provided for @navHome.
   ///
   /// In es, this message translates to:

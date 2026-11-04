@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -10,10 +9,8 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'core/ads/ad_consent.dart';
 import 'core/locale/locale_provider.dart';
 import 'core/map/mapbox_config.dart';
-import 'core/router/app_router.dart';
-import 'core/theme/app_theme.dart';
+import 'core/startup/app_bootstrap.dart';
 import 'firebase_options.dart';
-import 'l10n/gen/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +39,11 @@ void main() async {
           () => _InitialAppLocale(persistedLocale),
         ),
       ],
-      child: const XtremeRidersApp(),
+      // `AppBootstrap` (`core/startup/`) gates on the min-version handshake
+      // before ever building the real app (`XtremeRidersApp`, now in
+      // `app.dart`) — see its doc comment for why that must happen before
+      // the router/auth-dependent tree exists at all, not as a redirect.
+      child: const AppBootstrap(),
     ),
   );
 }
@@ -54,53 +55,4 @@ class _InitialAppLocale extends AppLocale {
 
   @override
   Locale? build() => _initial;
-}
-
-class XtremeRidersApp extends ConsumerWidget {
-  const XtremeRidersApp({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(appRouterProvider);
-    final locale = ref.watch(appLocaleProvider);
-
-    // PopScope(canPop: false) + a manual pop below the system's default
-    // `WidgetsBinding.handlePopRoute()` is needed because that default
-    // handler races GoRouter's async redirect/pop resolution: on a slow or
-    // mid-flight redirect (e.g. `refreshListenable` firing from a provider
-    // refresh at the same moment), Flutter can see "not handled yet" and
-    // fall through to `SystemNavigator.pop()` — closing the Activity — even
-    // though GoRouter's own pop completes correctly a moment later (bug:
-    // system back from Settings closed the app instead of returning to
-    // Home). Driving `router.pop()` directly here is synchronous and never
-    // loses that race.
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (router.canPop()) {
-          router.pop();
-        } else {
-          SystemNavigator.pop();
-        }
-      },
-      child: MaterialApp.router(
-        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-        theme: AppTheme.dark,
-        routerConfig: router,
-        locale: locale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        builder: (context, child) {
-          if (!MediaQuery.of(context).disableAnimations) return child!;
-          return Theme(
-            data: Theme.of(context).copyWith(
-              pageTransitionsTheme: AppTheme.reducedMotionPageTransitions,
-            ),
-            child: child!,
-          );
-        },
-      ),
-    );
-  }
 }

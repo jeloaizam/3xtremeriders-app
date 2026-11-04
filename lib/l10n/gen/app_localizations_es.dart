@@ -190,6 +190,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeServerErrorRetry => 'REINTENTAR';
 
   @override
+  String get startupUpdateRequiredTitle => 'ACTUALIZACIÓN REQUERIDA';
+
+  @override
+  String get startupUpdateRequiredBody =>
+      'Hay una nueva versión de 3xtreme Riders disponible. Actualízala para seguir usando la app.';
+
+  @override
+  String get startupUpdateRequiredButton => 'ACTUALIZAR EN PLAY STORE';
+
+  @override
   String get navHome => 'Inicio';
 
   @override

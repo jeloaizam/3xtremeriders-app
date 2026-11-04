@@ -56,5 +56,13 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Lets UpdateRequiredScreen's "market://details?id=..." intent
+             resolve to the installed Play Store app (package visibility,
+             Android 11+) instead of silently failing straight to the
+             https fallback. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="market"/>
+        </intent>
     </queries>
 </manifest>
