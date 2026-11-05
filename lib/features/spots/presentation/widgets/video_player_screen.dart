@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../core/ads/comments_banner_ad.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../moderation/presentation/widgets/report_dialog.dart';
@@ -59,6 +60,11 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
               videoPlayerController: _videoController,
               autoPlay: true,
               looping: false,
+              // Chewie's default overlay (replay-10/play/forward-10) sits on
+              // top of the video and only shows up on tap, which the user
+              // found awkward to dismiss — replaced below by `_Controls`,
+              // a fixed row under the video instead of a fading overlay.
+              showControls: false,
             );
           });
         })
@@ -136,6 +142,49 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
     }
   }
 
+  Future<void> _seekBy(Duration offset) async {
+    final position = await _videoController.position ?? Duration.zero;
+    final duration = _videoController.value.duration;
+    var target = position + offset;
+    if (target < Duration.zero) target = Duration.zero;
+    if (target > duration) target = duration;
+    await _videoController.seekTo(target);
+  }
+
+  Widget _buildControls() {
+    return ValueListenableBuilder<VideoPlayerValue>(
+      valueListenable: _videoController,
+      builder: (context, value, _) {
+        final isPlaying = value.isPlaying;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Symbols.replay_10, color: Colors.white),
+              onPressed: () => _seekBy(const Duration(seconds: -10)),
+            ),
+            const SizedBox(width: 18),
+            IconButton(
+              iconSize: 38,
+              icon: Icon(
+                isPlaying ? Symbols.pause : Symbols.play_arrow,
+                color: Colors.white,
+              ),
+              onPressed: () => isPlaying
+                  ? _videoController.pause()
+                  : _videoController.play(),
+            ),
+            const SizedBox(width: 18),
+            IconButton(
+              icon: const Icon(Symbols.forward_10, color: Colors.white),
+              onPressed: () => _seekBy(const Duration(seconds: 10)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = _error != null
@@ -143,6 +192,24 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
         : _chewieController != null
         ? Chewie(controller: _chewieController!)
         : const CircularProgressIndicator(color: Colors.white);
+
+    // Most spot clips are filmed vertically — forcing a 16:9 box pillarboxed
+    // them down to a small centered column. Sizing by the real video
+    // aspect ratio instead lets a portrait clip fill the screen width.
+    final aspectRatio = _chewieController != null
+        ? _videoController.value.aspectRatio
+        : 16 / 9;
+
+    final videoArea = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AspectRatio(aspectRatio: aspectRatio, child: player),
+        if (_chewieController != null) ...[
+          const SizedBox(height: 8),
+          _buildControls(),
+        ],
+      ],
+    );
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -167,10 +234,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
             ? ListView(
                 padding: const EdgeInsets.fromLTRB(18, 0, 18, 24),
                 children: [
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Center(child: player),
-                  ),
+                  videoArea,
                   const SizedBox(height: 12),
                   GestureDetector(
                     onTap: _toggleVote,
@@ -196,9 +260,11 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
                     targetType: 'video',
                     targetId: widget.videoId!,
                   ),
+                  const SizedBox(height: 20),
+                  const CommentsBannerAd(),
                 ],
               )
-            : Center(child: player),
+            : Center(child: videoArea),
       ),
     );
   }

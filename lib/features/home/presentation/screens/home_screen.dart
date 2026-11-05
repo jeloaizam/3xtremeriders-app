@@ -562,6 +562,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         active: true,
                         onPressed: () => context.push('/search'),
                       ),
+                      const SizedBox(width: 10),
+                      AppIconButton(
+                        icon: Symbols.map,
+                        onPressed: () => MapSportFilterSheet.show(context),
+                      ),
                     ],
                   ),
                 ],
@@ -577,11 +582,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               child: AppBottomNav(
                 active: 'ride',
                 items: [
-                  AppBottomNavItem(
-                    id: 'buscar',
-                    icon: Symbols.tune,
-                    label: l10n.homeNavCustomizeMap.toUpperCase(),
-                  ),
                   AppBottomNavItem(
                     id: 'menu',
                     icon: Symbols.menu,
@@ -611,8 +611,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     context.push('/settings');
                   } else if (id == 'menu') {
                     _scaffoldKey.currentState?.openDrawer();
-                  } else if (id == 'buscar') {
-                    MapSportFilterSheet.show(context);
                   } else if (id == 'ride') {
                     context.push('/rides');
                   } else if (id == 'sport') {

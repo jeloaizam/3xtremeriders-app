@@ -1,5 +1,6 @@
 {
   "MAPBOX_TOKEN": "pk.your-mapbox-public-token-here",
   "API_BASE_URL": "",
-  "ADMOB_INTERSTITIAL_UNIT_ID": "ca-app-pub-your-admob-id/your-interstitial-unit-id"
+  "ADMOB_INTERSTITIAL_UNIT_ID": "ca-app-pub-your-admob-id/your-interstitial-unit-id",
+  "ADMOB_COMMENTS_BANNER_UNIT_ID": "ca-app-pub-your-admob-id/your-banner-unit-id"
 }

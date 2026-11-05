@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/ads/comments_banner_ad.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../moderation/presentation/widgets/report_dialog.dart';
@@ -173,6 +174,8 @@ class _PhotoViewerScreenState extends ConsumerState<PhotoViewerScreen> {
                     targetType: 'photo',
                     targetId: widget.photoId!,
                   ),
+                  const SizedBox(height: 20),
+                  const CommentsBannerAd(),
                 ],
               )
             : Center(child: _ZoomableImage(image: image)),

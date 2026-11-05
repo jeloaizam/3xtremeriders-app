@@ -9,10 +9,9 @@ import '../../../spots/application/spot_catalog_providers.dart';
 import '../../../spots/domain/sport.dart';
 
 /// Multi-select picker ("Personalizar mapa") for which sports show on
-/// Home's map/carousel — replaces the bottom-nav's old "Buscar" shortcut
-/// (full text search is still reachable from Home's header search bar and
-/// its `tune` icon, so nothing is lost). Every toggle saves immediately,
-/// same instant-apply feel as the favorite-sports picker.
+/// Home's map/carousel — opened from the `map` icon button next to the
+/// header search bar's filter (`tune`) button. Every toggle saves
+/// immediately, same instant-apply feel as the favorite-sports picker.
 class MapSportFilterSheet extends ConsumerStatefulWidget {
   const MapSportFilterSheet({super.key});
 
