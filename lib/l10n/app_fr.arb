@@ -107,6 +107,15 @@
   "spotHazardRatingsCount": "{count} notes de danger",
   "spotHazardsTitle": "DANGERS · {count}",
   "spotNoHazards": "Aucun danger signalé",
+  "spotHazardsSeeMore": "Voir plus ({count})",
+  "@spotHazardsSeeMore": {
+    "description": "Bouton pour afficher plus que les 10 premiers dangers",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotHazardsAddButton": "Signaler un danger",
+  "spotHazardsLimitReached": "Ce spot a déjà atteint la limite de 50 dangers.",
   "spotCommentsTitle": "COMMENTAIRES · {count}",
   "spotNoComments": "Aucun commentaire pour l'instant",
   "spotCommentPlaceholder": "Écris un commentaire…",
@@ -286,6 +295,7 @@
   "reportDialogTitleComment": "Signaler le commentaire",
   "reportDialogTitlePhoto": "Signaler la photo",
   "reportDialogTitleVideo": "Signaler la vidéo",
+  "reportDialogTitleHazard": "Signaler le danger",
   "reportReasonPlaceholder": "Choisir un motif",
   "reportReasonSpam": "Spam",
   "reportReasonDangerous": "Contenu dangereux ou inapproprié",
@@ -309,9 +319,11 @@
   "moderationTypeComment": "Commentaire",
   "moderationTypePhoto": "Photo",
   "moderationTypeVideo": "Vidéo",
+  "moderationTypeHazard": "Danger",
   "moderationDeleteComment": "Supprimer le commentaire",
   "moderationDeletePhoto": "Supprimer la photo",
   "moderationDeleteVideo": "Supprimer la vidéo",
+  "moderationDeleteHazard": "Supprimer le danger",
   "moderationCommentDeleted": "Commentaire supprimé",
   "moderationContentDeleted": "Contenu supprimé",
   "moderationContentUnavailable": "Impossible de charger le contenu",

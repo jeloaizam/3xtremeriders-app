@@ -352,6 +352,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spotNoHazards => 'No hazards reported';
 
   @override
+  String spotHazardsSeeMore(int count) {
+    return 'See more ($count)';
+  }
+
+  @override
+  String get spotHazardsAddButton => 'Report hazard';
+
+  @override
+  String get spotHazardsLimitReached =>
+      'This spot already reached the 50-hazard limit.';
+
+  @override
   String spotCommentsTitle(int count) {
     return 'COMMENTS · $count';
   }
@@ -866,6 +878,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportDialogTitleVideo => 'Report video';
 
   @override
+  String get reportDialogTitleHazard => 'Report hazard';
+
+  @override
   String get reportReasonPlaceholder => 'Choose a reason';
 
   @override
@@ -935,6 +950,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moderationTypeVideo => 'Video';
 
   @override
+  String get moderationTypeHazard => 'Hazard';
+
+  @override
   String get moderationDeleteComment => 'Delete comment';
 
   @override
@@ -942,6 +960,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moderationDeleteVideo => 'Delete video';
+
+  @override
+  String get moderationDeleteHazard => 'Delete hazard';
 
   @override
   String get moderationCommentDeleted => 'Comment deleted';

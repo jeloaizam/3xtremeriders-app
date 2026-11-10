@@ -12,6 +12,9 @@ abstract class Hazzard with _$Hazzard {
     required String name,
     String? description,
     int? severity,
+    @JsonKey(name: 'reported_by') int? reportedBy,
+    @JsonKey(name: 'skull_count') @Default(0) int skullCount,
+    @JsonKey(name: 'broom_count') @Default(0) int broomCount,
     @JsonKey(name: 'created_date') required DateTime createdDate,
   }) = _Hazzard;
 

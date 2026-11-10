@@ -12,6 +12,9 @@ _Hazzard _$HazzardFromJson(Map<String, dynamic> json) => _Hazzard(
   name: json['name'] as String,
   description: json['description'] as String?,
   severity: (json['severity'] as num?)?.toInt(),
+  reportedBy: (json['reported_by'] as num?)?.toInt(),
+  skullCount: (json['skull_count'] as num?)?.toInt() ?? 0,
+  broomCount: (json['broom_count'] as num?)?.toInt() ?? 0,
   createdDate: DateTime.parse(json['created_date'] as String),
 );
 
@@ -21,5 +24,8 @@ Map<String, dynamic> _$HazzardToJson(_Hazzard instance) => <String, dynamic>{
   'name': instance.name,
   'description': instance.description,
   'severity': instance.severity,
+  'reported_by': instance.reportedBy,
+  'skull_count': instance.skullCount,
+  'broom_count': instance.broomCount,
   'created_date': instance.createdDate.toIso8601String(),
 };

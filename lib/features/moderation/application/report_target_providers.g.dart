@@ -259,3 +259,73 @@ final class ReportedVideoFamily extends $Family
   @override
   String toString() => r'reportedVideoProvider';
 }
+
+@ProviderFor(reportedHazzard)
+final reportedHazzardProvider = ReportedHazzardFamily._();
+
+final class ReportedHazzardProvider
+    extends
+        $FunctionalProvider<AsyncValue<Hazzard?>, Hazzard?, FutureOr<Hazzard?>>
+    with $FutureModifier<Hazzard?>, $FutureProvider<Hazzard?> {
+  ReportedHazzardProvider._({
+    required ReportedHazzardFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'reportedHazzardProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$reportedHazzardHash();
+
+  @override
+  String toString() {
+    return r'reportedHazzardProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Hazzard?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Hazzard?> create(Ref ref) {
+    final argument = this.argument as int;
+    return reportedHazzard(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ReportedHazzardProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$reportedHazzardHash() => r'01e307e0a486ec3498ebfeaa2ebf39d9709cc09e';
+
+final class ReportedHazzardFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Hazzard?>, int> {
+  ReportedHazzardFamily._()
+    : super(
+        retry: null,
+        name: r'reportedHazzardProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ReportedHazzardProvider call(int hazzardId) =>
+      ReportedHazzardProvider._(argument: hazzardId, from: this);
+
+  @override
+  String toString() => r'reportedHazzardProvider';
+}

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Hazzard {
 
- int get id;@JsonKey(name: 'spot_id') int get spotId; String get name; String? get description; int? get severity;@JsonKey(name: 'created_date') DateTime get createdDate;
+ int get id;@JsonKey(name: 'spot_id') int get spotId; String get name; String? get description; int? get severity;@JsonKey(name: 'reported_by') int? get reportedBy;@JsonKey(name: 'skull_count') int get skullCount;@JsonKey(name: 'broom_count') int get broomCount;@JsonKey(name: 'created_date') DateTime get createdDate;
 /// Create a copy of Hazzard
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $HazzardCopyWith<Hazzard> get copyWith => _$HazzardCopyWithImpl<Hazzard>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Hazzard&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Hazzard&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportedBy, reportedBy) || other.reportedBy == reportedBy)&&(identical(other.skullCount, skullCount) || other.skullCount == skullCount)&&(identical(other.broomCount, broomCount) || other.broomCount == broomCount)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,spotId,name,description,severity,createdDate);
+int get hashCode => Object.hash(runtimeType,id,spotId,name,description,severity,reportedBy,skullCount,broomCount,createdDate);
 
 @override
 String toString() {
-  return 'Hazzard(id: $id, spotId: $spotId, name: $name, description: $description, severity: $severity, createdDate: $createdDate)';
+  return 'Hazzard(id: $id, spotId: $spotId, name: $name, description: $description, severity: $severity, reportedBy: $reportedBy, skullCount: $skullCount, broomCount: $broomCount, createdDate: $createdDate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $HazzardCopyWith<$Res>  {
   factory $HazzardCopyWith(Hazzard value, $Res Function(Hazzard) _then) = _$HazzardCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, int? severity,@JsonKey(name: 'created_date') DateTime createdDate
+ int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, int? severity,@JsonKey(name: 'reported_by') int? reportedBy,@JsonKey(name: 'skull_count') int skullCount,@JsonKey(name: 'broom_count') int broomCount,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -65,14 +65,17 @@ class _$HazzardCopyWithImpl<$Res>
 
 /// Create a copy of Hazzard
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? severity = freezed,Object? createdDate = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? severity = freezed,Object? reportedBy = freezed,Object? skullCount = null,Object? broomCount = null,Object? createdDate = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,spotId: null == spotId ? _self.spotId : spotId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,severity: freezed == severity ? _self.severity : severity // ignore: cast_nullable_to_non_nullable
-as int?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as int?,reportedBy: freezed == reportedBy ? _self.reportedBy : reportedBy // ignore: cast_nullable_to_non_nullable
+as int?,skullCount: null == skullCount ? _self.skullCount : skullCount // ignore: cast_nullable_to_non_nullable
+as int,broomCount: null == broomCount ? _self.broomCount : broomCount // ignore: cast_nullable_to_non_nullable
+as int,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  int? severity, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  int? severity, @JsonKey(name: 'reported_by')  int? reportedBy, @JsonKey(name: 'skull_count')  int skullCount, @JsonKey(name: 'broom_count')  int broomCount, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Hazzard() when $default != null:
-return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severity,_that.createdDate);case _:
+return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severity,_that.reportedBy,_that.skullCount,_that.broomCount,_that.createdDate);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severit
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  int? severity, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  int? severity, @JsonKey(name: 'reported_by')  int? reportedBy, @JsonKey(name: 'skull_count')  int skullCount, @JsonKey(name: 'broom_count')  int broomCount, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
 switch (_that) {
 case _Hazzard():
-return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severity,_that.createdDate);case _:
+return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severity,_that.reportedBy,_that.skullCount,_that.broomCount,_that.createdDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severit
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  int? severity, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  int? severity, @JsonKey(name: 'reported_by')  int? reportedBy, @JsonKey(name: 'skull_count')  int skullCount, @JsonKey(name: 'broom_count')  int broomCount, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
 switch (_that) {
 case _Hazzard() when $default != null:
-return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severity,_that.createdDate);case _:
+return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severity,_that.reportedBy,_that.skullCount,_that.broomCount,_that.createdDate);case _:
   return null;
 
 }
@@ -214,7 +217,7 @@ return $default(_that.id,_that.spotId,_that.name,_that.description,_that.severit
 @JsonSerializable()
 
 class _Hazzard implements Hazzard {
-  const _Hazzard({required this.id, @JsonKey(name: 'spot_id') required this.spotId, required this.name, this.description, this.severity, @JsonKey(name: 'created_date') required this.createdDate});
+  const _Hazzard({required this.id, @JsonKey(name: 'spot_id') required this.spotId, required this.name, this.description, this.severity, @JsonKey(name: 'reported_by') this.reportedBy, @JsonKey(name: 'skull_count') this.skullCount = 0, @JsonKey(name: 'broom_count') this.broomCount = 0, @JsonKey(name: 'created_date') required this.createdDate});
   factory _Hazzard.fromJson(Map<String, dynamic> json) => _$HazzardFromJson(json);
 
 @override final  int id;
@@ -222,6 +225,9 @@ class _Hazzard implements Hazzard {
 @override final  String name;
 @override final  String? description;
 @override final  int? severity;
+@override@JsonKey(name: 'reported_by') final  int? reportedBy;
+@override@JsonKey(name: 'skull_count') final  int skullCount;
+@override@JsonKey(name: 'broom_count') final  int broomCount;
 @override@JsonKey(name: 'created_date') final  DateTime createdDate;
 
 /// Create a copy of Hazzard
@@ -237,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Hazzard&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Hazzard&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportedBy, reportedBy) || other.reportedBy == reportedBy)&&(identical(other.skullCount, skullCount) || other.skullCount == skullCount)&&(identical(other.broomCount, broomCount) || other.broomCount == broomCount)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,spotId,name,description,severity,createdDate);
+int get hashCode => Object.hash(runtimeType,id,spotId,name,description,severity,reportedBy,skullCount,broomCount,createdDate);
 
 @override
 String toString() {
-  return 'Hazzard(id: $id, spotId: $spotId, name: $name, description: $description, severity: $severity, createdDate: $createdDate)';
+  return 'Hazzard(id: $id, spotId: $spotId, name: $name, description: $description, severity: $severity, reportedBy: $reportedBy, skullCount: $skullCount, broomCount: $broomCount, createdDate: $createdDate)';
 }
 
 
@@ -257,7 +263,7 @@ abstract mixin class _$HazzardCopyWith<$Res> implements $HazzardCopyWith<$Res> {
   factory _$HazzardCopyWith(_Hazzard value, $Res Function(_Hazzard) _then) = __$HazzardCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, int? severity,@JsonKey(name: 'created_date') DateTime createdDate
+ int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, int? severity,@JsonKey(name: 'reported_by') int? reportedBy,@JsonKey(name: 'skull_count') int skullCount,@JsonKey(name: 'broom_count') int broomCount,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -274,14 +280,17 @@ class __$HazzardCopyWithImpl<$Res>
 
 /// Create a copy of Hazzard
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? severity = freezed,Object? createdDate = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? severity = freezed,Object? reportedBy = freezed,Object? skullCount = null,Object? broomCount = null,Object? createdDate = null,}) {
   return _then(_Hazzard(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,spotId: null == spotId ? _self.spotId : spotId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,severity: freezed == severity ? _self.severity : severity // ignore: cast_nullable_to_non_nullable
-as int?,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as int?,reportedBy: freezed == reportedBy ? _self.reportedBy : reportedBy // ignore: cast_nullable_to_non_nullable
+as int?,skullCount: null == skullCount ? _self.skullCount : skullCount // ignore: cast_nullable_to_non_nullable
+as int,broomCount: null == broomCount ? _self.broomCount : broomCount // ignore: cast_nullable_to_non_nullable
+as int,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

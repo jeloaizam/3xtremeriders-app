@@ -1,9 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/network/api_exception.dart';
+import '../../spots/data/hazzard_api.dart';
 import '../../spots/data/spot_comment_api.dart';
 import '../../spots/data/spot_photo_api.dart';
 import '../../spots/data/spot_video_api.dart';
+import '../../spots/domain/hazzard.dart';
 import '../../spots/domain/spot_comment.dart';
 import '../../spots/domain/spot_photo.dart';
 import '../../spots/domain/spot_video.dart';
@@ -39,6 +41,16 @@ Future<SpotPhoto?> reportedPhoto(Ref ref, int photoId) async {
 Future<SpotVideo?> reportedVideo(Ref ref, int videoId) async {
   try {
     return await ref.watch(spotVideoApiProvider).get(videoId);
+  } on ApiException catch (e) {
+    if (e.statusCode == 404) return null;
+    rethrow;
+  }
+}
+
+@riverpod
+Future<Hazzard?> reportedHazzard(Ref ref, int hazzardId) async {
+  try {
+    return await ref.watch(hazzardApiProvider).get(hazzardId);
   } on ApiException catch (e) {
     if (e.statusCode == 404) return null;
     rethrow;

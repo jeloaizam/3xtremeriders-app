@@ -107,6 +107,15 @@
   "spotHazardRatingsCount": "{count} hazard ratings",
   "spotHazardsTitle": "HAZARDS · {count}",
   "spotNoHazards": "No hazards reported",
+  "spotHazardsSeeMore": "See more ({count})",
+  "@spotHazardsSeeMore": {
+    "description": "Button to expand the hazard list beyond the first 10",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotHazardsAddButton": "Report hazard",
+  "spotHazardsLimitReached": "This spot already reached the 50-hazard limit.",
   "spotCommentsTitle": "COMMENTS · {count}",
   "spotNoComments": "No comments yet",
   "spotCommentPlaceholder": "Write a comment…",
@@ -286,6 +295,7 @@
   "reportDialogTitleComment": "Report comment",
   "reportDialogTitlePhoto": "Report photo",
   "reportDialogTitleVideo": "Report video",
+  "reportDialogTitleHazard": "Report hazard",
   "reportReasonPlaceholder": "Choose a reason",
   "reportReasonSpam": "Spam",
   "reportReasonDangerous": "Dangerous or inappropriate content",
@@ -309,9 +319,11 @@
   "moderationTypeComment": "Comment",
   "moderationTypePhoto": "Photo",
   "moderationTypeVideo": "Video",
+  "moderationTypeHazard": "Hazard",
   "moderationDeleteComment": "Delete comment",
   "moderationDeletePhoto": "Delete photo",
   "moderationDeleteVideo": "Delete video",
+  "moderationDeleteHazard": "Delete hazard",
   "moderationCommentDeleted": "Comment deleted",
   "moderationContentDeleted": "Content deleted",
   "moderationContentUnavailable": "Couldn't load the content",

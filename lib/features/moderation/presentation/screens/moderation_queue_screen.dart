@@ -10,6 +10,7 @@ import '../../../../core/widgets/app_icon_button.dart';
 import '../../../../core/widgets/app_segmented_control.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../spots/data/hazzard_api.dart';
 import '../../../spots/data/spot_api.dart';
 import '../../../spots/data/spot_comment_api.dart';
 import '../../../spots/data/spot_photo_api.dart';
@@ -99,6 +100,11 @@ class _ModerationQueueScreenState
             .read(spotVideoApiProvider)
             .delete(videoId: report.targetId, idToken: idToken);
         ref.invalidate(reportedVideoProvider(report.targetId));
+      case 'hazzard':
+        await ref
+            .read(hazzardApiProvider)
+            .delete(hazzardId: report.targetId, idToken: idToken);
+        ref.invalidate(reportedHazzardProvider(report.targetId));
     }
   });
 
@@ -178,6 +184,10 @@ class _ModerationQueueScreenState
                   ),
                   AppSegment(value: 'photo', label: l10n.moderationTypePhoto),
                   AppSegment(value: 'video', label: l10n.moderationTypeVideo),
+                  AppSegment(
+                    value: 'hazzard',
+                    label: l10n.moderationTypeHazard,
+                  ),
                 ],
                 onChanged: (value) => setState(() => _targetType = value),
               ),
@@ -261,6 +271,7 @@ String _actionedLabel(AppLocalizations l10n, String targetType) =>
       'comment' => l10n.moderationDeleteComment,
       'photo' => l10n.moderationDeletePhoto,
       'video' => l10n.moderationDeleteVideo,
+      'hazzard' => l10n.moderationDeleteHazard,
       _ => l10n.moderationMarkActioned,
     };
 
@@ -320,6 +331,10 @@ class _ReportRow extends StatelessWidget {
               'video' => Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: _VideoPreview(videoId: report.targetId),
+              ),
+              'hazzard' => Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: _HazzardPreview(hazzardId: report.targetId),
               ),
               _ => const SizedBox.shrink(),
             },
@@ -553,6 +568,45 @@ class _VideoPreview extends ConsumerWidget {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+}
+
+class _HazzardPreview extends ConsumerWidget {
+  const _HazzardPreview({required this.hazzardId});
+
+  final int hazzardId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+    final async = ref.watch(reportedHazzardProvider(hazzardId));
+    return async.when(
+      loading: () => const SizedBox(
+        height: 16,
+        width: 16,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+      error: (_, _) => Text(
+        l10n.moderationContentUnavailable,
+        style: context.typography.bodySm.copyWith(color: colors.textMuted),
+      ),
+      data: (hazzard) {
+        if (hazzard == null) {
+          return Text(
+            l10n.moderationContentDeleted,
+            style: context.typography.bodySm.copyWith(
+              color: colors.textMuted,
+              fontStyle: FontStyle.italic,
+            ),
+          );
+        }
+        return Text(
+          '${hazzard.name} · SEV ${hazzard.severity ?? 1}',
+          style: context.typography.bodySm,
         );
       },
     );

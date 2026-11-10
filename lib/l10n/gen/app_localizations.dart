@@ -742,6 +742,24 @@ abstract class AppLocalizations {
   /// **'Sin peligros reportados'**
   String get spotNoHazards;
 
+  /// Botón para expandir la lista de peligros más allá de los primeros 10
+  ///
+  /// In es, this message translates to:
+  /// **'Ver más ({count})'**
+  String spotHazardsSeeMore(int count);
+
+  /// No description provided for @spotHazardsAddButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar peligro'**
+  String get spotHazardsAddButton;
+
+  /// No description provided for @spotHazardsLimitReached.
+  ///
+  /// In es, this message translates to:
+  /// **'Este spot ya alcanzó el máximo de 50 peligros reportados.'**
+  String get spotHazardsLimitReached;
+
   /// Título de la sección de comentarios con la cantidad
   ///
   /// In es, this message translates to:
@@ -1708,6 +1726,12 @@ abstract class AppLocalizations {
   /// **'Reportar video'**
   String get reportDialogTitleVideo;
 
+  /// No description provided for @reportDialogTitleHazard.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar peligro'**
+  String get reportDialogTitleHazard;
+
   /// No description provided for @reportReasonPlaceholder.
   ///
   /// In es, this message translates to:
@@ -1846,6 +1870,12 @@ abstract class AppLocalizations {
   /// **'Video'**
   String get moderationTypeVideo;
 
+  /// No description provided for @moderationTypeHazard.
+  ///
+  /// In es, this message translates to:
+  /// **'Peligro'**
+  String get moderationTypeHazard;
+
   /// No description provided for @moderationDeleteComment.
   ///
   /// In es, this message translates to:
@@ -1863,6 +1893,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Eliminar video'**
   String get moderationDeleteVideo;
+
+  /// No description provided for @moderationDeleteHazard.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar peligro'**
+  String get moderationDeleteHazard;
 
   /// No description provided for @moderationCommentDeleted.
   ///

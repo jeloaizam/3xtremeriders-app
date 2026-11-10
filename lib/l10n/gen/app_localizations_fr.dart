@@ -353,6 +353,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get spotNoHazards => 'Aucun danger signalé';
 
   @override
+  String spotHazardsSeeMore(int count) {
+    return 'Voir plus ($count)';
+  }
+
+  @override
+  String get spotHazardsAddButton => 'Signaler un danger';
+
+  @override
+  String get spotHazardsLimitReached =>
+      'Ce spot a déjà atteint la limite de 50 dangers.';
+
+  @override
   String spotCommentsTitle(int count) {
     return 'COMMENTAIRES · $count';
   }
@@ -869,6 +881,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reportDialogTitleVideo => 'Signaler la vidéo';
 
   @override
+  String get reportDialogTitleHazard => 'Signaler le danger';
+
+  @override
   String get reportReasonPlaceholder => 'Choisir un motif';
 
   @override
@@ -938,6 +953,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moderationTypeVideo => 'Vidéo';
 
   @override
+  String get moderationTypeHazard => 'Danger';
+
+  @override
   String get moderationDeleteComment => 'Supprimer le commentaire';
 
   @override
@@ -945,6 +963,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get moderationDeleteVideo => 'Supprimer la vidéo';
+
+  @override
+  String get moderationDeleteHazard => 'Supprimer le danger';
 
   @override
   String get moderationCommentDeleted => 'Commentaire supprimé';

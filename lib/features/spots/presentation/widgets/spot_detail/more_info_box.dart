@@ -66,7 +66,11 @@ class MoreInfoBox extends StatelessWidget {
               children: [
                 DescriptionTab(spot: spot, creator: creator),
                 ElementsTab(elements: elements),
-                HazardsTab(hazzards: hazzards),
+                HazardsTab(
+                  hazzards: hazzards,
+                  spotId: spotId,
+                  spotCreatedBy: spot.createdBy,
+                ),
                 CommentsTab(spotId: spotId, comments: comments),
               ],
             ),
