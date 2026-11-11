@@ -105,6 +105,15 @@ class _ModerationQueueScreenState
             .read(hazzardApiProvider)
             .delete(hazzardId: report.targetId, idToken: idToken);
         ref.invalidate(reportedHazzardProvider(report.targetId));
+      case 'spot_element':
+        final spotApi = ref.read(spotApiProvider);
+        final element = await spotApi.getElement(report.targetId);
+        await spotApi.deleteElement(
+          spotId: element.spotId,
+          elementId: report.targetId,
+          idToken: idToken,
+        );
+        ref.invalidate(reportedSpotElementProvider(report.targetId));
     }
   });
 
@@ -187,6 +196,10 @@ class _ModerationQueueScreenState
                   AppSegment(
                     value: 'hazzard',
                     label: l10n.moderationTypeHazard,
+                  ),
+                  AppSegment(
+                    value: 'spot_element',
+                    label: l10n.moderationTypeSpotElement,
                   ),
                 ],
                 onChanged: (value) => setState(() => _targetType = value),
@@ -272,6 +285,7 @@ String _actionedLabel(AppLocalizations l10n, String targetType) =>
       'photo' => l10n.moderationDeletePhoto,
       'video' => l10n.moderationDeleteVideo,
       'hazzard' => l10n.moderationDeleteHazard,
+      'spot_element' => l10n.moderationDeleteSpotElement,
       _ => l10n.moderationMarkActioned,
     };
 
@@ -335,6 +349,10 @@ class _ReportRow extends StatelessWidget {
               'hazzard' => Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: _HazzardPreview(hazzardId: report.targetId),
+              ),
+              'spot_element' => Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: _SpotElementPreview(elementId: report.targetId),
               ),
               _ => const SizedBox.shrink(),
             },
@@ -606,6 +624,45 @@ class _HazzardPreview extends ConsumerWidget {
         }
         return Text(
           '${hazzard.name} · SEV ${hazzard.severity ?? 1}',
+          style: context.typography.bodySm,
+        );
+      },
+    );
+  }
+}
+
+class _SpotElementPreview extends ConsumerWidget {
+  const _SpotElementPreview({required this.elementId});
+
+  final int elementId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.colors;
+    final async = ref.watch(reportedSpotElementProvider(elementId));
+    return async.when(
+      loading: () => const SizedBox(
+        height: 16,
+        width: 16,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+      error: (_, _) => Text(
+        l10n.moderationContentUnavailable,
+        style: context.typography.bodySm.copyWith(color: colors.textMuted),
+      ),
+      data: (element) {
+        if (element == null) {
+          return Text(
+            l10n.moderationContentDeleted,
+            style: context.typography.bodySm.copyWith(
+              color: colors.textMuted,
+              fontStyle: FontStyle.italic,
+            ),
+          );
+        }
+        return Text(
+          '${element.name}${element.type != null ? ' · ${element.type}' : ''}',
           style: context.typography.bodySm,
         );
       },

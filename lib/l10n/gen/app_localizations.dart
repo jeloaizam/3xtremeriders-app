@@ -724,6 +724,42 @@ abstract class AppLocalizations {
   /// **'Sin elementos reportados todavía'**
   String get spotNoElements;
 
+  /// Botón para expandir la lista de elementos más allá de los primeros 10
+  ///
+  /// In es, this message translates to:
+  /// **'Ver más ({count})'**
+  String spotElementsSeeMore(int count);
+
+  /// No description provided for @spotElementsAddButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar elemento'**
+  String get spotElementsAddButton;
+
+  /// No description provided for @spotElementsAddTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar elemento'**
+  String get spotElementsAddTitle;
+
+  /// No description provided for @spotElementsNamePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Rail de 5 metros'**
+  String get spotElementsNamePlaceholder;
+
+  /// No description provided for @spotElementsTypeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'TIPO'**
+  String get spotElementsTypeLabel;
+
+  /// No description provided for @spotElementsLimitReached.
+  ///
+  /// In es, this message translates to:
+  /// **'Este spot ya alcanzó el máximo de 50 elementos.'**
+  String get spotElementsLimitReached;
+
   /// Cantidad de calificaciones de peligro (muletas) de un spot
   ///
   /// In es, this message translates to:
@@ -1732,6 +1768,12 @@ abstract class AppLocalizations {
   /// **'Reportar peligro'**
   String get reportDialogTitleHazard;
 
+  /// No description provided for @reportDialogTitleSpotElement.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar elemento'**
+  String get reportDialogTitleSpotElement;
+
   /// No description provided for @reportReasonPlaceholder.
   ///
   /// In es, this message translates to:
@@ -1876,6 +1918,12 @@ abstract class AppLocalizations {
   /// **'Peligro'**
   String get moderationTypeHazard;
 
+  /// No description provided for @moderationTypeSpotElement.
+  ///
+  /// In es, this message translates to:
+  /// **'Elemento'**
+  String get moderationTypeSpotElement;
+
   /// No description provided for @moderationDeleteComment.
   ///
   /// In es, this message translates to:
@@ -1899,6 +1947,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Eliminar peligro'**
   String get moderationDeleteHazard;
+
+  /// No description provided for @moderationDeleteSpotElement.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar elemento'**
+  String get moderationDeleteSpotElement;
 
   /// No description provided for @moderationCommentDeleted.
   ///

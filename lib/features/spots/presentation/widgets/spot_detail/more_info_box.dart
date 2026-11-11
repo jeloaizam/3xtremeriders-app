@@ -65,12 +65,8 @@ class MoreInfoBox extends StatelessWidget {
             child: TabBarView(
               children: [
                 DescriptionTab(spot: spot, creator: creator),
-                ElementsTab(elements: elements),
-                HazardsTab(
-                  hazzards: hazzards,
-                  spotId: spotId,
-                  spotCreatedBy: spot.createdBy,
-                ),
+                ElementsTab(elements: elements, spotId: spotId),
+                HazardsTab(hazzards: hazzards, spotId: spotId),
                 CommentsTab(spotId: spotId, comments: comments),
               ],
             ),

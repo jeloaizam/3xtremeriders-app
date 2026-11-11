@@ -16,7 +16,6 @@ import '../../hazard_form_dialog.dart';
 
 const _maxHazzardsPerSpot = 50;
 const _visibleByDefault = 10;
-const _editWindow = Duration(hours: 6);
 
 /// `MoreInfoBox`'s "Peligros" tab — any signed-in rider can report a hazard
 /// here (the backend already allowed it, this is the UI entry point) and
@@ -24,16 +23,10 @@ const _editWindow = Duration(hours: 6);
 /// list's order (net votes, see `crud/hazzard.py`'s `get_by_spot`). `severity`
 /// stays as a visual-only badge, set only from Create/Edit Spot.
 class HazardsTab extends ConsumerStatefulWidget {
-  const HazardsTab({
-    super.key,
-    required this.hazzards,
-    required this.spotId,
-    required this.spotCreatedBy,
-  });
+  const HazardsTab({super.key, required this.hazzards, required this.spotId});
 
   final List<Hazzard> hazzards;
   final int spotId;
-  final int spotCreatedBy;
 
   @override
   ConsumerState<HazardsTab> createState() => _HazardsTabState();
@@ -200,13 +193,8 @@ class _HazardsTabState extends ConsumerState<HazardsTab> {
 
   bool _canManage(Hazzard hazard, Rider? currentRider) {
     if (currentRider == null) return false;
-    if (currentRider.roleId >= roleModerator) return true;
-    if (currentRider.id == widget.spotCreatedBy) return true;
-    if (currentRider.id == hazard.reportedBy) {
-      final age = DateTime.now().difference(hazard.createdDate);
-      return age <= _editWindow;
-    }
-    return false;
+    if (currentRider.roleId >= roleAdmin) return true;
+    return currentRider.id == hazard.reportedBy;
   }
 
   @override

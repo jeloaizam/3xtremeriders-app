@@ -15,6 +15,10 @@ abstract class SpotElement with _$SpotElement {
     String? description,
     String? type,
     int? difficulty,
+    @JsonKey(name: 'reported_by') int? reportedBy,
+    @JsonKey(name: 'like_count') @Default(0) int likeCount,
+    @JsonKey(name: 'dislike_count') @Default(0) int dislikeCount,
+    @JsonKey(name: 'created_date') required DateTime createdDate,
   }) = _SpotElement;
 
   factory SpotElement.fromJson(Map<String, dynamic> json) =>

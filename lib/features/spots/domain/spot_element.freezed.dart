@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SpotElement {
 
- int get id;@JsonKey(name: 'spot_id') int get spotId; String get name; String? get description; String? get type; int? get difficulty;
+ int get id;@JsonKey(name: 'spot_id') int get spotId; String get name; String? get description; String? get type; int? get difficulty;@JsonKey(name: 'reported_by') int? get reportedBy;@JsonKey(name: 'like_count') int get likeCount;@JsonKey(name: 'dislike_count') int get dislikeCount;@JsonKey(name: 'created_date') DateTime get createdDate;
 /// Create a copy of SpotElement
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SpotElementCopyWith<SpotElement> get copyWith => _$SpotElementCopyWithImpl<Spot
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpotElement&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpotElement&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.reportedBy, reportedBy) || other.reportedBy == reportedBy)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.dislikeCount, dislikeCount) || other.dislikeCount == dislikeCount)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,spotId,name,description,type,difficulty);
+int get hashCode => Object.hash(runtimeType,id,spotId,name,description,type,difficulty,reportedBy,likeCount,dislikeCount,createdDate);
 
 @override
 String toString() {
-  return 'SpotElement(id: $id, spotId: $spotId, name: $name, description: $description, type: $type, difficulty: $difficulty)';
+  return 'SpotElement(id: $id, spotId: $spotId, name: $name, description: $description, type: $type, difficulty: $difficulty, reportedBy: $reportedBy, likeCount: $likeCount, dislikeCount: $dislikeCount, createdDate: $createdDate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SpotElementCopyWith<$Res>  {
   factory $SpotElementCopyWith(SpotElement value, $Res Function(SpotElement) _then) = _$SpotElementCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, String? type, int? difficulty
+ int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, String? type, int? difficulty,@JsonKey(name: 'reported_by') int? reportedBy,@JsonKey(name: 'like_count') int likeCount,@JsonKey(name: 'dislike_count') int dislikeCount,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -65,7 +65,7 @@ class _$SpotElementCopyWithImpl<$Res>
 
 /// Create a copy of SpotElement
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? type = freezed,Object? difficulty = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? type = freezed,Object? difficulty = freezed,Object? reportedBy = freezed,Object? likeCount = null,Object? dislikeCount = null,Object? createdDate = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,spotId: null == spotId ? _self.spotId : spotId // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,11 @@ as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nu
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String?,difficulty: freezed == difficulty ? _self.difficulty : difficulty // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,reportedBy: freezed == reportedBy ? _self.reportedBy : reportedBy // ignore: cast_nullable_to_non_nullable
+as int?,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
+as int,dislikeCount: null == dislikeCount ? _self.dislikeCount : dislikeCount // ignore: cast_nullable_to_non_nullable
+as int,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -158,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  String? type,  int? difficulty)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  String? type,  int? difficulty, @JsonKey(name: 'reported_by')  int? reportedBy, @JsonKey(name: 'like_count')  int likeCount, @JsonKey(name: 'dislike_count')  int dislikeCount, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SpotElement() when $default != null:
-return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_that.difficulty);case _:
+return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_that.difficulty,_that.reportedBy,_that.likeCount,_that.dislikeCount,_that.createdDate);case _:
   return orElse();
 
 }
@@ -179,10 +183,10 @@ return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  String? type,  int? difficulty)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  String? type,  int? difficulty, @JsonKey(name: 'reported_by')  int? reportedBy, @JsonKey(name: 'like_count')  int likeCount, @JsonKey(name: 'dislike_count')  int dislikeCount, @JsonKey(name: 'created_date')  DateTime createdDate)  $default,) {final _that = this;
 switch (_that) {
 case _SpotElement():
-return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_that.difficulty);case _:
+return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_that.difficulty,_that.reportedBy,_that.likeCount,_that.dislikeCount,_that.createdDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +203,10 @@ return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  String? type,  int? difficulty)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'spot_id')  int spotId,  String name,  String? description,  String? type,  int? difficulty, @JsonKey(name: 'reported_by')  int? reportedBy, @JsonKey(name: 'like_count')  int likeCount, @JsonKey(name: 'dislike_count')  int dislikeCount, @JsonKey(name: 'created_date')  DateTime createdDate)?  $default,) {final _that = this;
 switch (_that) {
 case _SpotElement() when $default != null:
-return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_that.difficulty);case _:
+return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_that.difficulty,_that.reportedBy,_that.likeCount,_that.dislikeCount,_that.createdDate);case _:
   return null;
 
 }
@@ -214,7 +218,7 @@ return $default(_that.id,_that.spotId,_that.name,_that.description,_that.type,_t
 @JsonSerializable()
 
 class _SpotElement implements SpotElement {
-  const _SpotElement({required this.id, @JsonKey(name: 'spot_id') required this.spotId, required this.name, this.description, this.type, this.difficulty});
+  const _SpotElement({required this.id, @JsonKey(name: 'spot_id') required this.spotId, required this.name, this.description, this.type, this.difficulty, @JsonKey(name: 'reported_by') this.reportedBy, @JsonKey(name: 'like_count') this.likeCount = 0, @JsonKey(name: 'dislike_count') this.dislikeCount = 0, @JsonKey(name: 'created_date') required this.createdDate});
   factory _SpotElement.fromJson(Map<String, dynamic> json) => _$SpotElementFromJson(json);
 
 @override final  int id;
@@ -223,6 +227,10 @@ class _SpotElement implements SpotElement {
 @override final  String? description;
 @override final  String? type;
 @override final  int? difficulty;
+@override@JsonKey(name: 'reported_by') final  int? reportedBy;
+@override@JsonKey(name: 'like_count') final  int likeCount;
+@override@JsonKey(name: 'dislike_count') final  int dislikeCount;
+@override@JsonKey(name: 'created_date') final  DateTime createdDate;
 
 /// Create a copy of SpotElement
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpotElement&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpotElement&&(identical(other.id, id) || other.id == id)&&(identical(other.spotId, spotId) || other.spotId == spotId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.type, type) || other.type == type)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.reportedBy, reportedBy) || other.reportedBy == reportedBy)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.dislikeCount, dislikeCount) || other.dislikeCount == dislikeCount)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,spotId,name,description,type,difficulty);
+int get hashCode => Object.hash(runtimeType,id,spotId,name,description,type,difficulty,reportedBy,likeCount,dislikeCount,createdDate);
 
 @override
 String toString() {
-  return 'SpotElement(id: $id, spotId: $spotId, name: $name, description: $description, type: $type, difficulty: $difficulty)';
+  return 'SpotElement(id: $id, spotId: $spotId, name: $name, description: $description, type: $type, difficulty: $difficulty, reportedBy: $reportedBy, likeCount: $likeCount, dislikeCount: $dislikeCount, createdDate: $createdDate)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$SpotElementCopyWith<$Res> implements $SpotElementCopyWith
   factory _$SpotElementCopyWith(_SpotElement value, $Res Function(_SpotElement) _then) = __$SpotElementCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, String? type, int? difficulty
+ int id,@JsonKey(name: 'spot_id') int spotId, String name, String? description, String? type, int? difficulty,@JsonKey(name: 'reported_by') int? reportedBy,@JsonKey(name: 'like_count') int likeCount,@JsonKey(name: 'dislike_count') int dislikeCount,@JsonKey(name: 'created_date') DateTime createdDate
 });
 
 
@@ -274,7 +282,7 @@ class __$SpotElementCopyWithImpl<$Res>
 
 /// Create a copy of SpotElement
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? type = freezed,Object? difficulty = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? spotId = null,Object? name = null,Object? description = freezed,Object? type = freezed,Object? difficulty = freezed,Object? reportedBy = freezed,Object? likeCount = null,Object? dislikeCount = null,Object? createdDate = null,}) {
   return _then(_SpotElement(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,spotId: null == spotId ? _self.spotId : spotId // ignore: cast_nullable_to_non_nullable
@@ -282,7 +290,11 @@ as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nu
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String?,difficulty: freezed == difficulty ? _self.difficulty : difficulty // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,reportedBy: freezed == reportedBy ? _self.reportedBy : reportedBy // ignore: cast_nullable_to_non_nullable
+as int?,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
+as int,dislikeCount: null == dislikeCount ? _self.dislikeCount : dislikeCount // ignore: cast_nullable_to_non_nullable
+as int,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

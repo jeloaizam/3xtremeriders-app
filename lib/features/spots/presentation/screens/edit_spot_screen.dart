@@ -31,6 +31,7 @@ import '../../domain/spot_element.dart';
 import '../../domain/sport.dart';
 import '../spot_category_visuals.dart';
 import '../sport_visuals.dart';
+import '../widgets/element_form_dialog.dart';
 import '../widgets/hazard_form_dialog.dart';
 
 const _seasonOptions = [
@@ -50,7 +51,6 @@ const _difficultyLabels = {
 // Same fixed vocabulary as `CreateSpotScreen`'s element chips — an element
 // here is just a type from this list, so toggling one on/off maps directly
 // to creating/deleting a `SpotElement` with that type.
-const _elementTypeOptions = ['bowl', 'ramps', 'rail', 'stairs', 'jump'];
 
 const _previewZoom = 15.0;
 
@@ -795,7 +795,7 @@ class _EditSpotScreenState extends ConsumerState<EditSpotScreen> {
                         spacing: 9,
                         runSpacing: 9,
                         children: [
-                          for (final type in _elementTypeOptions)
+                          for (final type in elementTypeOptions)
                             Opacity(
                               opacity: _pendingElementTypes.contains(type)
                                   ? .5

@@ -340,6 +340,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get spotNoElements => 'Aucun élément signalé pour l\'instant';
 
   @override
+  String spotElementsSeeMore(int count) {
+    return 'Voir plus ($count)';
+  }
+
+  @override
+  String get spotElementsAddButton => 'Ajouter un élément';
+
+  @override
+  String get spotElementsAddTitle => 'Ajouter un élément';
+
+  @override
+  String get spotElementsNamePlaceholder => 'Ex. Rail de 5 mètres';
+
+  @override
+  String get spotElementsTypeLabel => 'TYPE';
+
+  @override
+  String get spotElementsLimitReached =>
+      'Ce spot a déjà atteint la limite de 50 éléments.';
+
+  @override
   String spotHazardRatingsCount(int count) {
     return '$count notes de danger';
   }
@@ -884,6 +905,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reportDialogTitleHazard => 'Signaler le danger';
 
   @override
+  String get reportDialogTitleSpotElement => 'Signaler l\'élément';
+
+  @override
   String get reportReasonPlaceholder => 'Choisir un motif';
 
   @override
@@ -956,6 +980,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moderationTypeHazard => 'Danger';
 
   @override
+  String get moderationTypeSpotElement => 'Élément';
+
+  @override
   String get moderationDeleteComment => 'Supprimer le commentaire';
 
   @override
@@ -966,6 +993,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get moderationDeleteHazard => 'Supprimer le danger';
+
+  @override
+  String get moderationDeleteSpotElement => 'Supprimer l\'élément';
 
   @override
   String get moderationCommentDeleted => 'Commentaire supprimé';

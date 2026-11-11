@@ -60,6 +60,7 @@ class _ReportSheetState extends ConsumerState<_ReportSheet> {
     'photo' => l10n.reportDialogTitlePhoto,
     'video' => l10n.reportDialogTitleVideo,
     'hazzard' => l10n.reportDialogTitleHazard,
+    'spot_element' => l10n.reportDialogTitleSpotElement,
     _ => l10n.reportDialogTitle,
   };
 

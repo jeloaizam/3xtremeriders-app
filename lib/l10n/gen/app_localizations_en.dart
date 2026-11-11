@@ -339,6 +339,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get spotNoElements => 'No elements reported yet';
 
   @override
+  String spotElementsSeeMore(int count) {
+    return 'See more ($count)';
+  }
+
+  @override
+  String get spotElementsAddButton => 'Add element';
+
+  @override
+  String get spotElementsAddTitle => 'Add element';
+
+  @override
+  String get spotElementsNamePlaceholder => 'E.g. 5-meter rail';
+
+  @override
+  String get spotElementsTypeLabel => 'TYPE';
+
+  @override
+  String get spotElementsLimitReached =>
+      'This spot already reached the 50-element limit.';
+
+  @override
   String spotHazardRatingsCount(int count) {
     return '$count hazard ratings';
   }
@@ -881,6 +902,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportDialogTitleHazard => 'Report hazard';
 
   @override
+  String get reportDialogTitleSpotElement => 'Report element';
+
+  @override
   String get reportReasonPlaceholder => 'Choose a reason';
 
   @override
@@ -953,6 +977,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moderationTypeHazard => 'Hazard';
 
   @override
+  String get moderationTypeSpotElement => 'Element';
+
+  @override
   String get moderationDeleteComment => 'Delete comment';
 
   @override
@@ -963,6 +990,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moderationDeleteHazard => 'Delete hazard';
+
+  @override
+  String get moderationDeleteSpotElement => 'Delete element';
 
   @override
   String get moderationCommentDeleted => 'Comment deleted';

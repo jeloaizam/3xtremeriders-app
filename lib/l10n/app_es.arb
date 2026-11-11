@@ -135,6 +135,18 @@
     }
   },
   "spotNoElements": "Sin elementos reportados todavía",
+  "spotElementsSeeMore": "Ver más ({count})",
+  "@spotElementsSeeMore": {
+    "description": "Botón para expandir la lista de elementos más allá de los primeros 10",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "spotElementsAddButton": "Agregar elemento",
+  "spotElementsAddTitle": "Agregar elemento",
+  "spotElementsNamePlaceholder": "Ej. Rail de 5 metros",
+  "spotElementsTypeLabel": "TIPO",
+  "spotElementsLimitReached": "Este spot ya alcanzó el máximo de 50 elementos.",
   "spotHazardRatingsCount": "{count} calificaciones de peligro",
   "@spotHazardRatingsCount": {
     "description": "Cantidad de calificaciones de peligro (muletas) de un spot",
@@ -381,6 +393,7 @@
   "reportDialogTitlePhoto": "Reportar foto",
   "reportDialogTitleVideo": "Reportar video",
   "reportDialogTitleHazard": "Reportar peligro",
+  "reportDialogTitleSpotElement": "Reportar elemento",
   "reportReasonPlaceholder": "Elegí un motivo",
   "reportReasonSpam": "Spam",
   "reportReasonDangerous": "Contenido peligroso o inapropiado",
@@ -405,10 +418,12 @@
   "moderationTypePhoto": "Foto",
   "moderationTypeVideo": "Video",
   "moderationTypeHazard": "Peligro",
+  "moderationTypeSpotElement": "Elemento",
   "moderationDeleteComment": "Eliminar comentario",
   "moderationDeletePhoto": "Eliminar foto",
   "moderationDeleteVideo": "Eliminar video",
   "moderationDeleteHazard": "Eliminar peligro",
+  "moderationDeleteSpotElement": "Eliminar elemento",
   "moderationCommentDeleted": "Comentario eliminado",
   "moderationContentDeleted": "Contenido eliminado",
   "moderationContentUnavailable": "No se pudo cargar el contenido",

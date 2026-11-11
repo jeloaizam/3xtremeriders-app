@@ -302,6 +302,59 @@ class SpotApi {
     }
   }
 
+  Future<SpotElement> getElement(int elementId) async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/spot_elements/$elementId'),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotElement.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// 'like' o 'dislike' — tocar la misma reacción otra vez la quita, tocar
+  /// la otra la cambia (ver `app/crud/spot_element_vote.py`). Devuelve el
+  /// elemento con los conteos ya actualizados.
+  Future<SpotElement> voteElement({
+    required int elementId,
+    required String reaction,
+    required String idToken,
+  }) async {
+    final response = await http.post(
+      Uri.parse('${ApiConfig.baseUrl}/spot_elements/$elementId/vote'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'reaction': reaction}),
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    return SpotElement.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// La reacción ('like'/'dislike') del rider autenticado sobre ese
+  /// elemento, o null si no ha votado.
+  Future<String?> checkElementVote({
+    required int elementId,
+    required String idToken,
+  }) async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/spot_elements/$elementId/vote/check'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, response.body);
+    }
+    if (response.body == 'null') return null;
+    return jsonDecode(response.body) as String;
+  }
+
   /// Adds a sport to an already-created spot — returns the full `Sport`
   /// (same shape `getSports` returns) so the caller doesn't need a
   /// separate lookup just to show its name/icon right away.

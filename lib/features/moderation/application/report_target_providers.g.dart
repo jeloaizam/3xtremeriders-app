@@ -329,3 +329,79 @@ final class ReportedHazzardFamily extends $Family
   @override
   String toString() => r'reportedHazzardProvider';
 }
+
+@ProviderFor(reportedSpotElement)
+final reportedSpotElementProvider = ReportedSpotElementFamily._();
+
+final class ReportedSpotElementProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SpotElement?>,
+          SpotElement?,
+          FutureOr<SpotElement?>
+        >
+    with $FutureModifier<SpotElement?>, $FutureProvider<SpotElement?> {
+  ReportedSpotElementProvider._({
+    required ReportedSpotElementFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'reportedSpotElementProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$reportedSpotElementHash();
+
+  @override
+  String toString() {
+    return r'reportedSpotElementProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<SpotElement?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<SpotElement?> create(Ref ref) {
+    final argument = this.argument as int;
+    return reportedSpotElement(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ReportedSpotElementProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$reportedSpotElementHash() =>
+    r'977beae820f2a25d0db4e241e9b02ccb117f0240';
+
+final class ReportedSpotElementFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<SpotElement?>, int> {
+  ReportedSpotElementFamily._()
+    : super(
+        retry: null,
+        name: r'reportedSpotElementProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ReportedSpotElementProvider call(int elementId) =>
+      ReportedSpotElementProvider._(argument: elementId, from: this);
+
+  @override
+  String toString() => r'reportedSpotElementProvider';
+}
