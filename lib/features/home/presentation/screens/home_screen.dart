@@ -11,6 +11,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_avatar.dart';
 import '../../../../core/widgets/app_bottom_nav.dart';
@@ -817,22 +818,7 @@ class _QuickViewSheet extends ConsumerWidget {
                     child: SizedBox(
                       width: double.infinity,
                       height: 110,
-                      child: spot.coverPhotoUrl != null
-                          ? Image.network(
-                              spot.coverPhotoUrl!,
-                              fit: BoxFit.cover,
-                            )
-                          : Container(
-                              color: colors.surfaceMedia,
-                              alignment: Alignment.center,
-                              child: Icon(
-                                spot.coverVideoUrl != null
-                                    ? Symbols.play_circle
-                                    : Symbols.image,
-                                size: 30,
-                                color: colors.text700,
-                              ),
-                            ),
+                      child: _QuickViewCover(spot: spot, colors: colors),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -918,6 +904,60 @@ class _QuickViewSheet extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+/// `_QuickViewSheet`'s cover image — same fallback logic as `SpotCard`'s
+/// `_Thumbnail` (ver `spot_card.dart`): un spot cuya portada es un video
+/// (`topMediaType == 'video'`) antes caía siempre al ícono genérico acá,
+/// nunca mostraba el thumbnail real aunque `coverVideoThumbnailUrl` existiera.
+class _QuickViewCover extends StatelessWidget {
+  const _QuickViewCover({required this.spot, required this.colors});
+
+  final Spot spot;
+  final AppColors colors;
+
+  Widget _placeholder(IconData icon) => Container(
+    color: colors.surfaceMedia,
+    alignment: Alignment.center,
+    child: Icon(icon, size: 30, color: colors.text700),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    if (spot.topMediaType == 'photo' && spot.coverPhotoUrl != null) {
+      return Image.network(
+        spot.coverPhotoUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            _placeholder(Symbols.image),
+      );
+    }
+    if (spot.topMediaType == 'video') {
+      if (spot.coverVideoThumbnailUrl == null) {
+        return _placeholder(Symbols.play_circle);
+      }
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.network(
+            spot.coverVideoThumbnailUrl!,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                _placeholder(Symbols.play_circle),
+          ),
+          Center(
+            child: Icon(
+              Symbols.play_circle,
+              fill: 1,
+              size: 30,
+              color: colors.colorAction,
+            ),
+          ),
+        ],
+      );
+    }
+    return _placeholder(Symbols.image);
   }
 }
 
