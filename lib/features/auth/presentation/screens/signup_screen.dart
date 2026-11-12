@@ -17,6 +17,8 @@ import '../../../../l10n/gen/app_localizations.dart';
 import '../../application/auth_providers.dart';
 import '../../data/auth_repository.dart';
 import '../widgets/consent_fields.dart';
+import '../widgets/country_city_selector.dart';
+import '../widgets/gender_selector.dart';
 
 /// Real email/password registration form — the previous "Crear cuenta" link
 /// on [LoginScreen] just showed a "coming soon" snackbar. Same visual shell
@@ -47,6 +49,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool _termsAccepted = false;
   bool _privacyAccepted = false;
 
+  int? _countryId;
+  String? _cityName;
+  String? _gender;
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +76,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       _nicknameController.text.trim().isNotEmpty &&
       _emailController.text.trim().isNotEmpty &&
       _passwordController.text.isNotEmpty &&
+      _countryId != null &&
+      _cityName != null &&
+      _gender != null &&
       _birthDate != null &&
       ConsentFields.meetsMinimumAge(_birthDate!) &&
       _termsAccepted &&
@@ -89,6 +98,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             _nameController.text.trim(),
             _lastNameController.text.trim(),
             _nicknameController.text.trim(),
+            _countryId!,
+            _cityName!,
+            _gender!,
             _birthDate!,
             LegalLinks.currentTermsVersion,
             LegalLinks.currentPrivacyVersion,
@@ -221,6 +233,24 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ),
                   if (_showErrors && _passwordController.text.isEmpty)
                     _ErrorText(l10n.signupFieldRequired),
+                  const SizedBox(height: 11),
+                  CountryCitySelector(
+                    countryId: _countryId,
+                    cityName: _cityName,
+                    onCountryChanged: (id) => setState(() {
+                      _countryId = id;
+                      _cityName = null;
+                    }),
+                    onCityChanged: (name) => setState(() => _cityName = name),
+                    showErrors: _showErrors,
+                  ),
+                  const SizedBox(height: 20),
+                  GenderSelector(
+                    value: _gender,
+                    locked: false,
+                    onChanged: (gender) => setState(() => _gender = gender),
+                    showError: _showErrors,
+                  ),
                   const SizedBox(height: 11),
                   ConsentFields(
                     birthDate: _birthDate,

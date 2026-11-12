@@ -55,6 +55,9 @@ class PendingSignupProfile extends _$PendingSignupProfile {
     String name,
     String lastName,
     String nickname,
+    int countryId,
+    String cityName,
+    String gender,
     DateTime birthDate,
     String termsVersion,
     String privacyVersion,
@@ -66,6 +69,9 @@ class PendingSignupProfile extends _$PendingSignupProfile {
     String name,
     String lastName,
     String nickname,
+    int countryId,
+    String cityName,
+    String gender,
     DateTime birthDate,
     String termsVersion,
     String privacyVersion,
@@ -75,6 +81,9 @@ class PendingSignupProfile extends _$PendingSignupProfile {
       name: name,
       lastName: lastName,
       nickname: nickname,
+      countryId: countryId,
+      cityName: cityName,
+      gender: gender,
       birthDate: birthDate,
       termsVersion: termsVersion,
       privacyVersion: privacyVersion,
@@ -143,7 +152,7 @@ class CurrentRider extends _$CurrentRider {
     if (idToken == null) return null;
 
     final pending = ref.read(pendingSignupProfileProvider);
-    final rider = await ref
+    var rider = await ref
         .read(authApiProvider)
         .sync(
           idToken: idToken,
@@ -164,6 +173,19 @@ class CurrentRider extends _$CurrentRider {
             termsVersion: pending.termsVersion,
             privacyVersion: pending.privacyVersion,
             deviceInfo: pending.deviceInfo,
+          );
+      // `sync()`'s RiderCreate body has no room for country/city/gender —
+      // same write-once fields CompleteProfileScreen backfills for social
+      // sign-ins, just applied right away here since SignupScreen already
+      // collected them.
+      rider = await ref
+          .read(riderApiProvider)
+          .update(
+            riderId: rider.id,
+            idToken: idToken,
+            countryId: pending.countryId,
+            cityName: pending.cityName,
+            gender: pending.gender,
           );
     }
     return rider;

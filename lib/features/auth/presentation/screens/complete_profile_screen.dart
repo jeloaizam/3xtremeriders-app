@@ -6,17 +6,14 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/legal/legal_links.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/alien_icon.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_dropdown.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
-import '../../../settings/data/country_api.dart';
-import '../../../settings/domain/country.dart';
-import '../../../settings/presentation/widgets/city_search_field.dart';
 import '../../application/auth_providers.dart';
 import '../../domain/rider.dart';
 import '../widgets/consent_fields.dart';
+import '../widgets/country_city_selector.dart';
+import '../widgets/gender_selector.dart';
 
 /// Mandatory gate the router forces a rider into whenever their profile is
 /// missing a nickname — in practice, a brand-new Google sign-in, since
@@ -77,14 +74,6 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     _seeded = true;
   }
 
-  String? _isoCodeFor(List<Country>? countries, int? countryId) {
-    if (countries == null || countryId == null) return null;
-    for (final country in countries) {
-      if (country.id == countryId) return country.isoCode;
-    }
-    return null;
-  }
-
   bool get _isValid =>
       _nameController.text.trim().isNotEmpty &&
       _lastNameController.text.trim().isNotEmpty &&
@@ -143,7 +132,6 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
     final riderAsync = ref.watch(currentRiderProvider);
-    final countriesAsync = ref.watch(countriesProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -196,87 +184,23 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 if (_showErrors && _nicknameController.text.trim().isEmpty)
                   _ErrorText(l10n.signupFieldRequired),
                 const SizedBox(height: 11),
-                countriesAsync.when(
-                  loading: () => const LinearProgressIndicator(),
-                  error: (error, _) => Text('$error'),
-                  data: (countries) => AppDropdown<int>(
-                    icon: Symbols.public,
-                    placeholder: l10n.settingsCountryLabel,
-                    value: _countryId,
-                    extraVerticalPadding: 10,
-                    items: [
-                      for (final country in countries)
-                        DropdownMenuItem(
-                          value: country.id,
-                          child: Text(country.name),
-                        ),
-                    ],
-                    onChanged: (id) => setState(() {
-                      _countryId = id;
-                      _cityName = null;
-                    }),
-                  ),
-                ),
-                if (_showErrors && _countryId == null)
-                  _ErrorText(l10n.signupFieldRequired),
-                const SizedBox(height: 11),
-                CitySearchField(
-                  countryIsoCode: _isoCodeFor(countriesAsync.value, _countryId),
+                CountryCitySelector(
+                  countryId: _countryId,
                   cityName: _cityName,
-                  onCityNameChanged: (name) => setState(() => _cityName = name),
+                  onCountryChanged: (id) => setState(() {
+                    _countryId = id;
+                    _cityName = null;
+                  }),
+                  onCityChanged: (name) => setState(() => _cityName = name),
+                  showErrors: _showErrors,
                 ),
-                if (_showErrors && _cityName == null)
-                  _ErrorText(l10n.signupFieldRequired),
                 const SizedBox(height: 20),
-                Text(
-                  l10n.completeProfileGenderLabel,
-                  style: context.typography.eyebrow.copyWith(
-                    color: colors.textMuted,
-                  ),
+                GenderSelector(
+                  value: _gender,
+                  locked: _genderLocked,
+                  onChanged: (gender) => setState(() => _gender = gender),
+                  showError: _showErrors,
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _GenderButton(
-                        icon: Symbols.male,
-                        label: l10n.genderMale,
-                        selected: _gender == 'male',
-                        locked: _genderLocked,
-                        onTap: () => setState(() => _gender = 'male'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _GenderButton(
-                        icon: Symbols.female,
-                        label: l10n.genderFemale,
-                        selected: _gender == 'female',
-                        locked: _genderLocked,
-                        onTap: () => setState(() => _gender = 'female'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _GenderButton(
-                        iconWidget: AlienIcon.new,
-                        label: l10n.genderAlien,
-                        selected: _gender == 'alien',
-                        locked: _genderLocked,
-                        onTap: () => setState(() => _gender = 'alien'),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.completeProfileGenderWarning,
-                  style: context.typography.micro.copyWith(
-                    color: colors.textMuted,
-                  ),
-                ),
-                if (_showErrors && _gender == null)
-                  _ErrorText(l10n.signupFieldRequired),
                 if (_needsConsent) ...[
                   const SizedBox(height: 20),
                   ConsentFields(
@@ -300,69 +224,6 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-/// One of the two gender buttons — big enough to tap easily, since this is
-/// a write-once choice with no dropdown/segmented affordance to correct a
-/// misclick later. Dims and stops responding to taps once [locked] (a
-/// gender was already saved before this screen loaded).
-class _GenderButton extends StatelessWidget {
-  const _GenderButton({
-    this.icon,
-    this.iconWidget,
-    required this.label,
-    required this.selected,
-    required this.locked,
-    required this.onTap,
-  }) : assert(icon != null || iconWidget != null);
-
-  final IconData? icon;
-  // Builds a glyph with no Material Symbol (just AlienIcon today), given
-  // this button's selection-tinted color — not GenderVisual's fixed
-  // per-gender color, since this icon is recolored by selection state.
-  final Widget Function({required double size, required Color color})?
-  iconWidget;
-  final String label;
-  final bool selected;
-  final bool locked;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final color = selected ? colors.colorAction : colors.text300;
-    final builder = iconWidget;
-
-    return Opacity(
-      opacity: locked && !selected ? .4 : 1,
-      child: GestureDetector(
-        onTap: locked ? null : onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          decoration: BoxDecoration(
-            color: selected ? colors.tintBlue : colors.surfaceCard,
-            border: Border.all(
-              color: selected ? colors.colorAction : colors.hairline,
-              width: selected ? 2 : 1,
-            ),
-            borderRadius: BorderRadius.circular(context.spacing.radiusMd),
-          ),
-          child: Column(
-            children: [
-              builder == null
-                  ? Icon(icon, size: 32, color: color)
-                  : builder(size: 32, color: color),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: context.typography.title.copyWith(color: color),
-              ),
-            ],
-          ),
         ),
       ),
     );

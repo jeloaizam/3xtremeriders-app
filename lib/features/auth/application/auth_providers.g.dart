@@ -237,7 +237,10 @@ final class PendingSignupProfileProvider
           PendingSignupProfile,
           ({
             DateTime birthDate,
+            String cityName,
+            int countryId,
             String deviceInfo,
+            String gender,
             String lastName,
             String name,
             String nickname,
@@ -278,7 +281,10 @@ final class PendingSignupProfileProvider
   Override overrideWithValue(
     ({
       DateTime birthDate,
+      String cityName,
+      int countryId,
       String deviceInfo,
+      String gender,
       String lastName,
       String name,
       String nickname,
@@ -293,7 +299,10 @@ final class PendingSignupProfileProvider
           $SyncValueProvider<
             ({
               DateTime birthDate,
+              String cityName,
+              int countryId,
               String deviceInfo,
+              String gender,
               String lastName,
               String name,
               String nickname,
@@ -306,7 +315,7 @@ final class PendingSignupProfileProvider
 }
 
 String _$pendingSignupProfileHash() =>
-    r'f158960e71525e1f263cb59e9469f0b8200a132c';
+    r'5702ad6e8e79a84d5f948aa220864f89d903398f';
 
 /// Real profile data collected by `SignupScreen` right before creating the
 /// Firebase account, consumed once by [CurrentRider.build] the first time
@@ -325,7 +334,10 @@ abstract class _$PendingSignupProfile
         $Notifier<
           ({
             DateTime birthDate,
+            String cityName,
+            int countryId,
             String deviceInfo,
+            String gender,
             String lastName,
             String name,
             String nickname,
@@ -335,7 +347,10 @@ abstract class _$PendingSignupProfile
         > {
   ({
     DateTime birthDate,
+    String cityName,
+    int countryId,
     String deviceInfo,
+    String gender,
     String lastName,
     String name,
     String nickname,
@@ -351,7 +366,10 @@ abstract class _$PendingSignupProfile
             as $Ref<
               ({
                 DateTime birthDate,
+                String cityName,
+                int countryId,
                 String deviceInfo,
+                String gender,
                 String lastName,
                 String name,
                 String nickname,
@@ -360,7 +378,10 @@ abstract class _$PendingSignupProfile
               })?,
               ({
                 DateTime birthDate,
+                String cityName,
+                int countryId,
                 String deviceInfo,
+                String gender,
                 String lastName,
                 String name,
                 String nickname,
@@ -374,7 +395,10 @@ abstract class _$PendingSignupProfile
               AnyNotifier<
                 ({
                   DateTime birthDate,
+                  String cityName,
+                  int countryId,
                   String deviceInfo,
+                  String gender,
                   String lastName,
                   String name,
                   String nickname,
@@ -383,7 +407,10 @@ abstract class _$PendingSignupProfile
                 })?,
                 ({
                   DateTime birthDate,
+                  String cityName,
+                  int countryId,
                   String deviceInfo,
+                  String gender,
                   String lastName,
                   String name,
                   String nickname,
@@ -393,7 +420,10 @@ abstract class _$PendingSignupProfile
               >,
               ({
                 DateTime birthDate,
+                String cityName,
+                int countryId,
                 String deviceInfo,
+                String gender,
                 String lastName,
                 String name,
                 String nickname,
@@ -578,7 +608,7 @@ final class CurrentRiderProvider
   CurrentRider create() => CurrentRider();
 }
 
-String _$currentRiderHash() => r'dd575738fdf810a58345269ae78e993f03170942';
+String _$currentRiderHash() => r'f799736797041d89f90d9468794a0bccedd6372b';
 
 /// The backend Rider profile for the current Firebase user, synced via
 /// POST /auth/sync. For an already-registered rider the backend ignores the
