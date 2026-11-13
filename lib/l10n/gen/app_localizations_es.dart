@@ -293,6 +293,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsLogout => 'Cerrar sesión';
 
   @override
+  String get settingsDeleteAccount => 'Eliminar mi cuenta';
+
+  @override
+  String get settingsDeleteAccountConfirmTitle => '¿Eliminar tu cuenta?';
+
+  @override
+  String get settingsDeleteAccountConfirmBody =>
+      'Esta acción no se puede deshacer. Se borran tu perfil, tus equipos, tus fotos/videos propios y tus votos. Los spots, fotos o comentarios que compartiste con otros riders se mantienen, mostrando \"Usuario eliminado\".';
+
+  @override
+  String get settingsDeleteAccountConfirmButton => 'Eliminar cuenta';
+
+  @override
+  String get settingsDeleteAccountError =>
+      'No se pudo eliminar la cuenta. Intenta de nuevo.';
+
+  @override
   String get spotCreatedBy => 'Creado por';
 
   @override

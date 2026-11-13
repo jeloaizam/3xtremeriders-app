@@ -292,6 +292,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLogout => 'Log out';
 
   @override
+  String get settingsDeleteAccount => 'Delete my account';
+
+  @override
+  String get settingsDeleteAccountConfirmTitle => 'Delete your account?';
+
+  @override
+  String get settingsDeleteAccountConfirmBody =>
+      'This can\'t be undone. Your profile, gear, your own photos/videos, and your votes are deleted. Spots, photos, or comments you shared with other riders stay, shown as \"Deleted user\".';
+
+  @override
+  String get settingsDeleteAccountConfirmButton => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountError =>
+      'Couldn\'t delete the account. Try again.';
+
+  @override
   String get spotCreatedBy => 'Created by';
 
   @override

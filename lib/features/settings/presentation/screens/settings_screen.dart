@@ -20,6 +20,7 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../auth/data/auth_repository.dart';
+import '../../../auth/data/rider_api.dart';
 import '../../../auth/domain/rider.dart';
 import '../../data/country_api.dart';
 import '../../domain/country.dart';
@@ -49,6 +50,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _uploadingAvatar = false;
   bool _seeded = false;
   bool _saving = false;
+  bool _deletingAccount = false;
 
   @override
   void dispose() {
@@ -247,6 +249,52 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       }
     } finally {
       if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  Future<void> _deleteAccount() async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: context.colors.surfaceCard,
+        title: Text(l10n.settingsDeleteAccountConfirmTitle),
+        content: Text(l10n.settingsDeleteAccountConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.moderationCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              l10n.settingsDeleteAccountConfirmButton,
+              style: TextStyle(color: context.colors.colorDanger),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    setState(() => _deletingAccount = true);
+    try {
+      final user = ref.read(firebaseAuthProvider).currentUser;
+      final idToken = await user?.getIdToken();
+      if (idToken == null) return;
+      await ref.read(riderApiProvider).deleteMyAccount(idToken: idToken);
+      // El backend ya borró el rider (anonimizado) y la cuenta de Firebase
+      // Auth — este signOut solo limpia la sesión local, que ya quedó
+      // inválida del lado del servidor de todos modos.
+      await ref.read(authRepositoryProvider).signOut();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.settingsDeleteAccountError)),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _deletingAccount = false);
     }
   }
 
@@ -476,6 +524,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   label: l10n.settingsLogout,
                   variant: AppButtonVariant.danger,
                   onPressed: () => ref.read(authRepositoryProvider).signOut(),
+                ),
+                const SizedBox(height: 12),
+                AppButton(
+                  label: l10n.settingsDeleteAccount,
+                  variant: AppButtonVariant.danger,
+                  onPressed: _deletingAccount ? null : _deleteAccount,
                 ),
               ],
             ),

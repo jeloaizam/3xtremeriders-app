@@ -293,6 +293,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsLogout => 'Déconnexion';
 
   @override
+  String get settingsDeleteAccount => 'Supprimer mon compte';
+
+  @override
+  String get settingsDeleteAccountConfirmTitle => 'Supprimer votre compte ?';
+
+  @override
+  String get settingsDeleteAccountConfirmBody =>
+      'Cette action est irréversible. Votre profil, votre équipement, vos propres photos/vidéos et vos votes sont supprimés. Les spots, photos ou commentaires partagés avec d\'autres riders restent visibles, affichés comme « Utilisateur supprimé ».';
+
+  @override
+  String get settingsDeleteAccountConfirmButton => 'Supprimer le compte';
+
+  @override
+  String get settingsDeleteAccountError =>
+      'Impossible de supprimer le compte. Réessaie.';
+
+  @override
   String get spotCreatedBy => 'Créé par';
 
   @override

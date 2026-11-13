@@ -123,6 +123,19 @@ class RiderApi {
     return Rider.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  /// Autoeliminación de cuenta — `DELETE /riders/me` (el link que pide
+  /// Google Play en la sección "Account deletion" de Data Safety). Siempre
+  /// opera sobre el rider del token, nunca necesita un id.
+  Future<void> deleteMyAccount({required String idToken}) async {
+    final response = await http.delete(
+      Uri.parse('${ApiConfig.baseUrl}/riders/me'),
+      headers: {'Authorization': 'Bearer $idToken'},
+    );
+    if (response.statusCode != 204) {
+      throw ApiException(response.statusCode, response.body);
+    }
+  }
+
   static String _dateOnly(DateTime date) {
     final y = date.year.toString().padLeft(4, '0');
     final m = date.month.toString().padLeft(2, '0');

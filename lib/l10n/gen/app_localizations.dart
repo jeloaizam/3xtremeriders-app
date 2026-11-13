@@ -640,6 +640,36 @@ abstract class AppLocalizations {
   /// **'Cerrar sesión'**
   String get settingsLogout;
 
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar mi cuenta'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsDeleteAccountConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar tu cuenta?'**
+  String get settingsDeleteAccountConfirmTitle;
+
+  /// No description provided for @settingsDeleteAccountConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción no se puede deshacer. Se borran tu perfil, tus equipos, tus fotos/videos propios y tus votos. Los spots, fotos o comentarios que compartiste con otros riders se mantienen, mostrando \"Usuario eliminado\".'**
+  String get settingsDeleteAccountConfirmBody;
+
+  /// No description provided for @settingsDeleteAccountConfirmButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get settingsDeleteAccountConfirmButton;
+
+  /// No description provided for @settingsDeleteAccountError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo eliminar la cuenta. Intenta de nuevo.'**
+  String get settingsDeleteAccountError;
+
   /// No description provided for @spotCreatedBy.
   ///
   /// In es, this message translates to:
