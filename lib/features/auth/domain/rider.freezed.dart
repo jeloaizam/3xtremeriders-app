@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Rider {
 
- int get id;@JsonKey(name: 'firebase_uid') String get firebaseUid;@JsonKey(name: 'role_id') int get roleId; String get email; String get name;@JsonKey(name: 'last_name') String get lastName; String get nickname;@JsonKey(name: 'icon_image') String? get iconImage; String? get bio;@JsonKey(name: 'city_id') int? get cityId;@JsonKey(name: 'city_text') String? get cityText;@JsonKey(name: 'city_name') String? get cityName;@JsonKey(name: 'country_id') int? get countryId; String? get gender;@JsonKey(name: 'birth_date') DateTime? get birthDate;@JsonKey(name: 'social_links') Map<String, dynamic>? get socialLinks;@JsonKey(name: 'reputation_pts') int get reputationPts;@JsonKey(name: 'active_sport_id') int? get activeSportId;@JsonKey(name: 'map_sport_filter') List<int>? get mapSportFilter;@JsonKey(name: 'created_date') DateTime get createdDate;@JsonKey(name: 'updated_date') DateTime? get updatedDate;
+ int get id;@JsonKey(name: 'firebase_uid') String? get firebaseUid;@JsonKey(name: 'role_id') int get roleId; String? get email; String get name;@JsonKey(name: 'last_name') String get lastName; String get nickname;@JsonKey(name: 'icon_image') String? get iconImage; String? get bio;@JsonKey(name: 'city_id') int? get cityId;@JsonKey(name: 'city_text') String? get cityText;@JsonKey(name: 'city_name') String? get cityName;@JsonKey(name: 'country_id') int? get countryId; String? get gender;@JsonKey(name: 'birth_date') DateTime? get birthDate;@JsonKey(name: 'social_links') Map<String, dynamic>? get socialLinks;@JsonKey(name: 'reputation_pts') int get reputationPts;@JsonKey(name: 'active_sport_id') int? get activeSportId;@JsonKey(name: 'map_sport_filter') List<int>? get mapSportFilter;@JsonKey(name: 'created_date') DateTime get createdDate;@JsonKey(name: 'updated_date') DateTime? get updatedDate;
 /// Create a copy of Rider
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RiderCopyWith<$Res>  {
   factory $RiderCopyWith(Rider value, $Res Function(Rider) _then) = _$RiderCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'firebase_uid') String firebaseUid,@JsonKey(name: 'role_id') int roleId, String email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio,@JsonKey(name: 'city_id') int? cityId,@JsonKey(name: 'city_text') String? cityText,@JsonKey(name: 'city_name') String? cityName,@JsonKey(name: 'country_id') int? countryId, String? gender,@JsonKey(name: 'birth_date') DateTime? birthDate,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'active_sport_id') int? activeSportId,@JsonKey(name: 'map_sport_filter') List<int>? mapSportFilter,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
+ int id,@JsonKey(name: 'firebase_uid') String? firebaseUid,@JsonKey(name: 'role_id') int roleId, String? email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio,@JsonKey(name: 'city_id') int? cityId,@JsonKey(name: 'city_text') String? cityText,@JsonKey(name: 'city_name') String? cityName,@JsonKey(name: 'country_id') int? countryId, String? gender,@JsonKey(name: 'birth_date') DateTime? birthDate,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'active_sport_id') int? activeSportId,@JsonKey(name: 'map_sport_filter') List<int>? mapSportFilter,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
 });
 
 
@@ -65,13 +65,13 @@ class _$RiderCopyWithImpl<$Res>
 
 /// Create a copy of Rider
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firebaseUid = null,Object? roleId = null,Object? email = null,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? cityId = freezed,Object? cityText = freezed,Object? cityName = freezed,Object? countryId = freezed,Object? gender = freezed,Object? birthDate = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? activeSportId = freezed,Object? mapSportFilter = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firebaseUid = freezed,Object? roleId = null,Object? email = freezed,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? cityId = freezed,Object? cityText = freezed,Object? cityName = freezed,Object? countryId = freezed,Object? gender = freezed,Object? birthDate = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? activeSportId = freezed,Object? mapSportFilter = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,firebaseUid: null == firebaseUid ? _self.firebaseUid : firebaseUid // ignore: cast_nullable_to_non_nullable
-as String,roleId: null == roleId ? _self.roleId : roleId // ignore: cast_nullable_to_non_nullable
-as int,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as int,firebaseUid: freezed == firebaseUid ? _self.firebaseUid : firebaseUid // ignore: cast_nullable_to_non_nullable
+as String?,roleId: null == roleId ? _self.roleId : roleId // ignore: cast_nullable_to_non_nullable
+as int,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
 as String,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
@@ -173,7 +173,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId,  String? gender, @JsonKey(name: 'birth_date')  DateTime? birthDate, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'active_sport_id')  int? activeSportId, @JsonKey(name: 'map_sport_filter')  List<int>? mapSportFilter, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String? firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String? email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId,  String? gender, @JsonKey(name: 'birth_date')  DateTime? birthDate, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'active_sport_id')  int? activeSportId, @JsonKey(name: 'map_sport_filter')  List<int>? mapSportFilter, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Rider() when $default != null:
 return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.cityId,_that.cityText,_that.cityName,_that.countryId,_that.gender,_that.birthDate,_that.socialLinks,_that.reputationPts,_that.activeSportId,_that.mapSportFilter,_that.createdDate,_that.updatedDate);case _:
@@ -194,7 +194,7 @@ return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId,  String? gender, @JsonKey(name: 'birth_date')  DateTime? birthDate, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'active_sport_id')  int? activeSportId, @JsonKey(name: 'map_sport_filter')  List<int>? mapSportFilter, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'firebase_uid')  String? firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String? email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId,  String? gender, @JsonKey(name: 'birth_date')  DateTime? birthDate, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'active_sport_id')  int? activeSportId, @JsonKey(name: 'map_sport_filter')  List<int>? mapSportFilter, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)  $default,) {final _that = this;
 switch (_that) {
 case _Rider():
 return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.cityId,_that.cityText,_that.cityName,_that.countryId,_that.gender,_that.birthDate,_that.socialLinks,_that.reputationPts,_that.activeSportId,_that.mapSportFilter,_that.createdDate,_that.updatedDate);case _:
@@ -214,7 +214,7 @@ return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'firebase_uid')  String firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId,  String? gender, @JsonKey(name: 'birth_date')  DateTime? birthDate, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'active_sport_id')  int? activeSportId, @JsonKey(name: 'map_sport_filter')  List<int>? mapSportFilter, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'firebase_uid')  String? firebaseUid, @JsonKey(name: 'role_id')  int roleId,  String? email,  String name, @JsonKey(name: 'last_name')  String lastName,  String nickname, @JsonKey(name: 'icon_image')  String? iconImage,  String? bio, @JsonKey(name: 'city_id')  int? cityId, @JsonKey(name: 'city_text')  String? cityText, @JsonKey(name: 'city_name')  String? cityName, @JsonKey(name: 'country_id')  int? countryId,  String? gender, @JsonKey(name: 'birth_date')  DateTime? birthDate, @JsonKey(name: 'social_links')  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts')  int reputationPts, @JsonKey(name: 'active_sport_id')  int? activeSportId, @JsonKey(name: 'map_sport_filter')  List<int>? mapSportFilter, @JsonKey(name: 'created_date')  DateTime createdDate, @JsonKey(name: 'updated_date')  DateTime? updatedDate)?  $default,) {final _that = this;
 switch (_that) {
 case _Rider() when $default != null:
 return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_that.lastName,_that.nickname,_that.iconImage,_that.bio,_that.cityId,_that.cityText,_that.cityName,_that.countryId,_that.gender,_that.birthDate,_that.socialLinks,_that.reputationPts,_that.activeSportId,_that.mapSportFilter,_that.createdDate,_that.updatedDate);case _:
@@ -229,13 +229,13 @@ return $default(_that.id,_that.firebaseUid,_that.roleId,_that.email,_that.name,_
 @JsonSerializable()
 
 class _Rider implements Rider {
-  const _Rider({required this.id, @JsonKey(name: 'firebase_uid') required this.firebaseUid, @JsonKey(name: 'role_id') required this.roleId, required this.email, required this.name, @JsonKey(name: 'last_name') required this.lastName, required this.nickname, @JsonKey(name: 'icon_image') this.iconImage, this.bio, @JsonKey(name: 'city_id') this.cityId, @JsonKey(name: 'city_text') this.cityText, @JsonKey(name: 'city_name') this.cityName, @JsonKey(name: 'country_id') this.countryId, this.gender, @JsonKey(name: 'birth_date') this.birthDate, @JsonKey(name: 'social_links') final  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts') required this.reputationPts, @JsonKey(name: 'active_sport_id') this.activeSportId, @JsonKey(name: 'map_sport_filter') final  List<int>? mapSportFilter, @JsonKey(name: 'created_date') required this.createdDate, @JsonKey(name: 'updated_date') this.updatedDate}): _socialLinks = socialLinks,_mapSportFilter = mapSportFilter;
+  const _Rider({required this.id, @JsonKey(name: 'firebase_uid') this.firebaseUid, @JsonKey(name: 'role_id') required this.roleId, this.email, required this.name, @JsonKey(name: 'last_name') required this.lastName, required this.nickname, @JsonKey(name: 'icon_image') this.iconImage, this.bio, @JsonKey(name: 'city_id') this.cityId, @JsonKey(name: 'city_text') this.cityText, @JsonKey(name: 'city_name') this.cityName, @JsonKey(name: 'country_id') this.countryId, this.gender, @JsonKey(name: 'birth_date') this.birthDate, @JsonKey(name: 'social_links') final  Map<String, dynamic>? socialLinks, @JsonKey(name: 'reputation_pts') required this.reputationPts, @JsonKey(name: 'active_sport_id') this.activeSportId, @JsonKey(name: 'map_sport_filter') final  List<int>? mapSportFilter, @JsonKey(name: 'created_date') required this.createdDate, @JsonKey(name: 'updated_date') this.updatedDate}): _socialLinks = socialLinks,_mapSportFilter = mapSportFilter;
   factory _Rider.fromJson(Map<String, dynamic> json) => _$RiderFromJson(json);
 
 @override final  int id;
-@override@JsonKey(name: 'firebase_uid') final  String firebaseUid;
+@override@JsonKey(name: 'firebase_uid') final  String? firebaseUid;
 @override@JsonKey(name: 'role_id') final  int roleId;
-@override final  String email;
+@override final  String? email;
 @override final  String name;
 @override@JsonKey(name: 'last_name') final  String lastName;
 @override final  String nickname;
@@ -303,7 +303,7 @@ abstract mixin class _$RiderCopyWith<$Res> implements $RiderCopyWith<$Res> {
   factory _$RiderCopyWith(_Rider value, $Res Function(_Rider) _then) = __$RiderCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'firebase_uid') String firebaseUid,@JsonKey(name: 'role_id') int roleId, String email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio,@JsonKey(name: 'city_id') int? cityId,@JsonKey(name: 'city_text') String? cityText,@JsonKey(name: 'city_name') String? cityName,@JsonKey(name: 'country_id') int? countryId, String? gender,@JsonKey(name: 'birth_date') DateTime? birthDate,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'active_sport_id') int? activeSportId,@JsonKey(name: 'map_sport_filter') List<int>? mapSportFilter,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
+ int id,@JsonKey(name: 'firebase_uid') String? firebaseUid,@JsonKey(name: 'role_id') int roleId, String? email, String name,@JsonKey(name: 'last_name') String lastName, String nickname,@JsonKey(name: 'icon_image') String? iconImage, String? bio,@JsonKey(name: 'city_id') int? cityId,@JsonKey(name: 'city_text') String? cityText,@JsonKey(name: 'city_name') String? cityName,@JsonKey(name: 'country_id') int? countryId, String? gender,@JsonKey(name: 'birth_date') DateTime? birthDate,@JsonKey(name: 'social_links') Map<String, dynamic>? socialLinks,@JsonKey(name: 'reputation_pts') int reputationPts,@JsonKey(name: 'active_sport_id') int? activeSportId,@JsonKey(name: 'map_sport_filter') List<int>? mapSportFilter,@JsonKey(name: 'created_date') DateTime createdDate,@JsonKey(name: 'updated_date') DateTime? updatedDate
 });
 
 
@@ -320,13 +320,13 @@ class __$RiderCopyWithImpl<$Res>
 
 /// Create a copy of Rider
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firebaseUid = null,Object? roleId = null,Object? email = null,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? cityId = freezed,Object? cityText = freezed,Object? cityName = freezed,Object? countryId = freezed,Object? gender = freezed,Object? birthDate = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? activeSportId = freezed,Object? mapSportFilter = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firebaseUid = freezed,Object? roleId = null,Object? email = freezed,Object? name = null,Object? lastName = null,Object? nickname = null,Object? iconImage = freezed,Object? bio = freezed,Object? cityId = freezed,Object? cityText = freezed,Object? cityName = freezed,Object? countryId = freezed,Object? gender = freezed,Object? birthDate = freezed,Object? socialLinks = freezed,Object? reputationPts = null,Object? activeSportId = freezed,Object? mapSportFilter = freezed,Object? createdDate = null,Object? updatedDate = freezed,}) {
   return _then(_Rider(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,firebaseUid: null == firebaseUid ? _self.firebaseUid : firebaseUid // ignore: cast_nullable_to_non_nullable
-as String,roleId: null == roleId ? _self.roleId : roleId // ignore: cast_nullable_to_non_nullable
-as int,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as int,firebaseUid: freezed == firebaseUid ? _self.firebaseUid : firebaseUid // ignore: cast_nullable_to_non_nullable
+as String?,roleId: null == roleId ? _self.roleId : roleId // ignore: cast_nullable_to_non_nullable
+as int,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
 as String,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable

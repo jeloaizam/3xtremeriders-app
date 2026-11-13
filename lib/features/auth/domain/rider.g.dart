@@ -8,9 +8,9 @@ part of 'rider.dart';
 
 _Rider _$RiderFromJson(Map<String, dynamic> json) => _Rider(
   id: (json['id'] as num).toInt(),
-  firebaseUid: json['firebase_uid'] as String,
+  firebaseUid: json['firebase_uid'] as String?,
   roleId: (json['role_id'] as num).toInt(),
-  email: json['email'] as String,
+  email: json['email'] as String?,
   name: json['name'] as String,
   lastName: json['last_name'] as String,
   nickname: json['nickname'] as String,

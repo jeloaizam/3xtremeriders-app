@@ -3,14 +3,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'rider.freezed.dart';
 part 'rider.g.dart';
 
-/// Mirrors the backend's `RiderRead` schema (`app/schemas/rider.py`).
+/// Mirrors the backend's `RiderRead`/`RiderPublicRead` schemas
+/// (`app/schemas/rider.py`). `firebaseUid`/`email` are nullable because
+/// `GET /riders/` and `GET /riders/{id}` (someone else's public profile) use
+/// the pruned `RiderPublicRead` and omit both — only your own profile, via
+/// `POST /auth/sync`/`PATCH /riders/{id}`, gets the full schema with them.
 @freezed
 abstract class Rider with _$Rider {
   const factory Rider({
     required int id,
-    @JsonKey(name: 'firebase_uid') required String firebaseUid,
+    @JsonKey(name: 'firebase_uid') String? firebaseUid,
     @JsonKey(name: 'role_id') required int roleId,
-    required String email,
+    String? email,
     required String name,
     @JsonKey(name: 'last_name') required String lastName,
     required String nickname,

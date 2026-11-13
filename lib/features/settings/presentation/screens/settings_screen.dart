@@ -464,7 +464,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const SizedBox(height: 32),
                 _SectionTitle(l10n.settingsAccountSection),
                 const SizedBox(height: 12),
-                _InfoRow(label: l10n.settingsEmailLabel, value: rider.email),
+                _InfoRow(
+                  label: l10n.settingsEmailLabel,
+                  value: rider.email ?? '',
+                ),
                 _InfoRow(
                   label: l10n.settingsRoleLabel,
                   value: _roleLabel(l10n, rider.roleId),
